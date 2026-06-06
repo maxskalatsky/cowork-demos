@@ -113,15 +113,15 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     <div>
       <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:12px;text-align:center">Select Your Role</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
-        <div class="persona-card selected" id="card-member" onclick="selectPersona('member')">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.3" style="margin-bottom:8px"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase">Member</div>
-          <div style="font-size:10px;color:#8899AA;margin-top:3px">James Whitfield</div>
+        <div class="persona-card selected" id="card-member" onclick="selectPersona('member')" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.3" style="margin-bottom:8px;pointer-events:none"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase;pointer-events:none">Member</div>
+          <div style="font-size:10px;color:#8899AA;margin-top:3px;pointer-events:none">James Whitfield</div>
         </div>
-        <div class="persona-card" id="card-exec" onclick="selectPersona('exec')">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#556677" stroke-width="1.3" style="margin-bottom:8px" id="exec-icon"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase">Executive</div>
-          <div style="font-size:10px;color:#8899AA;margin-top:3px">Chief Financial Officer</div>
+        <div class="persona-card" id="card-exec" onclick="selectPersona('exec')" style="cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#556677" stroke-width="1.3" style="margin-bottom:8px;pointer-events:none" id="exec-icon"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase;pointer-events:none">Executive</div>
+          <div style="font-size:10px;color:#8899AA;margin-top:3px;pointer-events:none">Chief Financial Officer</div>
         </div>
       </div>
       <div class="divider" style="margin-bottom:24px"></div>
@@ -133,7 +133,7 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
         <label class="field-label">Password</label>
         <input type="password" value="demo1234">
       </div>
-      <button class="btn-gold" onclick="signIn()">Sign In</button>
+      <button class="btn-gold" onclick="signIn()" id="signin-btn">Sign In</button>
       <div style="text-align:center;margin-top:16px">
         <span style="font-size:11px;letter-spacing:.08em;color:#556677;cursor:pointer">Forgot your password?</span>
       </div>
@@ -654,7 +654,10 @@ function selectPersona(p){
   }
 }
 function signIn(){
-  if(currentPersona==='exec'){goTo('exec');}else{goTo('home');}
+  var execSelected = document.getElementById('card-exec').classList.contains('selected');
+  var email = document.getElementById('login-email').value;
+  var isExec = execSelected || email.indexOf('jzaloom') > -1;
+  if(isExec){goTo('exec');}else{goTo('home');}
 }
 function goTo(s){
   document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
