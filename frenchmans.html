@@ -3,29 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Frenchman's Creek — Member App</title>
+<title>Frenchman's Creek — Club OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#1a1a1a;display:flex;justify-content:center;align-items:flex-start;padding:24px 0;font-family:'Jost',sans-serif}
-.phone-frame{width:390px;min-height:844px;background:#0A1628;border-radius:44px;overflow:hidden;position:relative;border:1px solid #2a3a52;box-shadow:0 32px 80px rgba(0,0,0,0.6)}
+html,body{height:100%;background:#111518;display:flex;justify-content:center;align-items:flex-start;padding:24px 0;font-family:'Jost',sans-serif}
+.phone-frame{width:390px;min-height:844px;background:#0A1628;border-radius:44px;overflow:hidden;position:relative;border:1px solid #2a3a52;box-shadow:0 32px 80px rgba(0,0,0,0.7)}
 .screen{display:none;flex-direction:column;min-height:844px;background:#0A1628}
 .screen.active{display:flex}
-.gold{color:#C9A84C}
-.serif{font-family:'Cormorant Garamond',serif}
-.muted{color:#8899AA}
 .btn-gold{background:#C9A84C;color:#0A1628;border:none;padding:14px 0;border-radius:2px;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;width:100%;transition:opacity .2s}
 .btn-gold:hover{opacity:.88}
 .btn-outline{background:transparent;color:#C9A84C;border:1px solid #C9A84C;padding:10px 0;border-radius:2px;font-family:'Jost',sans-serif;font-size:12px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;width:100%;transition:all .2s}
 .btn-outline:hover{background:#C9A84C22}
+.btn-sm{background:transparent;color:#C9A84C;border:1px solid #C9A84C33;padding:5px 12px;border-radius:2px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .divider{height:1px;background:linear-gradient(90deg,transparent,#2a3a52 30%,#2a3a52 70%,transparent)}
 .status-bar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
 .status-time{color:#fff;font-size:15px;font-weight:500}
 .status-icons{display:flex;gap:6px;align-items:center;color:#fff;font-size:11px}
 .bottom-nav{height:72px;background:#0d1e35;border-top:1px solid #1e3050;display:flex;align-items:center;justify-content:space-around;flex-shrink:0;padding-bottom:8px}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 12px;transition:opacity .2s}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px}
 .nav-item svg{width:22px;height:22px;stroke:#556677;fill:none;stroke-width:1.5}
 .nav-item.active svg{stroke:#C9A84C}
 .nav-item span{font-size:9px;letter-spacing:.08em;color:#556677;text-transform:uppercase}
@@ -37,6 +35,9 @@ html,body{height:100%;background:#1a1a1a;display:flex;justify-content:center;ali
 .screen-subtitle{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8899AA;margin-top:2px}
 .card{background:#0d1e35;border-radius:4px;border:1px solid #1e3050;padding:16px}
 .tag{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#C9A84C;border:1px solid #C9A84C33;padding:3px 10px;border-radius:1px}
+.tag-green{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#4CAF7D;border:1px solid #4CAF7D33;padding:2px 8px;border-radius:1px}
+.tag-red{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#E05252;border:1px solid #E0525233;padding:2px 8px;border-radius:1px}
+.tag-amber{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#E8A030;border:1px solid #E8A03033;padding:2px 8px;border-radius:1px}
 input[type=text],input[type=email],input[type=password]{background:transparent;border:none;border-bottom:1px solid #2a3a52;color:#fff;padding:10px 0;font-family:'Jost',sans-serif;font-size:14px;width:100%;outline:none;transition:border-color .2s}
 input[type=text]:focus,input[type=email]:focus,input[type=password]:focus{border-bottom-color:#C9A84C}
 input::placeholder{color:#55667799;font-size:13px}
@@ -62,37 +63,78 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
 .date-pill.unsel{background:#0d1e35;color:#8899AA;border:1px solid #1e3050}
 .select-input{background:#0d1e35;border:1px solid #1e3050;color:#fff;padding:10px 14px;border-radius:2px;font-family:'Jost',sans-serif;font-size:13px;width:100%;outline:none;-webkit-appearance:none}
 .avatar{width:40px;height:40px;border-radius:50%;background:#C9A84C22;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;color:#C9A84C;font-family:'Cormorant Garamond',serif;font-size:16px}
+.metric-card{background:#0d1e35;border:1px solid #1e3050;border-radius:3px;padding:14px;text-align:center}
+.metric-val{font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;line-height:1;margin:4px 0}
+.metric-lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8899AA}
+.metric-sub{font-size:10px;color:#556677;margin-top:3px}
+.dept-row{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid #1a2d44;gap:10px}
+.dept-row:last-child{border-bottom:none}
+.bar-track{flex:1;height:4px;background:#1a2d44;border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width .4s}
+.bar-gold{background:#C9A84C}
+.bar-green{background:#4CAF7D}
+.bar-red{background:#E05252}
+.alert-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #1a2d44;align-items:flex-start}
+.alert-row:last-child{border-bottom:none}
+.alert-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dot-red{background:#E05252}
+.dot-amber{background:#E8A030}
+.dot-green{background:#4CAF7D}
+.persona-card{background:#0d1e35;border:1px solid #1e3050;border-radius:4px;padding:20px;cursor:pointer;transition:border-color .3s;text-align:center}
+.persona-card:hover{border-color:#C9A84C66}
+.persona-card.selected{border-color:#C9A84C;background:#C9A84C08}
+.exec-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 8px}
+.exec-nav-item svg{width:20px;height:20px;stroke:#556677;fill:none;stroke-width:1.5}
+.exec-nav-item.active svg{stroke:#C9A84C}
+.exec-nav-item span{font-size:8px;letter-spacing:.06em;color:#556677;text-transform:uppercase}
+.exec-nav-item.active span{color:#C9A84C}
+.ap-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #1a2d44}
+.ap-row:last-child{border-bottom:none}
+.pulse-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1a2d44}
+.pulse-row:last-child{border-bottom:none}
 </style>
 </head>
 <body>
-
 <div class="phone-frame">
 
 <!-- LOGIN -->
 <div class="screen active" id="screen-login">
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:60px 36px 48px">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 36px 44px">
     <div style="display:flex;flex-direction:column;align-items:center">
       <div style="width:80px;height:80px;border-radius:50%;border:1px solid #C9A84C66;display:flex;flex-direction:column;align-items:center;justify-content:center">
         <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:#C9A84C;line-height:1">FC</div>
         <div style="font-size:7px;letter-spacing:.2em;color:#C9A84C88;text-transform:uppercase;margin-top:2px">B&amp;CC</div>
       </div>
-      <div style="margin-top:20px;text-align:center">
+      <div style="margin-top:18px;text-align:center">
         <div style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.28em;color:#C9A84C;text-transform:uppercase">Frenchman's Creek</div>
-        <div style="font-size:10px;letter-spacing:.22em;color:#556677;text-transform:uppercase;margin-top:4px">Beach &amp; Country Club</div>
+        <div style="font-size:10px;letter-spacing:.22em;color:#556677;text-transform:uppercase;margin-top:3px">Beach &amp; Country Club</div>
       </div>
     </div>
     <div>
-      <div class="divider" style="margin-bottom:36px"></div>
-      <div style="margin-bottom:24px">
-        <label class="field-label">Member Email</label>
-        <input type="email" value="james.whitfield@fc.com">
+      <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:12px;text-align:center">Select Your Role</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
+        <div class="persona-card selected" id="card-member" onclick="selectPersona('member')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.3" style="margin-bottom:8px"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase">Member</div>
+          <div style="font-size:10px;color:#8899AA;margin-top:3px">James Whitfield</div>
+        </div>
+        <div class="persona-card" id="card-exec" onclick="selectPersona('exec')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#556677" stroke-width="1.3" style="margin-bottom:8px" id="exec-icon"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <div style="font-size:11px;letter-spacing:.1em;color:#fff;text-transform:uppercase">Executive</div>
+          <div style="font-size:10px;color:#8899AA;margin-top:3px">Club President</div>
+        </div>
       </div>
-      <div style="margin-bottom:36px">
+      <div class="divider" style="margin-bottom:24px"></div>
+      <div style="margin-bottom:20px">
+        <label class="field-label">Email</label>
+        <input type="email" id="login-email" value="james.whitfield@fc.com">
+      </div>
+      <div style="margin-bottom:28px">
         <label class="field-label">Password</label>
         <input type="password" value="demo1234">
       </div>
-      <button class="btn-gold" onclick="goTo('home')">Sign In</button>
-      <div style="text-align:center;margin-top:20px">
+      <button class="btn-gold" onclick="signIn()">Sign In</button>
+      <div style="text-align:center;margin-top:16px">
         <span style="font-size:11px;letter-spacing:.08em;color:#556677;cursor:pointer">Forgot your password?</span>
       </div>
     </div>
@@ -102,7 +144,7 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
   </div>
 </div>
 
-<!-- HOME -->
+<!-- MEMBER HOME -->
 <div class="screen" id="screen-home">
   <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
   <div class="scroll-area" style="padding:0 20px 20px">
@@ -166,10 +208,7 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
 <!-- TEE TIMES -->
 <div class="screen" id="screen-teetimes">
   <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
-  <div class="screen-header">
-    <div class="screen-title">Tee Times</div>
-    <div class="screen-subtitle">Regulation &amp; Executive Courses</div>
-  </div>
+  <div class="screen-header"><div class="screen-title">Tee Times</div><div class="screen-subtitle">Regulation &amp; Executive Courses</div></div>
   <div style="padding:0 20px 8px;flex-shrink:0">
     <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none">
       <button class="date-pill unsel" onclick="selectDate(this,'Monday, June 9')">Mon 9</button>
@@ -183,57 +222,13 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     <div style="margin-top:12px;font-size:11px;letter-spacing:.1em;color:#8899AA;text-transform:uppercase" id="tee-date-label">Saturday, June 14</div>
   </div>
   <div class="scroll-area" style="padding:8px 20px 20px">
-    <div class="tee-slot booked">
-      <div>
-        <div style="color:#C9A84C;font-size:16px;font-family:'Cormorant Garamond',serif">10:24 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">2 players · Regulation</div>
-      </div>
-      <div class="tag">Your Booking</div>
-    </div>
-    <div class="tee-slot" id="slot-1040">
-      <div>
-        <div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">10:40 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div>
-      </div>
-      <button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1040','10:40 AM')">Book</button>
-    </div>
-    <div class="tee-slot" id="slot-1056">
-      <div>
-        <div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">10:56 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div>
-      </div>
-      <button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1056','10:56 AM')">Book</button>
-    </div>
-    <div class="tee-slot" style="opacity:.4;cursor:default">
-      <div>
-        <div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:12 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">Reserved · member event</div>
-      </div>
-      <div style="font-size:11px;color:#556677;text-transform:uppercase;letter-spacing:.08em">Closed</div>
-    </div>
-    <div class="tee-slot" id="slot-1128">
-      <div>
-        <div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:28 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div>
-      </div>
-      <button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1128','11:28 AM')">Book</button>
-    </div>
-    <div class="tee-slot" id="slot-1144">
-      <div>
-        <div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:44 AM</div>
-        <div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 2 players</div>
-      </div>
-      <button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1144','11:44 AM')">Book</button>
-    </div>
-    <div id="tee-confirm" style="display:none;margin-top:8px">
-      <div class="confirm-badge">
-        <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div>
-          <div style="color:#C9A84C;font-size:13px;font-weight:500" id="confirm-text">Tee time booked</div>
-          <div style="color:#8899AA;font-size:11px">Confirmation sent to james.whitfield@fc.com</div>
-        </div>
-      </div>
-    </div>
+    <div class="tee-slot booked"><div><div style="color:#C9A84C;font-size:16px;font-family:'Cormorant Garamond',serif">10:24 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">2 players · Regulation</div></div><div class="tag">Your Booking</div></div>
+    <div class="tee-slot" id="slot-1040"><div><div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">10:40 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div></div><button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1040','10:40 AM')">Book</button></div>
+    <div class="tee-slot" id="slot-1056"><div><div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">10:56 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div></div><button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1056','10:56 AM')">Book</button></div>
+    <div class="tee-slot" style="opacity:.4;cursor:default"><div><div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:12 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">Reserved · member event</div></div><div style="font-size:11px;color:#556677;text-transform:uppercase;letter-spacing:.08em">Closed</div></div>
+    <div class="tee-slot" id="slot-1128"><div><div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:28 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 4 players</div></div><button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1128','11:28 AM')">Book</button></div>
+    <div class="tee-slot" id="slot-1144"><div><div style="color:#fff;font-size:16px;font-family:'Cormorant Garamond',serif">11:44 AM</div><div style="color:#8899AA;font-size:11px;margin-top:2px">Available · up to 2 players</div></div><button class="btn-outline" style="width:80px;padding:7px 0" onclick="bookSlot('1144','11:44 AM')">Book</button></div>
+    <div id="tee-confirm" style="display:none;margin-top:8px"><div class="confirm-badge"><div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="color:#C9A84C;font-size:13px;font-weight:500" id="confirm-text">Tee time booked</div><div style="color:#8899AA;font-size:11px">Confirmation sent to james.whitfield@fc.com</div></div></div></div>
   </div>
   <div class="bottom-nav">
     <div class="nav-item" onclick="goTo('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Home</span></div>
@@ -247,67 +242,29 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
 <!-- DINING -->
 <div class="screen" id="screen-dining">
   <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
-  <div class="screen-header">
-    <div class="screen-title">Dining</div>
-    <div class="screen-subtitle">Reservations &amp; Private Dining</div>
-  </div>
+  <div class="screen-header"><div class="screen-title">Dining</div><div class="screen-subtitle">Reservations &amp; Private Dining</div></div>
   <div class="scroll-area" id="dining-main" style="padding:0 20px 20px">
     <div class="venue-card" onclick="openVenue('Main Dining Room','Formal · Jacket Preferred')">
-      <div class="venue-img" style="background:linear-gradient(135deg,#0d2040,#152e50)">
-        <div style="text-align:center">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">Main Dining Room</div>
-          <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Jacket Preferred</div>
-        </div>
-      </div>
-      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:12px;color:#8899AA">Dinner · Mon–Sat · Opens 6pm</div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
+      <div class="venue-img" style="background:linear-gradient(135deg,#0d2040,#152e50)"><div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">Main Dining Room</div><div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Jacket Preferred</div></div></div>
+      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:#8899AA">Dinner · Mon–Sat · Opens 6pm</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg></div>
     </div>
     <div class="venue-card" onclick="openVenue('Beach Club Grill','Casual · Poolside')">
-      <div class="venue-img" style="background:linear-gradient(135deg,#0a2035,#0d2a3f)">
-        <div style="text-align:center">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">Beach Club Grill</div>
-          <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Casual &amp; Poolside</div>
-        </div>
-      </div>
-      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:12px;color:#8899AA">Lunch &amp; Dinner · Daily · Opens 11am</div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
+      <div class="venue-img" style="background:linear-gradient(135deg,#0a2035,#0d2a3f)"><div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">Beach Club Grill</div><div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Casual &amp; Poolside</div></div></div>
+      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:#8899AA">Lunch &amp; Dinner · Daily · Opens 11am</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg></div>
     </div>
-    <div class="venue-card" onclick="openVenue('19th Hole Bar','Casual Drinks &amp; Light Fare')">
-      <div class="venue-img" style="background:linear-gradient(135deg,#0f1e38,#162840)">
-        <div style="text-align:center">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">19th Hole Bar</div>
-          <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Casual &amp; Light Fare</div>
-        </div>
-      </div>
-      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:12px;color:#8899AA">All Day · Daily · Opens 10am</div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
+    <div class="venue-card" onclick="openVenue('19th Hole Bar','Casual · Drinks &amp; Light Fare')">
+      <div class="venue-img" style="background:linear-gradient(135deg,#0f1e38,#162840)"><div style="text-align:center"><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#C9A84C;font-weight:300">19th Hole Bar</div><div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-top:4px">Casual &amp; Light Fare</div></div></div>
+      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:12px;color:#8899AA">All Day · Daily · Opens 10am</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg></div>
     </div>
   </div>
   <div style="display:none;flex:1;flex-direction:column;overflow:hidden" id="dining-book">
     <div style="padding:12px 20px;border-bottom:1px solid #1e3050;display:flex;align-items:center;gap:12px;flex-shrink:0">
-      <div onclick="closeDining()" style="cursor:pointer;padding:4px">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8899AA" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      </div>
-      <div>
-        <div style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:18px" id="venue-name-title">Main Dining Room</div>
-        <div style="font-size:11px;color:#8899AA" id="venue-subtitle">Formal</div>
-      </div>
+      <div onclick="closeDining()" style="cursor:pointer;padding:4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8899AA" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></div>
+      <div><div style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:18px" id="venue-name-title">Main Dining Room</div><div style="font-size:11px;color:#8899AA" id="venue-subtitle">Formal</div></div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:20px;scrollbar-width:none">
-      <div style="margin-bottom:20px">
-        <label class="field-label">Date</label>
-        <select class="select-input"><option>Saturday, June 14</option><option>Sunday, June 15</option><option>Monday, June 16</option><option>Friday, June 20</option></select>
-      </div>
-      <div style="margin-bottom:20px">
-        <label class="field-label">Party Size</label>
-        <select class="select-input"><option>1 Guest</option><option>2 Guests</option><option selected>4 Guests</option><option>6 Guests</option><option>8 Guests</option></select>
-      </div>
+      <div style="margin-bottom:20px"><label class="field-label">Date</label><select class="select-input"><option>Saturday, June 14</option><option>Sunday, June 15</option><option>Monday, June 16</option><option>Friday, June 20</option></select></div>
+      <div style="margin-bottom:20px"><label class="field-label">Party Size</label><select class="select-input"><option>1 Guest</option><option>2 Guests</option><option selected>4 Guests</option><option>6 Guests</option><option>8 Guests</option></select></div>
       <div style="margin-bottom:20px">
         <label class="field-label">Available Times</label>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
@@ -319,20 +276,9 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
           <button class="date-pill unsel" style="opacity:.4;pointer-events:none">8:30 PM</button>
         </div>
       </div>
-      <div style="margin-bottom:20px">
-        <label class="field-label">Special Requests</label>
-        <input type="text" placeholder="Anniversary, dietary needs, seating preference…">
-      </div>
+      <div style="margin-bottom:20px"><label class="field-label">Special Requests</label><input type="text" placeholder="Anniversary, dietary needs, seating preference…"></div>
       <button class="btn-gold" onclick="confirmDining()">Request Reservation</button>
-      <div id="dining-confirm" style="display:none;margin-top:14px">
-        <div class="confirm-badge">
-          <div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div style="color:#C9A84C;font-size:13px;font-weight:500">Reservation Requested</div>
-            <div style="color:#8899AA;font-size:11px">You will receive confirmation within 2 hours</div>
-          </div>
-        </div>
-      </div>
+      <div id="dining-confirm" style="display:none;margin-top:14px"><div class="confirm-badge"><div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="color:#C9A84C;font-size:13px;font-weight:500">Reservation Requested</div><div style="color:#8899AA;font-size:11px">You will receive confirmation within 2 hours</div></div></div></div>
     </div>
   </div>
   <div class="bottom-nav">
@@ -347,47 +293,28 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
 <!-- EVENTS -->
 <div class="screen" id="screen-events">
   <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
-  <div class="screen-header">
-    <div class="screen-title">Events</div>
-    <div class="screen-subtitle">Club Calendar · June 2026</div>
-  </div>
+  <div class="screen-header"><div class="screen-title">Events</div><div class="screen-subtitle">Club Calendar · June 2026</div></div>
   <div class="scroll-area" style="padding:0 20px 20px">
     <div class="card" style="margin-bottom:12px">
       <div style="font-size:10px;letter-spacing:.12em;color:#C9A84C;text-transform:uppercase;margin-bottom:10px">June</div>
       <div class="event-row">
         <div class="event-date-box"><div class="month">Jun</div><div class="day">21</div></div>
-        <div style="flex:1">
-          <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Member Guest Golf Tournament</div>
-          <div style="color:#8899AA;font-size:11px;margin-bottom:10px">36-hole stroke play · Regulation Course · Shotgun 8am</div>
-          <button class="btn-outline" id="evt-btn-1" onclick="registerEvent(1)" style="width:100px">Register</button>
-        </div>
+        <div style="flex:1"><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Member Guest Golf Tournament</div><div style="color:#8899AA;font-size:11px;margin-bottom:10px">36-hole stroke play · Regulation Course · Shotgun 8am</div><button class="btn-outline" id="evt-btn-1" onclick="registerEvent(1)" style="width:100px">Register</button></div>
       </div>
       <div class="event-row">
         <div class="event-date-box"><div class="month">Jun</div><div class="day">28</div></div>
-        <div style="flex:1">
-          <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Summer Wine Dinner</div>
-          <div style="color:#8899AA;font-size:11px;margin-bottom:10px">Six-course pairing · Main Dining Room · 7pm · Black Tie Optional</div>
-          <button class="btn-outline" id="evt-btn-2" onclick="registerEvent(2)" style="width:100px">Register</button>
-        </div>
+        <div style="flex:1"><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Summer Wine Dinner</div><div style="color:#8899AA;font-size:11px;margin-bottom:10px">Six-course pairing · Main Dining Room · 7pm · Black Tie Optional</div><button class="btn-outline" id="evt-btn-2" onclick="registerEvent(2)" style="width:100px">Register</button></div>
       </div>
     </div>
     <div class="card" style="margin-bottom:12px">
       <div style="font-size:10px;letter-spacing:.12em;color:#C9A84C;text-transform:uppercase;margin-bottom:10px">July</div>
       <div class="event-row">
         <div class="event-date-box"><div class="month">Jul</div><div class="day">4</div></div>
-        <div style="flex:1">
-          <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">July 4th Celebration</div>
-          <div style="color:#8899AA;font-size:11px;margin-bottom:10px">Poolside BBQ · Live music · Fireworks · Beach Club · All Day</div>
-          <button class="btn-outline" id="evt-btn-3" onclick="registerEvent(3)" style="width:100px">Register</button>
-        </div>
+        <div style="flex:1"><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">July 4th Celebration</div><div style="color:#8899AA;font-size:11px;margin-bottom:10px">Poolside BBQ · Live music · Fireworks · Beach Club · All Day</div><button class="btn-outline" id="evt-btn-3" onclick="registerEvent(3)" style="width:100px">Register</button></div>
       </div>
       <div class="event-row">
         <div class="event-date-box"><div class="month">Jul</div><div class="day">12</div></div>
-        <div style="flex:1">
-          <div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Club Championship Qualifying</div>
-          <div style="color:#8899AA;font-size:11px;margin-bottom:10px">18-hole stroke play qualifier · Handicap index required · Tee sheet 7am</div>
-          <button class="btn-outline" id="evt-btn-4" onclick="registerEvent(4)" style="width:100px">Register</button>
-        </div>
+        <div style="flex:1"><div style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:3px">Club Championship Qualifying</div><div style="color:#8899AA;font-size:11px;margin-bottom:10px">18-hole stroke play qualifier · Handicap index required · Tee sheet 7am</div><button class="btn-outline" id="evt-btn-4" onclick="registerEvent(4)" style="width:100px">Register</button></div>
       </div>
     </div>
   </div>
@@ -400,31 +327,19 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
   </div>
 </div>
 
-<!-- ACCOUNT -->
+<!-- MEMBER ACCOUNT -->
 <div class="screen" id="screen-account">
   <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
   <div style="padding:20px 20px 0;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid #1e3050">
       <div style="width:54px;height:54px;border-radius:50%;background:#C9A84C22;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;color:#C9A84C;font-family:'Cormorant Garamond',serif;font-size:22px">JW</div>
-      <div>
-        <div style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:22px;font-weight:300">James Whitfield</div>
-        <div style="font-size:11px;color:#8899AA;margin-top:1px">Member No. 1847 &nbsp;·&nbsp; Since 2018</div>
-        <div class="tag" style="margin-top:6px">Golf &amp; Social</div>
-      </div>
+      <div><div style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:22px;font-weight:300">James Whitfield</div><div style="font-size:11px;color:#8899AA;margin-top:1px">Member No. 1847 &nbsp;·&nbsp; Since 2018</div><div class="tag" style="margin-top:6px">Golf &amp; Social</div></div>
     </div>
   </div>
   <div class="scroll-area" style="padding:16px 20px 20px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <div style="background:#0d1e35;border:1px solid #1e3050;border-radius:3px;padding:16px;text-align:center">
-        <div style="font-size:10px;letter-spacing:.12em;color:#8899AA;text-transform:uppercase;margin-bottom:6px">Account Balance</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#C9A84C">$2,340</div>
-        <div style="font-size:10px;color:#556677;margin-top:2px">Credit</div>
-      </div>
-      <div style="background:#0d1e35;border:1px solid #1e3050;border-radius:3px;padding:16px;text-align:center">
-        <div style="font-size:10px;letter-spacing:.12em;color:#8899AA;text-transform:uppercase;margin-bottom:6px">YTD Spend</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff">$8,940</div>
-        <div style="font-size:10px;color:#556677;margin-top:2px">Jan–Jun 2026</div>
-      </div>
+      <div style="background:#0d1e35;border:1px solid #1e3050;border-radius:3px;padding:16px;text-align:center"><div style="font-size:10px;letter-spacing:.12em;color:#8899AA;text-transform:uppercase;margin-bottom:6px">Account Balance</div><div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#C9A84C">$2,340</div><div style="font-size:10px;color:#556677;margin-top:2px">Credit</div></div>
+      <div style="background:#0d1e35;border:1px solid #1e3050;border-radius:3px;padding:16px;text-align:center"><div style="font-size:10px;letter-spacing:.12em;color:#8899AA;text-transform:uppercase;margin-bottom:6px">YTD Spend</div><div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff">$8,940</div><div style="font-size:10px;color:#556677;margin-top:2px">Jan–Jun 2026</div></div>
     </div>
     <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:10px">Recent Charges</div>
     <div class="card" style="margin-bottom:16px">
@@ -452,9 +367,295 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
   </div>
 </div>
 
+<!-- EXEC DASHBOARD -->
+<div class="screen" id="screen-exec">
+  <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
+  <div style="padding:16px 20px 12px;flex-shrink:0;border-bottom:1px solid #1e3050">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:10px;letter-spacing:.16em;color:#8899AA;text-transform:uppercase;margin-bottom:3px">Good Morning</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#fff;font-weight:300">Richard Harmon</div>
+        <div style="font-size:10px;color:#8899AA;margin-top:1px">Club President &nbsp;·&nbsp; June 14, 2026</div>
+      </div>
+      <div style="width:38px;height:38px;border-radius:50%;background:#C9A84C22;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;color:#C9A84C;font-family:'Cormorant Garamond',serif;font-size:14px">RH</div>
+    </div>
+  </div>
+  <div class="scroll-area" style="padding:14px 20px 20px" id="exec-main">
+
+    <!-- alerts -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Alerts Requiring Attention</div>
+      <div class="card" style="padding:12px 14px">
+        <div class="alert-row"><div class="alert-dot dot-red"></div><div><div style="color:#fff;font-size:12px">F&amp;B labor over budget by 8.3% — week of June 9</div><div style="color:#556677;font-size:10px;margin-top:2px">Food &amp; Beverage · Flagged today</div></div></div>
+        <div class="alert-row"><div class="alert-dot dot-amber"></div><div><div style="color:#fff;font-size:12px">3 AP invoices pending approval &gt; $10K</div><div style="color:#556677;font-size:10px;margin-top:2px">Accounts Payable · Oldest: 6 days</div></div></div>
+        <div class="alert-row"><div class="alert-dot dot-amber"></div><div><div style="color:#fff;font-size:12px">Golf shop revenue 12% below May pace</div><div style="color:#556677;font-size:10px;margin-top:2px">Golf Operations · Month to date</div></div></div>
+        <div class="alert-row"><div class="alert-dot dot-green"></div><div><div style="color:#fff;font-size:12px">Member Guest pre-registrations: 94 of 96 slots filled</div><div style="color:#556677;font-size:10px;margin-top:2px">Events · June 21 Tournament</div></div></div>
+      </div>
+    </div>
+
+    <!-- MTD P&L -->
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase">P&amp;L — June MTD</div>
+        <div class="tag-green">+4.2% vs budget</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div class="metric-card"><div class="metric-lbl">Revenue</div><div class="metric-val" style="color:#4CAF7D;font-size:22px">$1.24M</div><div class="metric-sub">Budget $1.19M</div></div>
+        <div class="metric-card"><div class="metric-lbl">Expenses</div><div class="metric-val" style="font-size:22px">$980K</div><div class="metric-sub">Budget $970K</div></div>
+        <div class="metric-card"><div class="metric-lbl">Net</div><div class="metric-val" style="color:#C9A84C;font-size:22px">$260K</div><div class="metric-sub">Budget $220K</div></div>
+      </div>
+
+      <!-- dept bars -->
+      <div class="card" style="padding:12px 14px">
+        <div style="font-size:10px;letter-spacing:.1em;color:#8899AA;text-transform:uppercase;margin-bottom:10px">Revenue by Department</div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Golf Ops</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:82%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:48px;text-align:right;flex-shrink:0">$487K</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">F&amp;B</div>
+          <div class="bar-track"><div class="bar-fill bar-gold" style="width:60%"></div></div>
+          <div style="font-size:11px;color:#C9A84C;width:48px;text-align:right;flex-shrink:0">$354K</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Membership</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:55%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:48px;text-align:right;flex-shrink:0">$218K</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Beach Club</div>
+          <div class="bar-track"><div class="bar-fill bar-gold" style="width:30%"></div></div>
+          <div style="font-size:11px;color:#C9A84C;width:48px;text-align:right;flex-shrink:0">$112K</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Spa &amp; Fitness</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:18%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:48px;text-align:right;flex-shrink:0">$68K</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Labor -->
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase">Labor — Week of June 9</div>
+        <div class="tag-red">$4.2K over</div>
+      </div>
+      <div class="card" style="padding:12px 14px">
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">F&amp;B</div>
+          <div class="bar-track"><div class="bar-fill bar-red" style="width:92%"></div></div>
+          <div style="font-size:11px;color:#E05252;width:60px;text-align:right;flex-shrink:0">108.3%</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Golf Ops</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:74%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:60px;text-align:right;flex-shrink:0">96.1%</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Security</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:68%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:60px;text-align:right;flex-shrink:0">98.4%</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Admin</div>
+          <div class="bar-track"><div class="bar-fill bar-gold" style="width:62%"></div></div>
+          <div style="font-size:11px;color:#C9A84C;width:60px;text-align:right;flex-shrink:0">100.8%</div>
+        </div>
+        <div class="dept-row">
+          <div style="font-size:11px;color:#fff;width:80px;flex-shrink:0">Spa</div>
+          <div class="bar-track"><div class="bar-fill bar-green" style="width:50%"></div></div>
+          <div style="font-size:11px;color:#4CAF7D;width:60px;text-align:right;flex-shrink:0">91.2%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Pulse -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Today's Operational Pulse</div>
+      <div class="card" style="padding:12px 14px">
+        <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Tee sheet utilization</div><div style="font-size:13px;color:#4CAF7D;font-family:'Cormorant Garamond',serif">87% &nbsp;<span style="font-size:10px;color:#4CAF7D44">↑</span></div></div>
+        <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Dining covers today</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">214</div></div>
+        <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Active gate entries</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">38</div></div>
+        <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Member Guest registrations</div><div style="font-size:13px;color:#4CAF7D;font-family:'Cormorant Garamond',serif">94 / 96</div></div>
+        <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Open service requests</div><div style="font-size:13px;color:#E8A030;font-family:'Cormorant Garamond',serif">7</div></div>
+        <div class="pulse-row" style="border:none"><div style="font-size:12px;color:#8899AA">Beach Club capacity</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">61%</div></div>
+      </div>
+    </div>
+
+    <!-- AP Queue -->
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase">AP — Pending Approval</div>
+        <div class="tag-amber">3 items</div>
+      </div>
+      <div class="card" style="padding:12px 14px">
+        <div class="ap-row">
+          <div><div style="color:#fff;font-size:12px">Nxt Edge — F&amp;B Supplies</div><div style="color:#556677;font-size:10px;margin-top:1px">Submitted June 8 · 6 days pending</div></div>
+          <div style="text-align:right"><div style="color:#fff;font-size:13px;font-family:'Cormorant Garamond',serif">$18,440</div><button class="btn-sm" onclick="approveAP(this)">Approve</button></div>
+        </div>
+        <div class="ap-row">
+          <div><div style="color:#fff;font-size:12px">Course Maintenance — Chemicals</div><div style="color:#556677;font-size:10px;margin-top:1px">Submitted June 10 · 4 days pending</div></div>
+          <div style="text-align:right"><div style="color:#fff;font-size:13px;font-family:'Cormorant Garamond',serif">$12,080</div><button class="btn-sm" onclick="approveAP(this)">Approve</button></div>
+        </div>
+        <div class="ap-row" style="border:none">
+          <div><div style="color:#fff;font-size:12px">ABDI — Gate System Service</div><div style="color:#556677;font-size:10px;margin-top:1px">Submitted June 12 · 2 days pending</div></div>
+          <div style="text-align:right"><div style="color:#fff;font-size:13px;font-family:'Cormorant Garamond',serif">$6,885</div><button class="btn-sm" onclick="approveAP(this)">Approve</button></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-outline" onclick="goTo('login')">Sign Out</button>
+  </div>
+
+  <!-- EXEC NAV -->
+  <div class="bottom-nav">
+    <div class="exec-nav-item active" onclick="execTab('exec-main','exec')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></div>
+    <div class="exec-nav-item" onclick="execTab('exec-finance','exec-finance-screen')"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Finance</span></div>
+    <div class="exec-nav-item" onclick="execTab('exec-ops','exec-ops-screen')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg><span>Operations</span></div>
+    <div class="exec-nav-item" onclick="execTab('exec-members','exec-members-screen')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Members</span></div>
+    <div class="exec-nav-item" onclick="goTo('login')"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Sign Out</span></div>
+  </div>
 </div>
 
+<!-- EXEC FINANCE DETAIL -->
+<div class="screen" id="screen-exec-finance-screen">
+  <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
+  <div class="screen-header"><div class="screen-title">Financial Detail</div><div class="screen-subtitle">YTD &amp; Monthly Breakdown</div></div>
+  <div class="scroll-area" style="padding:0 20px 20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="metric-card"><div class="metric-lbl">YTD Revenue</div><div class="metric-val" style="color:#4CAF7D">$7.18M</div><div class="metric-sub">Budget $6.94M</div></div>
+      <div class="metric-card"><div class="metric-lbl">YTD Net</div><div class="metric-val" style="color:#C9A84C">$1.42M</div><div class="metric-sub">Budget $1.28M</div></div>
+      <div class="metric-card"><div class="metric-lbl">YTD Expenses</div><div class="metric-val">$5.76M</div><div class="metric-sub">Budget $5.66M</div></div>
+      <div class="metric-card"><div class="metric-lbl">Margin</div><div class="metric-val" style="color:#4CAF7D">19.8%</div><div class="metric-sub">Target 18.4%</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Monthly Revenue Trend</div>
+    <div class="card" style="padding:12px 14px;margin-bottom:14px">
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">Jan</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:70%"></div></div><div style="font-size:11px;color:#C9A84C;width:52px;text-align:right;flex-shrink:0">$1.04M</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">Feb</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:74%"></div></div><div style="font-size:11px;color:#C9A84C;width:52px;text-align:right;flex-shrink:0">$1.10M</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">Mar</div><div class="bar-track"><div class="bar-fill bar-green" style="width:82%"></div></div><div style="font-size:11px;color:#4CAF7D;width:52px;text-align:right;flex-shrink:0">$1.28M</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">Apr</div><div class="bar-track"><div class="bar-fill bar-green" style="width:86%"></div></div><div style="font-size:11px;color:#4CAF7D;width:52px;text-align:right;flex-shrink:0">$1.32M</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">May</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:76%"></div></div><div style="font-size:11px;color:#C9A84C;width:52px;text-align:right;flex-shrink:0">$1.20M</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#8899AA;width:44px;flex-shrink:0">Jun MTD</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:62%"></div></div><div style="font-size:11px;color:#C9A84C;width:52px;text-align:right;flex-shrink:0">$1.24M</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Current Stack — Annual Cost</div>
+    <div class="card" style="padding:12px 14px">
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">Jonas (Financial)</div><div style="font-size:12px;color:#fff">$42,700</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">Workday Adaptive</div><div style="font-size:12px;color:#fff">$31,900</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">Beanworks (AP)</div><div style="font-size:12px;color:#fff">$23,000</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">ADP (Payroll)</div><div style="font-size:12px;color:#fff">$120,000</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">Power BI</div><div style="font-size:12px;color:#fff">$16,000</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">ABDI (Security)</div><div style="font-size:12px;color:#fff">$27,540</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#8899AA">Nxt Edge / F&amp;B</div><div style="font-size:12px;color:#fff">$19,560</div></div>
+      <div class="charge-row" style="border:none"><div style="font-size:12px;color:#E05252;font-weight:500">Total Known Stack</div><div style="font-size:13px;color:#E05252;font-family:'Cormorant Garamond',serif">$285,788</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="exec-nav-item" onclick="goTo('exec')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></div>
+    <div class="exec-nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Finance</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-ops-screen')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg><span>Operations</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-members-screen')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Members</span></div>
+    <div class="exec-nav-item" onclick="goTo('login')"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Sign Out</span></div>
+  </div>
+</div>
+
+<!-- EXEC OPS -->
+<div class="screen" id="screen-exec-ops-screen">
+  <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
+  <div class="screen-header"><div class="screen-title">Operations</div><div class="screen-subtitle">Live Club Status · June 14</div></div>
+  <div class="scroll-area" style="padding:0 20px 20px">
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Golf Operations</div>
+    <div class="card" style="margin-bottom:12px;padding:12px 14px">
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Tee sheet utilization</div><div style="font-size:13px;color:#4CAF7D;font-family:'Cormorant Garamond',serif">87%</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Rounds today (projected)</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">104</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Cart fleet deployed</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">38 of 44</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Course condition</div><div class="tag-green">Excellent</div></div>
+      <div class="pulse-row" style="border:none"><div style="font-size:12px;color:#8899AA">Irrigation last run</div><div style="font-size:13px;color:#8899AA;font-family:'Cormorant Garamond',serif">5:30 AM</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">F&amp;B Operations</div>
+    <div class="card" style="margin-bottom:12px;padding:12px 14px">
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Main Dining — covers today</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">128</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Beach Club Grill — covers</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">54</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">19th Hole — covers</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">32</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Revenue pace vs Friday</div><div class="tag-green">+11%</div></div>
+      <div class="pulse-row" style="border:none"><div style="font-size:12px;color:#8899AA">Labor vs budget (today)</div><div class="tag-red">+8.3%</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Security &amp; Access</div>
+    <div class="card" style="padding:12px 14px">
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Active gate entries</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">38</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Guest vehicles on property</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">12</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Security incidents today</div><div style="font-size:13px;color:#4CAF7D;font-family:'Cormorant Garamond',serif">0</div></div>
+      <div class="pulse-row" style="border:none"><div style="font-size:12px;color:#8899AA">Camera system status</div><div class="tag-green">All Online</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="exec-nav-item" onclick="goTo('exec')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-finance-screen')"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Finance</span></div>
+    <div class="exec-nav-item active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg><span>Operations</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-members-screen')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Members</span></div>
+    <div class="exec-nav-item" onclick="goTo('login')"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Sign Out</span></div>
+  </div>
+</div>
+
+<!-- EXEC MEMBERS -->
+<div class="screen" id="screen-exec-members-screen">
+  <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>●●●</span><span>WiFi</span><span>▮▮▮</span></div></div>
+  <div class="screen-header"><div class="screen-title">Membership</div><div class="screen-subtitle">500 Active Members · June 2026</div></div>
+  <div class="scroll-area" style="padding:0 20px 20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="metric-card"><div class="metric-lbl">Active Members</div><div class="metric-val">500</div><div class="metric-sub">Full capacity</div></div>
+      <div class="metric-card"><div class="metric-lbl">Waitlist</div><div class="metric-val" style="color:#C9A84C">74</div><div class="metric-sub">Avg wait 18 mo</div></div>
+      <div class="metric-card"><div class="metric-lbl">Avg YTD Spend</div><div class="metric-val" style="color:#4CAF7D">$9.2K</div><div class="metric-sub">vs $8.4K last yr</div></div>
+      <div class="metric-card"><div class="metric-lbl">Renewals Due</div><div class="metric-val" style="color:#E8A030">12</div><div class="metric-sub">Next 30 days</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Membership by Type</div>
+    <div class="card" style="padding:12px 14px;margin-bottom:12px">
+      <div class="dept-row"><div style="font-size:11px;color:#fff;width:100px;flex-shrink:0">Golf &amp; Social</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:80%"></div></div><div style="font-size:11px;color:#C9A84C;width:36px;text-align:right;flex-shrink:0">310</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#fff;width:100px;flex-shrink:0">Social Only</div><div class="bar-track"><div class="bar-fill bar-green" style="width:38%"></div></div><div style="font-size:11px;color:#4CAF7D;width:36px;text-align:right;flex-shrink:0">120</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#fff;width:100px;flex-shrink:0">Corporate</div><div class="bar-track"><div class="bar-fill bar-gold" style="width:22%"></div></div><div style="font-size:11px;color:#C9A84C;width:36px;text-align:right;flex-shrink:0">48</div></div>
+      <div class="dept-row"><div style="font-size:11px;color:#fff;width:100px;flex-shrink:0">Junior</div><div class="bar-track"><div class="bar-fill bar-green" style="width:14%"></div></div><div style="font-size:11px;color:#4CAF7D;width:36px;text-align:right;flex-shrink:0">22</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.14em;color:#8899AA;text-transform:uppercase;margin-bottom:8px">Today's Active Members</div>
+    <div class="card" style="padding:12px 14px">
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">On property now</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">38</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Tee times today</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">104 members</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Dining reservations</div><div style="font-size:13px;color:#fff;font-family:'Cormorant Garamond',serif">214 covers</div></div>
+      <div class="pulse-row"><div style="font-size:12px;color:#8899AA">Event registrations open</div><div style="font-size:13px;color:#C9A84C;font-family:'Cormorant Garamond',serif">2 events</div></div>
+      <div class="pulse-row" style="border:none"><div style="font-size:12px;color:#8899AA">Member since longest</div><div style="font-size:13px;color:#8899AA;font-family:'Cormorant Garamond',serif">1987 · 39 yrs</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="exec-nav-item" onclick="goTo('exec')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-finance-screen')"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Finance</span></div>
+    <div class="exec-nav-item" onclick="goTo('exec-ops-screen')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg><span>Operations</span></div>
+    <div class="exec-nav-item active"><svg viewBox="0 0 24 24"><path d="M17 21v-
+    <div class="exec-nav-item active"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Members</span></div>
+    <div class="exec-nav-item" onclick="goTo('login')"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>Sign Out</span></div>
+  </div>
+</div>
+
+</div>
 <script>
+var currentPersona='member';
+function selectPersona(p){
+  currentPersona=p;
+  var mc=document.getElementById('card-member');
+  var ec=document.getElementById('card-exec');
+  var ei=document.getElementById('exec-icon');
+  if(p==='member'){
+    mc.classList.add('selected');ec.classList.remove('selected');
+    ei.setAttribute('stroke','#556677');
+    document.getElementById('login-email').value='james.whitfield@fc.com';
+  } else {
+    ec.classList.add('selected');mc.classList.remove('selected');
+    ei.setAttribute('stroke','#C9A84C');
+    document.getElementById('login-email').value='r.harmon@frenchmanscreek.com';
+  }
+}
+function signIn(){
+  if(currentPersona==='exec'){goTo('exec');}else{goTo('home');}
+}
 function goTo(s){
   document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
   document.getElementById('screen-'+s).classList.add('active');
@@ -462,6 +663,7 @@ function goTo(s){
   if(sa)sa.scrollTop=0;
   if(s==='dining')closeDining();
 }
+function execTab(panel,screen){goTo(screen);}
 function selectDate(btn,label){
   btn.closest('.screen').querySelectorAll('.date-pill').forEach(b=>{b.classList.remove('sel');b.classList.add('unsel')});
   btn.classList.add('sel');btn.classList.remove('unsel');
@@ -470,7 +672,7 @@ function selectDate(btn,label){
 }
 function bookSlot(id,time){
   var slot=document.getElementById('slot-'+id);
-  slot.innerHTML='<div><div style="color:#C9A84C;font-size:16px;font-family:\'Cormorant Garamond\',serif">'+time+'</div><div style="color:#8899AA;font-size:11px;margin-top:2px">2 players · Regulation</div></div><div class="tag">Your Booking</div>';
+  slot.innerHTML='<div><div style="color:#C9A84C;font-size:16px;font-family:'Cormorant Garamond',serif">'+time+'</div><div style="color:#8899AA;font-size:11px;margin-top:2px">2 players · Regulation</div></div><div class="tag">Your Booking</div>';
   slot.classList.add('booked');slot.onclick=null;
   document.getElementById('confirm-text').textContent='Tee time booked — '+time+', June 14';
   document.getElementById('tee-confirm').style.display='block';
@@ -492,15 +694,15 @@ function selTime(btn){
   document.querySelectorAll('#dining-book .date-pill').forEach(b=>{b.classList.add('unsel');b.classList.remove('sel')});
   btn.classList.add('sel');btn.classList.remove('unsel');
 }
-function confirmDining(){
-  document.getElementById('dining-confirm').style.display='block';
-}
+function confirmDining(){document.getElementById('dining-confirm').style.display='block';}
 function registerEvent(n){
   var btn=document.getElementById('evt-btn-'+n);
-  btn.textContent='Registered';
-  btn.style.background='#C9A84C22';
-  btn.style.color='#C9A84C';
-  btn.style.pointerEvents='none';
+  btn.textContent='Registered';btn.style.background='#C9A84C22';btn.style.color='#C9A84C';btn.style.pointerEvents='none';
+}
+function approveAP(btn){
+  var row=btn.closest('.ap-row');
+  btn.textContent='Approved';btn.style.background='#4CAF7D22';btn.style.color='#4CAF7D';btn.style.borderColor='#4CAF7D33';btn.style.pointerEvents='none';
+  row.style.opacity='.5';
 }
 </script>
 </body>
