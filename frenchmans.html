@@ -164,7 +164,8 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
       </div>
     </div>
     <div style="text-align:center">
-      <div style="font-size:10px;letter-spacing:.1em;color:#0A3060;text-transform:uppercase">Member Services: (561) 626-2500</div>
+      <div style="font-size:10px;letter-spacing:.1em;color:#0A3060;text-transform:uppercase;margin-bottom:6px">Member Services: (561) 626-2500</div>
+      <div style="font-size:9px;letter-spacing:.08em;color:#6BAEC688">Powered by <a href="https://skalatsky.com" style="color:#6BAEC688;text-decoration:none">skalatsky.com</a></div>
     </div>
   </div>
 </div>
@@ -546,7 +547,71 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     <div class="nav-item" onclick="goTo('staff-schedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Schedule</span></div>
     <div class="nav-item" onclick="goTo('staff-tasks')"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Tasks</span></div>
     <div class="nav-item" onclick="goTo('staff-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Messages</span></div>
-    <div class="nav-item" onclick="goTo('staff-pto')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>HR</span></div>
+    <div class="nav-item" onclick="goTo('staff-comms')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Comms</span></div>
+  </div>
+</div>
+
+<!-- STAFF COMMS & DESIGN - MODULE 7 -->
+<div class="screen" id="screen-staff-comms">
+  <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span>&#9679;&#9679;&#9679; WiFi</span></div></div>
+  <div style="padding:12px 18px 8px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div onclick="goTo('staff')" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6BAEC6" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></div>
+    <div><div class="screen-title">Communications</div><div class="screen-subtitle">Announcements · Menus · Projects · Design</div></div>
+  </div>
+  <div class="scroll-area" style="padding:0 18px 18px">
+    <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Announcement Builder</div>
+    <div class="card-white" style="margin-bottom:12px">
+      <div style="margin-bottom:12px"><label class="field-label">Send To</label>
+        <select class="select-input" style="background:#f0f4f8;color:#0A1628;border:1px solid #dde4ee">
+          <option>All Members (500)</option>
+          <option>Golf Members Only</option>
+          <option>Social Members Only</option>
+          <option>All Staff</option>
+          <option>F&amp;B Staff Only</option>
+          <option>Golf Operations Staff</option>
+        </select>
+      </div>
+      <div style="margin-bottom:12px"><label class="field-label">Subject</label><input type="text" placeholder="e.g. Range Closure - Member Guest Setup"></div>
+      <div style="margin-bottom:12px"><label class="field-label">Message</label><textarea placeholder="Type your announcement here..." style="height:72px;border-bottom:1px solid #dde4ee"></textarea></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-gold" onclick="sendAnnouncement(this)" style="flex:2">Send Announcement</button>
+        <button class="btn-navy" style="flex:1">Save Draft</button>
+      </div>
+      <div id="announce-confirm" style="display:none;margin-top:10px"><div class="confirm-badge"><div class="check-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="color:#C9A84C;font-size:12px;font-weight:500">Announcement Sent</div><div style="color:#0A3060;font-size:10px">Push notification delivered to all recipients</div></div></div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Recent Announcements</div>
+    <div class="card-white" style="margin-bottom:12px">
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Range Closes 4pm - Member Guest Setup</div><div style="font-size:10px;color:#0A3060;margin-top:1px">All Members · June 14 · 9:00 AM</div></div><div class="tag-green">Sent</div></div>
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Beachfront - New Summer Menu Live</div><div style="font-size:10px;color:#0A3060;margin-top:1px">All Members · June 13 · 2:00 PM</div></div><div class="tag-green">Sent</div></div>
+      <div class="charge-row" style="border:none"><div><div style="font-size:12px;color:#0A1628">July 4th Celebration - Early Registration</div><div style="font-size:10px;color:#0A3060;margin-top:1px">All Members · June 10 · 10:00 AM</div></div><div class="tag-green">Sent</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Menus &amp; Event Collateral</div>
+    <div class="card-white" style="margin-bottom:12px">
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Beachfront - Summer Menu</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Updated June 13 · Chef Marco · Current</div></div><button class="btn-sm-navy">View</button></div>
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Main Dining - Dinner Menu</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Updated June 1 · Current version</div></div><button class="btn-sm-navy">View</button></div>
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Member Guest Tournament Program</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Draft · June 21 event</div></div><button class="btn-sm-navy">View</button></div>
+      <div class="charge-row" style="border:none"><div><div style="font-size:12px;color:#0A1628">Summer Wine Dinner Invitation</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Final · June 28 event</div></div><button class="btn-sm-navy">View</button></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Project Tracker</div>
+    <div class="card-white" style="margin-bottom:12px">
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Member Guest Tournament Setup</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Due June 20 · 3 tasks remaining</div></div><div class="tag-amber">In Progress</div></div>
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">Beachfront Rebrand Signage</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Due June 30 · Awaiting approval</div></div><div class="tag-amber">In Progress</div></div>
+      <div class="charge-row"><div><div style="font-size:12px;color:#0A1628">July 4th Event Collateral</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Due June 25 · Not started</div></div><div class="tag-red">Pending</div></div>
+      <div class="charge-row" style="border:none"><div><div style="font-size:12px;color:#0A1628">Fall Membership Brochure</div><div style="font-size:10px;color:#0A3060;margin-top:1px">Due August 1 · Early planning</div></div><div class="tag-blue">Planned</div></div>
+    </div>
+    <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Module 7 - Systems Replaced</div>
+    <div class="card-white">
+      <div class="charge-row"><div style="font-size:12px;color:#0A1628">Adobe Express + Creative Cloud + Stock</div><div class="tag-red">Eliminated</div></div>
+      <div class="charge-row"><div style="font-size:12px;color:#0A1628">Canva (menu creation)</div><div class="tag-red">Eliminated</div></div>
+      <div class="charge-row" style="border:none"><div style="font-size:12px;color:#0A1628">Monday (project scheduling)</div><div class="tag-red">Eliminated</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="goTo('staff')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Home</span></div>
+    <div class="nav-item" onclick="goTo('staff-schedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Schedule</span></div>
+    <div class="nav-item" onclick="goTo('staff-tasks')"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Tasks</span></div>
+    <div class="nav-item" onclick="goTo('staff-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Messages</span></div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Comms</span></div>
   </div>
 </div>
 
@@ -793,17 +858,21 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     </div>
     <div style="font-size:10px;letter-spacing:.12em;color:#6BAEC6;text-transform:uppercase;margin-bottom:8px">Current Stack — Annual Cost</div>
     <div class="card" style="padding:10px 12px;margin-bottom:12px">
+      <div style="font-size:9px;letter-spacing:.1em;color:#6BAEC6;text-transform:uppercase;margin-bottom:8px">Replaceable Systems</div>
       <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Jonas (Financial)</div><div style="font-size:11px;color:#fff">$42,700</div></div>
       <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Workday Adaptive</div><div style="font-size:11px;color:#fff">$31,900</div></div>
       <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Beanworks (AP)</div><div style="font-size:11px;color:#fff">$23,000</div></div>
-      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">ADP (reporting layer only)</div><div style="font-size:11px;color:#fff">$120,000</div></div>
       <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Power BI</div><div style="font-size:11px;color:#fff">$16,000</div></div>
       <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">ABDI (Security)</div><div style="font-size:11px;color:#fff">$27,540</div></div>
-      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Nxt Edge / F&amp;B</div><div style="font-size:11px;color:#fff">$19,560</div></div>
-      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Additional Systems (est.)</div><div style="font-size:11px;color:#fff">~$65,000</div></div>
-      <div class="ap-row" style="border:none"><div style="font-size:11px;color:#E05252;font-weight:500">Total Current Stack</div><div style="font-size:13px;color:#E05252;font-family:'Cormorant Garamond',serif">~$350,788/yr</div></div>
+      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Adobe Suite</div><div style="font-size:11px;color:#fff">$5,088</div></div>
+      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">Nxt Edge (F&amp;B + Purchasing)</div><div style="font-size:11px;color:#fff">$19,560</div></div>
+      <div class="ap-row"><div style="font-size:11px;color:#6BAEC6">14 Additional Systems (TBD)</div><div style="font-size:11px;color:#E8A030">~$50,000 est.</div></div>
+      <div class="ap-row" style="border-bottom:1px solid #1e3050;padding-bottom:10px;margin-bottom:10px"><div style="font-size:11px;color:#6BAEC6;font-weight:500">Known Replaceable Total</div><div style="font-size:12px;color:#E05252;font-family:'Cormorant Garamond',serif">~$215,788/yr</div></div>
+      <div style="font-size:9px;letter-spacing:.1em;color:#6BAEC6;text-transform:uppercase;margin-bottom:8px">Retained via API</div>
+      <div class="ap-row" style="border:none"><div style="font-size:11px;color:#6BAEC6">ADP Payroll Processing</div><div style="font-size:11px;color:#4CAF7D">Retained — not replaced</div></div>
     </div>
 
+<div style="text-align:center;margin-top:16px;padding-bottom:4px"><div style="font-size:9px;letter-spacing:.1em;color:#6BAEC666;text-transform:uppercase">Powered by <a href="https://skalatsky.com" style="color:#6BAEC666;text-decoration:none">skalatsky.com</a></div></div>
     <!-- ROI SECTION -->
     <div style="font-size:10px;letter-spacing:.12em;color:#6BAEC6;text-transform:uppercase;margin-bottom:8px">Platform ROI — S&amp;A Club OS</div>
 
@@ -811,16 +880,16 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     <div class="card" style="padding:10px 12px;margin-bottom:10px">
       <div style="font-size:9px;letter-spacing:.1em;color:#6BAEC6;text-transform:uppercase;margin-bottom:10px">FC · Annual Cost Comparison</div>
       <div class="ap-row">
-        <div><div style="font-size:11px;color:#fff">Current Stack</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">All known + estimated systems</div></div>
-        <div style="font-size:13px;color:#E05252;font-family:'Cormorant Garamond',serif">$350,788</div>
+        <div><div style="font-size:11px;color:#fff">Replaceable Stack</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">Known + estimated · ADP excluded</div></div>
+        <div style="font-size:13px;color:#E05252;font-family:'Cormorant Garamond',serif">~$215,788</div>
       </div>
       <div class="ap-row">
-        <div><div style="font-size:11px;color:#fff">S&amp;A Club OS</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">$20,000/mo · ADP payroll retained via API</div></div>
-        <div style="font-size:13px;color:#C9A84C;font-family:'Cormorant Garamond',serif">$240,000</div>
+        <div><div style="font-size:11px;color:#fff">Club OS Annual License</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">All modules · All personas · ADP retained</div></div>
+        <div style="font-size:13px;color:#C9A84C;font-family:'Cormorant Garamond',serif">$132,000</div>
       </div>
       <div class="ap-row" style="border:none;background:#4CAF7D11;margin:0 -12px;padding:10px 12px;border-radius:0 0 3px 3px">
-        <div><div style="font-size:11px;color:#4CAF7D;font-weight:500">Annual Savings — FC</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">ADP payroll engine retained via API connector</div></div>
-        <div style="font-size:15px;color:#4CAF7D;font-family:'Cormorant Garamond',serif;font-weight:500">$110,788</div>
+        <div><div style="font-size:11px;color:#4CAF7D;font-weight:500">Net Annual Savings — FC</div><div style="font-size:10px;color:#6BAEC6;margin-top:1px">39% reduction · RSM assessment validates full number</div></div>
+        <div style="font-size:15px;color:#4CAF7D;font-family:'Cormorant Garamond',serif;font-weight:500">~$83,788</div>
       </div>
     </div>
 
@@ -1166,6 +1235,7 @@ label.field-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;c
     </div>
     <div style="font-size:10px;letter-spacing:.12em;color:#0A3060;text-transform:uppercase;margin-bottom:8px">Systems Replaced by Club OS</div>
     <div class="card-white"><div class="charge-row"><div style="font-size:12px;color:#0A1628">HotSchedules</div><div class="tag-red">Eliminated</div></div><div class="charge-row"><div style="font-size:12px;color:#0A1628">SevenRooms</div><div class="tag-red">Eliminated</div></div><div class="charge-row"><div style="font-size:12px;color:#0A1628">Nxt Edge</div><div class="tag-red">Eliminated</div></div><div class="charge-row" style="border:none"><div style="font-size:12px;color:#0A1628">Relay walkie-talkie app</div><div class="tag-red">Eliminated</div></div></div>
+<div style="text-align:center;margin-top:16px;padding-bottom:4px"><div style="font-size:9px;letter-spacing:.1em;color:#6BAEC666;text-transform:uppercase">Powered by <a href="https://skalatsky.com" style="color:#6BAEC666;text-decoration:none">skalatsky.com</a></div></div>
   </div>
   <div class="bottom-nav">
     <div class="nav-item" onclick="goTo('staff-fnb')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Home</span></div>
@@ -1321,6 +1391,22 @@ function fnbClockOut(){
   document.getElementById('fnb-clock-out-btn').textContent='Out: '+t;
   document.getElementById('fnb-clock-out-btn').style.background='#E05252';
   document.getElementById('fnb-clock-out-btn').style.pointerEvents='none';
+}
+function sendAnnouncement(btn){
+  document.getElementById('announce-confirm').style.display='block';
+  btn.style.opacity='.5'; btn.style.pointerEvents='none';
+  setTimeout(function(){ 
+    document.getElementById('announce-confirm').style.display='none';
+    btn.style.opacity='1'; btn.style.pointerEvents='auto';
+  }, 3000);
+}
+function sendAnnouncement(btn){
+  document.getElementById('announce-confirm').style.display='block';
+  btn.style.opacity='.5'; btn.style.pointerEvents='none';
+  setTimeout(function(){
+    document.getElementById('announce-confirm').style.display='none';
+    btn.style.opacity='1'; btn.style.pointerEvents='auto';
+  }, 3000);
 }
 function submitOrder(btn){
   document.getElementById('order-confirm').style.display='block';
