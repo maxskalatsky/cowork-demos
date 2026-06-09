@@ -1,110 +1,336 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Growth Diagnostic — Skalatsky & Associates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --navy: #0B2545;
-    --navy2: #1A3A6B;
-    --teal: #0891B2;
-    --teal-light: #ECFEFF;
-    --blue: #1D4ED8;
-    --blue-light: #EFF6FF;
-    --gray-50: #F8FAFC;
-    --gray-100: #F1F5F9;
-    --gray-200: #E2E8F0;
-    --gray-400: #94A3B8;
+    --primary: #006699;
+    --primary-dark: #004F82;
+    --primary-mid: #0069AA;
+    --accent: #00C99C;
+    --accent-light: #e6faf6;
+    --primary-light: #e6f2f8;
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
     --gray-600: #475569;
-    --gray-800: #1E293B;
-    --red: #DC2626;
-    --red-light: #FEF2F2;
-    --amber: #D97706;
-    --amber-light: #FFFBEB;
+    --gray-800: #1e293b;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
     --green: #059669;
-    --green-light: #ECFDF5;
-    --shadow: 0 2px 20px rgba(11,37,69,0.09);
+    --green-light: #ecfdf5;
+    --shadow: 0 2px 16px rgba(0,102,153,0.10);
+    --radius: 10px;
   }
 
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 48px 20px 80px; }
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 20px 80px;
+  }
 
-  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .brand-mark { width: 36px; height: 36px; background: var(--navy); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
-  .brand-name { font-size: 15px; font-weight: 700; color: var(--navy); }
-  .brand-sep { color: var(--gray-400); }
-  .brand-sub { font-size: 13px; color: var(--gray-400); }
+  /* ── Brand bar ── */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .brand img {
+    height: 48px;
+    width: auto;
+    display: block;
+  }
+  .brand-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--gray-200);
+  }
+  .brand-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: 0.3px;
+  }
 
-  .hero { text-align: center; max-width: 560px; margin-bottom: 40px; }
-  .hero-eyebrow { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 16px; }
-  .hero-title { font-size: 30px; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 14px; }
-  .hero-body { font-size: 15px; color: var(--gray-600); line-height: 1.65; margin-bottom: 20px; }
-  .hero-meta { display: flex; justify-content: center; gap: 20px; font-size: 13px; color: var(--gray-400); margin-bottom: 28px; }
-  .btn-start { background: var(--navy); color: white; padding: 14px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: background 0.15s; }
-  .btn-start:hover { background: var(--navy2); }
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    max-width: 580px;
+    margin-bottom: 40px;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(0,201,156,0.3);
+  }
+  .hero-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .hero-body {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .pillars {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .pillar-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid rgba(0,102,153,0.25);
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--gray-400);
+    margin-bottom: 28px;
+  }
+  .btn-start {
+    background: var(--primary);
+    color: white;
+    padding: 14px 38px;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Open Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-start:hover { background: var(--primary-dark); }
 
-  .pillars { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
-  .pillar-chip { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid; }
-  .p-brand { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
-  .p-digital { background: #ECFEFF; color: #0891B2; border-color: #A5F3FC; }
-  .p-revenue { background: #ECFDF5; color: #059669; border-color: #A7F3D0; }
-  .p-tech { background: #FDF4FF; color: #9333EA; border-color: #E9D5FF; }
-
+  /* ── Container ── */
   .container { width: 100%; max-width: 620px; }
 
-  .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-  .progress-track { flex: 1; height: 3px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.4s ease; }
-  .progress-label { font-size: 12px; color: var(--gray-400); font-weight: 600; white-space: nowrap; }
+  /* ── Progress ── */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 600;
+    white-space: nowrap;
+  }
 
-  .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); box-shadow: var(--shadow); padding: 36px; }
+  /* ── Card ── */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+    padding: 36px;
+  }
   .step { display: none; }
   .step.active { display: block; }
-  .step-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
-  .step-q { font-size: 21px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 6px; }
-  .step-hint { font-size: 13px; color: var(--gray-400); margin-bottom: 26px; line-height: 1.5; }
 
+  .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .step-q {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+  .step-hint {
+    font-size: 13px;
+    color: var(--gray-400);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  /* ── Options ── */
   .options { display: flex; flex-direction: column; gap: 9px; }
-  .option { display: flex; align-items: flex-start; gap: 14px; padding: 15px 16px; border: 2px solid var(--gray-200); border-radius: 10px; cursor: pointer; transition: all 0.15s; background: white; text-align: left; width: 100%; }
-  .option:hover { border-color: var(--teal); background: var(--teal-light); }
-  .option.selected { border-color: var(--teal); background: var(--teal-light); }
-  .option-radio { width: 18px; height: 18px; border: 2px solid var(--gray-200); border-radius: 50%; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-  .option.selected .option-radio { background: var(--teal); border-color: var(--teal); }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 14px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+    text-align: left;
+    width: 100%;
+    font-family: 'Open Sans', sans-serif;
+  }
+  .option:hover { border-color: var(--primary); background: var(--primary-light); }
+  .option.selected { border-color: var(--primary); background: var(--primary-light); }
+  .option-radio {
+    width: 18px; height: 18px;
+    border: 2px solid var(--gray-200);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .option.selected .option-radio { background: var(--primary); border-color: var(--primary); }
   .option.selected .option-radio::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; display: block; }
   .option-label { font-size: 14px; font-weight: 600; color: var(--gray-800); line-height: 1.3; }
   .option-desc { font-size: 12px; color: var(--gray-400); margin-top: 2px; line-height: 1.4; }
 
-  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
-  .btn { padding: 11px 26px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
+  /* ── Nav ── */
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 26px; }
+  .btn {
+    padding: 11px 26px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Open Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
   .btn-back { background: none; color: var(--gray-600); border: 1px solid var(--gray-200); }
   .btn-back:hover { background: var(--gray-100); }
-  .btn-next { background: var(--navy); color: white; min-width: 110px; }
-  .btn-next:hover { background: var(--navy2); }
+  .btn-next { background: var(--primary); color: white; min-width: 110px; }
+  .btn-next:hover { background: var(--primary-dark); }
   .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
 
+  /* ── Results ── */
   .results { display: none; }
   .results.active { display: block; }
 
-  .results-hero { background: var(--navy); border-radius: 14px; padding: 32px; margin-bottom: 24px; }
-  .results-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
-  .results-title { font-size: 22px; font-weight: 800; color: white; line-height: 1.3; margin-bottom: 10px; }
-  .results-summary { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; }
-  .cap-match { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
-  .cap-tag { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-  .cap-tag.primary { background: var(--teal); color: white; }
-  .cap-tag.secondary { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); }
+  .results-hero {
+    background: var(--primary-dark);
+    border-radius: var(--radius);
+    padding: 30px;
+    margin-bottom: 20px;
+  }
+  .results-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .results-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .results-summary { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.65; }
+  .cap-match { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .cap-tag { padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .cap-tag.primary { background: var(--accent); color: white; }
+  .cap-tag.secondary { background: rgba(255,255,255,0.13); color: rgba(255,255,255,0.75); }
 
-  .findings-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 14px; margin-top: 8px; }
+  /* ── Speed box ── */
+  .speed-box {
+    background: var(--primary-light);
+    border: 1px solid rgba(0,102,153,0.2);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 18px;
+  }
+  .speed-label { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .speed-row { display: flex; align-items: center; gap: 12px; }
+  .speed-track { flex: 1; height: 5px; background: rgba(0,102,153,0.15); border-radius: 4px; overflow: hidden; }
+  .speed-fill { height: 100%; background: var(--primary); border-radius: 4px; }
+  .speed-text { font-size: 12px; color: var(--primary); font-weight: 700; white-space: nowrap; }
 
-  .finding { background: white; border-radius: 12px; border: 1px solid var(--gray-200); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); }
-  .finding-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--gray-100); }
+  /* ── Findings ── */
+  .findings-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 12px;
+    margin-top: 4px;
+  }
+  .finding {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .finding-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--gray-100);
+  }
   .finding-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .finding-title { font-size: 14px; font-weight: 700; color: var(--gray-800); flex: 1; }
-  .finding-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
-  .finding-body { padding: 14px 18px; font-size: 13px; color: var(--gray-600); line-height: 1.6; }
-  .finding-cta { padding: 0 18px 14px; font-size: 12px; font-weight: 700; color: var(--teal); }
+  .finding-pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 10px; }
+  .finding-body { padding: 13px 18px; font-size: 13px; color: var(--gray-600); line-height: 1.65; }
+  .finding-cta { padding: 0 18px 13px; font-size: 12px; font-weight: 700; color: var(--primary); }
 
   .sev-critical .finding-dot { background: var(--red); }
   .sev-critical .finding-pill { background: var(--red-light); color: var(--red); }
@@ -113,57 +339,92 @@
   .sev-optimize .finding-dot { background: var(--green); }
   .sev-optimize .finding-pill { background: var(--green-light); color: var(--green); }
 
-  .speed-box { background: var(--blue-light); border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; }
-  .speed-label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
-  .speed-row { display: flex; align-items: center; gap: 12px; }
-  .speed-track { flex: 1; height: 6px; background: rgba(29,78,216,0.15); border-radius: 4px; overflow: hidden; }
-  .speed-fill { height: 100%; background: var(--blue); border-radius: 4px; }
-  .speed-text { font-size: 12px; color: var(--blue); font-weight: 700; white-space: nowrap; }
-
-  .cta-box { background: var(--navy); border-radius: 14px; padding: 28px; text-align: center; margin-top: 8px; }
-  .cta-box h3 { font-size: 19px; font-weight: 800; color: white; margin-bottom: 8px; }
-  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 20px; line-height: 1.5; }
-  .cta-box a { display: inline-block; background: var(--teal); color: white; padding: 13px 30px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity 0.15s; }
+  /* ── CTA box ── */
+  .cta-box {
+    background: var(--primary-dark);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .cta-box h3 { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
+  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 20px; line-height: 1.6; }
+  .cta-box a {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 13px 30px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Open Sans', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
   .cta-box a:hover { opacity: 0.88; }
+
+  /* ── Divider ── */
+  .sa-divider {
+    width: 60%;
+    max-width: 200px;
+    height: 2px;
+    background: var(--primary);
+    margin: 10px auto 18px auto;
+    border: none;
+  }
+
   .restart { text-align: center; margin-top: 16px; }
-  .restart button { background: none; border: none; color: var(--gray-400); font-size: 13px; cursor: pointer; text-decoration: underline; }
+  .restart button {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 24px; }
+    .hero-title { font-size: 22px; }
+    .results-hero { padding: 22px; }
+  }
 </style>
 </head>
 <body>
 
+<!-- Brand bar -->
 <div class="brand">
-  <div class="brand-mark">S</div>
-  <span class="brand-name">Skalatsky & Associates</span>
-  <span class="brand-sep">/</span>
-  <span class="brand-sub">Growth Diagnostic</span>
+  <img src="https://raw.githubusercontent.com/maxskalatsky/cowork-demos/main/skalatsky_associates_logo.jfif" alt="Skalatsky & Associates" />
+  <div class="brand-divider"></div>
+  <span class="brand-label">Growth Diagnostic</span>
 </div>
 
+<!-- Hero -->
 <div class="hero">
   <div class="hero-eyebrow">Free · 3 Minutes · Instant Results</div>
   <div class="hero-title">Find out which capability gap is costing you the most</div>
   <div class="hero-body">Answer 7 questions. We'll map your exact friction points against S&A's four growth capabilities and show you where to focus first.</div>
   <div class="pillars">
-    <span class="pillar-chip p-brand">Build a Brand</span>
-    <span class="pillar-chip p-digital">Win Digital</span>
-    <span class="pillar-chip p-revenue">Grow Revenue</span>
-    <span class="pillar-chip p-tech">Tech Products</span>
+    <span class="pillar-chip">Build a Brand</span>
+    <span class="pillar-chip">Win Digital</span>
+    <span class="pillar-chip">Grow Revenue</span>
+    <span class="pillar-chip">Tech Products</span>
   </div>
   <div class="hero-meta">
-    <span>7 questions</span>
-    <span>·</span>
-    <span>No email required</span>
-    <span>·</span>
-    <span>Personalized output</span>
+    <span>7 questions</span><span>·</span><span>No email required</span><span>·</span><span>Personalized output</span>
   </div>
   <button class="btn-start" onclick="startQuiz()">Start the Diagnostic →</button>
 </div>
 
 <div class="container">
+
   <div class="progress-wrap" id="progress-wrap" style="display:none;">
     <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <div class="progress-label" id="progress-label">1 of 7</div>
   </div>
 
+  <!-- Q1 -->
   <div class="card step" id="q1">
     <div class="step-num">Question 1 of 7</div>
     <div class="step-q">What best describes your role?</div>
@@ -177,10 +438,11 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(1)">Back</button><button class="btn btn-next" id="next1" onclick="goNext(1)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q2 -->
   <div class="card step" id="q2">
     <div class="step-num">Question 2 of 7</div>
     <div class="step-q">Where is your company right now?</div>
-    <div class="step-hint">Be honest — different stages have very different leverage points.</div>
+    <div class="step-hint">Different stages have very different leverage points.</div>
     <div class="options">
       <button class="option" onclick="pick(2,'pre')"><div class="option-radio"></div><div><div class="option-label">Pre-revenue / Early stage</div><div class="option-desc">Building the foundation — positioning, product, first customers</div></div></button>
       <button class="option" onclick="pick(2,'growth')"><div class="option-radio"></div><div><div class="option-label">Growth mode ($1M–$20M ARR)</div><div class="option-desc">Revenue exists but systems and team haven't caught up</div></div></button>
@@ -190,6 +452,7 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(2)">Back</button><button class="btn btn-next" id="next2" onclick="goNext(2)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q3 -->
   <div class="card step" id="q3">
     <div class="step-num">Question 3 of 7</div>
     <div class="step-q">When a prospect lands on your site or hears your pitch — what happens?</div>
@@ -203,6 +466,7 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(3)">Back</button><button class="btn btn-next" id="next3" onclick="goNext(3)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q4 -->
   <div class="card step" id="q4">
     <div class="step-num">Question 4 of 7</div>
     <div class="step-q">How is inbound working for you right now?</div>
@@ -216,6 +480,7 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(4)">Back</button><button class="btn btn-next" id="next4" onclick="goNext(4)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q5 -->
   <div class="card step" id="q5">
     <div class="step-num">Question 5 of 7</div>
     <div class="step-q">What's the state of your revenue pipeline?</div>
@@ -229,6 +494,7 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(5)">Back</button><button class="btn btn-next" id="next5" onclick="goNext(5)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q6 -->
   <div class="card step" id="q6">
     <div class="step-num">Question 6 of 7</div>
     <div class="step-q">How would you describe your tech and product situation?</div>
@@ -242,6 +508,7 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(6)">Back</button><button class="btn btn-next" id="next6" onclick="goNext(6)" disabled>Next →</button></div>
   </div>
 
+  <!-- Q7 -->
   <div class="card step" id="q7">
     <div class="step-num">Question 7 of 7</div>
     <div class="step-q">How fast does your org actually move?</div>
@@ -255,21 +522,27 @@
     <div class="nav"><button class="btn btn-back" onclick="goBack(7)">Back</button><button class="btn btn-next" id="next7" onclick="showResults()" disabled>See My Results →</button></div>
   </div>
 
+  <!-- Results -->
   <div class="results" id="results">
+
     <div class="results-hero">
       <div class="results-eyebrow">Your Gap Map</div>
       <div class="results-title" id="results-title">Here's where your growth is stalling</div>
       <div class="results-summary" id="results-summary"></div>
       <div class="cap-match" id="cap-match"></div>
     </div>
+
     <div id="speed-box-wrap"></div>
+
     <div class="findings-label">Your findings — prioritized</div>
     <div id="findings"></div>
+
     <div class="cta-box">
       <h3 id="cta-title">Ready to close these gaps?</h3>
       <p id="cta-body">S&A delivers in days what traditional firms take months to produce. Let's look at your specific situation.</p>
       <a href="mailto:max@skalatsky.com?subject=Growth Diagnostic — Let's Talk">Book a 30-Minute Call</a>
     </div>
+
     <div class="restart"><button onclick="restart()">Start over</button></div>
   </div>
 
@@ -287,7 +560,7 @@ function startQuiz() {
 function showStep(n) {
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('q' + n);
-  if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  if (el) { el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   document.getElementById('progress-fill').style.width = ((n-1)/7*100) + '%';
   document.getElementById('progress-label').textContent = n + ' of 7';
 }
@@ -306,17 +579,22 @@ function goBack(q) {
     document.getElementById('progress-wrap').style.display = 'none';
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.querySelector('.hero').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else { showStep(q - 1); }
 }
 
-function cap(label, type) {
-  return `<span class="cap-tag ${type === 'primary' ? 'primary' : 'secondary'}">${label}</span>`;
+function capTag(label, type) {
+  return `<span class="cap-tag ${type}">${label}</span>`;
 }
 
-function finding(sev, title, body, cta) {
+function findingHTML(sev, title, body, cta) {
   const sc = sev === 'critical' ? 'sev-critical' : sev === 'friction' ? 'sev-friction' : 'sev-optimize';
   const sl = sev === 'critical' ? 'Critical Gap' : sev === 'friction' ? 'Active Friction' : 'Optimize';
-  return `<div class="finding ${sc}"><div class="finding-header"><div class="finding-dot"></div><div class="finding-title">${title}</div><div class="finding-pill">${sl}</div></div><div class="finding-body">${body}</div>${cta ? `<div class="finding-cta">→ ${cta}</div>` : ''}</div>`;
+  return `<div class="finding ${sc}">
+    <div class="finding-header"><div class="finding-dot"></div><div class="finding-title">${title}</div><div class="finding-pill">${sl}</div></div>
+    <div class="finding-body">${body}</div>
+    ${cta ? `<div class="finding-cta">→ ${cta}</div>` : ''}
+  </div>`;
 }
 
 function showResults() {
@@ -327,46 +605,103 @@ function showResults() {
   const r = A;
   const findings = [], caps = [];
 
-  if (r[3] === 'confused') { findings.push({ sev:'critical', title:'Positioning Failure', body:"If prospects can't understand you quickly, nothing downstream works — not paid ads, not outreach, not referrals. You're paying a compounding tax on every channel.", cta:'S&A delivers positioning, messaging, and brand architecture in 2–3 days.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
-  else if (r[3] === 'nosite') { findings.push({ sev:'critical', title:'No Web Presence', body:'In 2025, your website is your pitch. An outdated or placeholder site is actively costing you deals — prospects check before they respond to outreach.', cta:'S&A builds conversion-ready sites in 1 week.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
-  else if (r[3] === 'attention') { findings.push({ sev:'friction', title:'Brand Awareness Gap', body:'You may have a great product but no one knows it. Awareness compounds when you build it systematically — and stays flat when it\'s ad hoc.', cta:'S&A builds content and campaign programs that create category presence.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
+  // Brand (Q3)
+  if (r[3] === 'confused') {
+    findings.push({ sev:'critical', title:'Positioning Failure', body:"If prospects can't understand you quickly, nothing downstream works — not paid ads, not outreach, not referrals. You're paying a compounding tax on every channel.", cta:'S&A delivers positioning, messaging, and brand architecture in 2–3 days.' });
+    caps.push({ label:'Build a Brand', type:'primary' });
+  } else if (r[3] === 'nosite') {
+    findings.push({ sev:'critical', title:'No Web Presence', body:'In 2025, your website is your pitch. An outdated or placeholder site is actively costing you deals — prospects check before they respond to outreach, before they take calls.', cta:'S&A builds conversion-ready sites in 1 week.' });
+    caps.push({ label:'Build a Brand', type:'primary' });
+  } else if (r[3] === 'attention') {
+    findings.push({ sev:'friction', title:'Brand Awareness Gap', body:"You may have a great product but no one knows it. Awareness compounds when you build it systematically — and stays flat when it's ad hoc.", cta:'S&A builds content and campaign programs that create category presence.' });
+    caps.push({ label:'Build a Brand', type:'primary' });
+  }
 
-  if (r[4] === 'invisible') { findings.push({ sev:'critical', title:'Zero Organic Presence', body:"You don't rank, which means you're not in the consideration set before anyone talks to you. SEO and AEO are compounding assets — every month you wait is a month of compounding you're missing.", cta:'S&A builds and executes SEO/AEO programs in 1 week.' }); caps.push({ label:'Win Digital', type:'primary' }); }
-  else if (r[4] === 'manual') { findings.push({ sev:'critical', title:'No Digital Engine', body:'All-referral growth has a ceiling. When the network slows, there\'s nothing to fall back on. Building a digital engine now — before you need it — is the highest-ROI move.', cta:'S&A builds full digital programs: SEO, social, email in 1 week.' }); caps.push({ label:'Win Digital', type:'primary' }); }
-  else if (r[4] === 'weak') { findings.push({ sev:'friction', title:'Traffic Without Conversion', body:'You have an audience but not a funnel. This is usually a messaging + CTA problem, not a traffic problem. The fix is faster than most teams think.', cta:'S&A optimizes landing pages, CTAs, and nurture sequences.' }); caps.push({ label:'Win Digital', type:'secondary' }); }
+  // Digital (Q4)
+  if (r[4] === 'invisible') {
+    findings.push({ sev:'critical', title:'Zero Organic Presence', body:"You don't rank, which means you're not in the consideration set before anyone talks to you. SEO and AEO are compounding assets — every month you wait is a month of compounding you're missing.", cta:'S&A builds and executes SEO/AEO programs in 1 week.' });
+    caps.push({ label:'Win Digital', type:'primary' });
+  } else if (r[4] === 'manual') {
+    findings.push({ sev:'critical', title:'No Digital Engine', body:"All-referral growth has a ceiling. When the network slows, there's nothing to fall back on. Building a digital engine now — before you need it — is the highest-ROI move.", cta:'S&A builds full digital programs: SEO, social, email in 1 week.' });
+    caps.push({ label:'Win Digital', type:'primary' });
+  } else if (r[4] === 'weak') {
+    findings.push({ sev:'friction', title:'Traffic Without Conversion', body:'You have an audience but not a funnel. This is usually a messaging + CTA problem, not a traffic problem. The fix is faster than most teams think.', cta:'S&A optimizes landing pages, CTAs, and nurture sequences.' });
+    caps.push({ label:'Win Digital', type:'secondary' });
+  }
 
-  if (r[5] === 'thin') { findings.push({ sev:'critical', title:'Thin Pipeline', body:"Not enough qualified opportunities is a top-of-funnel problem. Every week without a systematic outbound motion is a week of compounding you're missing.", cta:'S&A builds SDR automation and CEO-voice outreach in 1–2 weeks.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
-  else if (r[5] === 'manual_outreach') { findings.push({ sev:'critical', title:'No Scalable Outreach Motion', body:"Manual, rep-dependent outreach doesn't scale. Automating the top of funnel while keeping the human touch where it matters is the unlock.", cta:'S&A builds automated SDR + pipeline intelligence systems.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
-  else if (r[5] === 'nodata') { findings.push({ sev:'friction', title:'Pipeline Blindness', body:"You can't optimize what you can't see. No forecasting, no stage velocity data — every decision is a guess.", cta:'S&A builds pipeline intelligence and CRM architecture.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
-  else if (r[5] === 'full') { findings.push({ sev:'friction', title:'Conversion & Velocity Gap', body:'A full pipeline with a closing problem means the deal motion is broken. Speed-to-close is a competitive weapon.', cta:'S&A builds deal acceleration and pipeline velocity systems.' }); caps.push({ label:'Grow Revenue', type:'secondary' }); }
+  // Revenue (Q5)
+  if (r[5] === 'thin') {
+    findings.push({ sev:'critical', title:'Thin Pipeline', body:"Not enough qualified opportunities is a top-of-funnel problem. Every week without a systematic outbound motion is a week of compounding you're missing.", cta:'S&A builds SDR automation and CEO-voice outreach in 1–2 weeks.' });
+    caps.push({ label:'Grow Revenue', type:'primary' });
+  } else if (r[5] === 'manual_outreach') {
+    findings.push({ sev:'critical', title:'No Scalable Outreach Motion', body:"Manual, rep-dependent outreach doesn't scale and creates a single point of failure. Automating the top of funnel while keeping the human touch where it matters is the unlock.", cta:'S&A builds automated SDR + pipeline intelligence systems.' });
+    caps.push({ label:'Grow Revenue', type:'primary' });
+  } else if (r[5] === 'nodata') {
+    findings.push({ sev:'friction', title:'Pipeline Blindness', body:"You can't optimize what you can't see. No forecasting, no stage velocity data — every decision is a guess.", cta:'S&A builds pipeline intelligence and CRM architecture.' });
+    caps.push({ label:'Grow Revenue', type:'primary' });
+  } else if (r[5] === 'full') {
+    findings.push({ sev:'friction', title:'Conversion & Velocity Gap', body:'A full pipeline with a closing problem means the deal motion is broken. Speed-to-close is a competitive weapon.', cta:'S&A builds deal acceleration and pipeline velocity systems.' });
+    caps.push({ label:'Grow Revenue', type:'secondary' });
+  }
 
-  if (r[6] === 'nobuild') { findings.push({ sev:'critical', title:"Can't Ship What You Need", body:'Having the right idea and no way to build it is a direct revenue cost. Traditional dev shops take 6–12 months and $300–500K. S&A builds enterprise-grade products at a fraction of the cost and timeline.', cta:'S&A delivers iOS, Android, and platform builds in 1 month.' }); caps.push({ label:'Tech Products', type:'primary' }); }
-  else if (r[6] === 'noai') { findings.push({ sev:'critical', title:'No AI Strategy or Deployment', body:'The gap between AI-native companies and everyone else is compounding weekly. You need a strategy and a deployment — not another workshop.', cta:'S&A builds AI strategy and deploys agents in weeks, not quarters.' }); caps.push({ label:'Tech Products', type:'primary' }); }
-  else if (r[6] === 'slow') { findings.push({ sev:'friction', title:'Engineering Velocity Problem', body:'A slow engineering team is a business problem. Every week of delay is a week competitors compound. S&A\'s forward-deployed engineers work alongside your team to accelerate throughput.', cta:'S&A provides forward-deployed engineering to unblock velocity.' }); caps.push({ label:'Tech Products', type:'secondary' }); }
+  // Tech (Q6)
+  if (r[6] === 'nobuild') {
+    findings.push({ sev:'critical', title:"Can't Ship What You Need", body:'Having the right idea and no way to build it is a direct revenue cost. Traditional dev shops take 6–12 months and $300–500K. S&A builds enterprise-grade products at a fraction of the cost and timeline.', cta:'S&A delivers iOS, Android, and platform builds in 1 month.' });
+    caps.push({ label:'Tech Products', type:'primary' });
+  } else if (r[6] === 'noai') {
+    findings.push({ sev:'critical', title:'No AI Strategy or Deployment', body:'The gap between AI-native companies and everyone else is compounding weekly. You need a strategy and a deployment — not another workshop.', cta:'S&A builds AI strategy and deploys agents in weeks, not quarters.' });
+    caps.push({ label:'Tech Products', type:'primary' });
+  } else if (r[6] === 'slow') {
+    findings.push({ sev:'friction', title:'Engineering Velocity Problem', body:"A slow engineering team is a business problem. Every week of delay is a week competitors compound. S&A's forward-deployed engineers work alongside your team to accelerate throughput.", cta:'S&A provides forward-deployed engineering to unblock velocity.' });
+    caps.push({ label:'Tech Products', type:'secondary' });
+  }
 
+  // Speed (Q7)
   const speedScore = { fast:95, medium:60, slow:25, unknown:40 }[r[7]] || 50;
   const speedLabel = { fast:'High execution velocity', medium:'Inconsistent velocity', slow:'Execution drag detected', unknown:'Velocity untracked' }[r[7]];
-  if (r[7] === 'slow') findings.push({ sev:'friction', title:'Execution Drag', body:"Slow orgs pay a compounding cost. S&A's AI operating model compresses time-to-execution across all four capabilities.", cta:null });
-  else if (r[7] === 'unknown') findings.push({ sev:'optimize', title:'No Velocity Baseline', body:'If you\'re not measuring execution speed, you can\'t improve it. Setting a simple cycle-time baseline for your top 3 workstreams takes a day and changes how you manage.', cta:null });
+  if (r[7] === 'slow') findings.push({ sev:'friction', title:'Execution Drag', body:"Slow orgs pay a compounding cost — every week of delayed execution is a week competitors pull ahead. S&A's AI operating model compresses time-to-execution across all four capabilities.", cta: null });
+  else if (r[7] === 'unknown') findings.push({ sev:'optimize', title:'No Velocity Baseline', body:"If you're not measuring execution speed, you can't improve it. Setting a simple cycle-time baseline for your top 3 workstreams takes a day and changes how you manage.", cta: null });
 
-  if (r[2] === 'pre' && caps.length === 0) { findings.push({ sev:'friction', title:'Foundation First', body:'At the pre-revenue stage, positioning and messaging are the highest-leverage investments. Before you spend on ads or outreach, you need a clear story that resonates.', cta:'S&A builds GTM architecture and positioning in 2–3 days.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
+  // Stage fallback (Q2)
+  if (r[2] === 'pre' && caps.length === 0) {
+    findings.push({ sev:'friction', title:'Foundation First', body:'At the pre-revenue stage, positioning and messaging are the highest-leverage investments. Before you spend on ads or outreach, you need a clear story that resonates.', cta:'S&A builds GTM architecture and positioning in 2–3 days.' });
+    caps.push({ label:'Build a Brand', type:'primary' });
+  }
 
+  // Summary
   const roleMap = { founder:'As a founder', cmo:'As a marketing leader', cto:'As a product/tech leader', revenue:'As a revenue leader' };
   const roleLabel = roleMap[r[1]] || 'Based on your answers';
   const critCount = findings.filter(f => f.sev === 'critical').length;
   const primaryCaps = [...new Set(caps.filter(c => c.type === 'primary').map(c => c.label))];
 
-  document.getElementById('results-title').textContent = critCount > 0 ? `You have ${critCount} critical gap${critCount > 1 ? 's' : ''} blocking growth` : 'Your growth friction map';
+  document.getElementById('results-title').textContent = critCount > 0
+    ? `You have ${critCount} critical gap${critCount > 1 ? 's' : ''} blocking growth`
+    : 'Your growth friction map';
   document.getElementById('results-summary').textContent = `${roleLabel}, your highest-leverage gaps are in: ${primaryCaps.length ? primaryCaps.join(' and ') : 'execution velocity'}. Here's the full picture.`;
-  document.getElementById('cap-match').innerHTML = [...new Map(caps.map(c => [c.label, c])).values()].map(c => cap(c.label, c.type)).join('');
-  document.getElementById('speed-box-wrap').innerHTML = `<div class="speed-box"><div class="speed-label">Execution Velocity Score</div><div class="speed-row"><div class="speed-track"><div class="speed-fill" style="width:${speedScore}%"></div></div><div class="speed-text">${speedLabel}</div></div></div>`;
+
+  const uniqueCaps = [...new Map(caps.map(c => [c.label, c])).values()];
+  document.getElementById('cap-match').innerHTML = uniqueCaps.map(c => capTag(c.label, c.type)).join('');
+
+  document.getElementById('speed-box-wrap').innerHTML = `
+    <div class="speed-box">
+      <div class="speed-label">Execution Velocity Score</div>
+      <div class="speed-row">
+        <div class="speed-track"><div class="speed-fill" style="width:${speedScore}%"></div></div>
+        <div class="speed-text">${speedLabel}</div>
+      </div>
+    </div>`;
 
   const sorted = [...findings.filter(f=>f.sev==='critical'), ...findings.filter(f=>f.sev==='friction'), ...findings.filter(f=>f.sev==='optimize')];
-  document.getElementById('findings').innerHTML = sorted.length ? sorted.map(f => finding(f.sev, f.title, f.body, f.cta)).join('') : `<div class="finding sev-optimize"><div class="finding-header"><div class="finding-dot"></div><div class="finding-title">Solid Foundation</div></div><div class="finding-body">Your answers suggest a strong baseline. The opportunity is optimization — tightening conversion, compressing cycle times, and deploying AI to extend your lead.</div></div>`;
+  document.getElementById('findings').innerHTML = sorted.length
+    ? sorted.map(f => findingHTML(f.sev, f.title, f.body, f.cta)).join('')
+    : `<div class="finding sev-optimize"><div class="finding-header"><div class="finding-dot"></div><div class="finding-title">Solid Foundation</div></div><div class="finding-body">Your answers suggest a strong baseline. The opportunity is optimization — tightening conversion, compressing cycle times, and deploying AI to extend your lead.</div></div>`;
 
   const ctaTitles = { 'Build a Brand':'Your brand is leaving revenue on the table', 'Win Digital':'Your digital engine is stalled', 'Grow Revenue':'Your pipeline needs a system, not more reps', 'Tech Products':'You need to build — and S&A can ship it fast' };
-  const ctaBodies = { 'Build a Brand':'S&A delivers positioning, messaging, and brand architecture in 2–3 days. Let\'s look at your specific situation.', 'Win Digital':'S&A builds and executes full digital programs in 1 week. Let\'s talk about your gap.', 'Grow Revenue':'S&A builds SDR automation, CEO-voice outreach, and pipeline intelligence in 1–2 weeks.', 'Tech Products':'S&A builds enterprise-grade products at a fraction of the cost. Let\'s scope your build.' };
-  if (primaryCaps[0]) { document.getElementById('cta-title').textContent = ctaTitles[primaryCaps[0]] || 'Ready to close these gaps?'; document.getElementById('cta-body').textContent = ctaBodies[primaryCaps[0]] || 'S&A delivers in days what traditional firms take months to produce.'; }
+  const ctaBodies = { 'Build a Brand':"S&A delivers positioning, messaging, and brand architecture in 2–3 days. Let's look at your specific situation.", 'Win Digital':"S&A builds and executes full digital programs in 1 week. Let's talk about your gap.", 'Grow Revenue':'S&A builds SDR automation, CEO-voice outreach, and pipeline intelligence in 1–2 weeks.', 'Tech Products':"S&A builds enterprise-grade products at a fraction of the cost. Let's scope your build." };
+  if (primaryCaps[0]) {
+    document.getElementById('cta-title').textContent = ctaTitles[primaryCaps[0]] || 'Ready to close these gaps?';
+    document.getElementById('cta-body').textContent = ctaBodies[primaryCaps[0]] || "S&A delivers in days what traditional firms take months to produce.";
+  }
 
   document.getElementById('results').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
