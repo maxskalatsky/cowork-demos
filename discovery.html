@@ -9,7 +9,9 @@
 
   :root {
     --navy: #0B2545;
-    --navy-light: #1A3A6B;
+    --navy2: #1A3A6B;
+    --teal: #0891B2;
+    --teal-light: #ECFEFF;
     --blue: #1D4ED8;
     --blue-light: #EFF6FF;
     --gray-50: #F8FAFC;
@@ -24,95 +26,106 @@
     --amber-light: #FFFBEB;
     --green: #059669;
     --green-light: #ECFDF5;
-    --radius: 12px;
-    --shadow: 0 2px 16px rgba(11,37,69,0.08);
+    --shadow: 0 2px 20px rgba(11,37,69,0.09);
   }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-800);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px 80px;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 48px 20px 80px; }
 
-  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
   .brand-mark { width: 36px; height: 36px; background: var(--navy); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
   .brand-name { font-size: 15px; font-weight: 700; color: var(--navy); }
-  .brand-div { color: var(--gray-400); margin: 0 2px; }
-  .brand-sub { font-size: 13px; color: var(--gray-400); font-weight: 500; }
-  .container { width: 100%; max-width: 640px; }
+  .brand-sep { color: var(--gray-400); }
+  .brand-sub { font-size: 13px; color: var(--gray-400); }
 
-  .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
-  .progress-track { flex: 1; height: 4px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.4s ease; }
+  .hero { text-align: center; max-width: 560px; margin-bottom: 40px; }
+  .hero-eyebrow { display: inline-block; background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 16px; }
+  .hero-title { font-size: 30px; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 14px; }
+  .hero-body { font-size: 15px; color: var(--gray-600); line-height: 1.65; margin-bottom: 20px; }
+  .hero-meta { display: flex; justify-content: center; gap: 20px; font-size: 13px; color: var(--gray-400); margin-bottom: 28px; }
+  .btn-start { background: var(--navy); color: white; padding: 14px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: background 0.15s; }
+  .btn-start:hover { background: var(--navy2); }
+
+  .pillars { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .pillar-chip { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid; }
+  .p-brand { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+  .p-digital { background: #ECFEFF; color: #0891B2; border-color: #A5F3FC; }
+  .p-revenue { background: #ECFDF5; color: #059669; border-color: #A7F3D0; }
+  .p-tech { background: #FDF4FF; color: #9333EA; border-color: #E9D5FF; }
+
+  .container { width: 100%; max-width: 620px; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .progress-track { flex: 1; height: 3px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.4s ease; }
   .progress-label { font-size: 12px; color: var(--gray-400); font-weight: 600; white-space: nowrap; }
 
-  .card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); box-shadow: var(--shadow); padding: 36px; }
+  .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); box-shadow: var(--shadow); padding: 36px; }
   .step { display: none; }
   .step.active { display: block; }
-  .step-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
-  .step-q { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 8px; }
-  .step-hint { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
+  .step-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .step-q { font-size: 21px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 6px; }
+  .step-hint { font-size: 13px; color: var(--gray-400); margin-bottom: 26px; line-height: 1.5; }
 
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border: 2px solid var(--gray-200); border-radius: 10px; cursor: pointer; transition: all 0.15s ease; background: white; text-align: left; width: 100%; }
-  .option:hover { border-color: var(--blue); background: var(--blue-light); }
-  .option.selected { border-color: var(--blue); background: var(--blue-light); }
-  .option-check { width: 20px; height: 20px; border: 2px solid var(--gray-200); border-radius: 50%; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-  .option.selected .option-check { background: var(--blue); border-color: var(--blue); }
-  .option.selected .option-check::after { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; display: block; }
-  .option-label { font-size: 15px; font-weight: 600; color: var(--gray-800); }
-  .option-desc { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .option { display: flex; align-items: flex-start; gap: 14px; padding: 15px 16px; border: 2px solid var(--gray-200); border-radius: 10px; cursor: pointer; transition: all 0.15s; background: white; text-align: left; width: 100%; }
+  .option:hover { border-color: var(--teal); background: var(--teal-light); }
+  .option.selected { border-color: var(--teal); background: var(--teal-light); }
+  .option-radio { width: 18px; height: 18px; border: 2px solid var(--gray-200); border-radius: 50%; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .option.selected .option-radio { background: var(--teal); border-color: var(--teal); }
+  .option.selected .option-radio::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; display: block; }
+  .option-label { font-size: 14px; font-weight: 600; color: var(--gray-800); line-height: 1.3; }
+  .option-desc { font-size: 12px; color: var(--gray-400); margin-top: 2px; line-height: 1.4; }
 
-  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
-  .btn { padding: 12px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+  .btn { padding: 11px 26px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
   .btn-back { background: none; color: var(--gray-600); border: 1px solid var(--gray-200); }
   .btn-back:hover { background: var(--gray-100); }
-  .btn-next { background: var(--navy); color: white; min-width: 120px; }
-  .btn-next:hover { background: var(--navy-light); }
-  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .intro-tag { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 20px; }
-  .intro-title { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1.25; margin-bottom: 14px; }
-  .intro-body { font-size: 15px; color: var(--gray-600); line-height: 1.6; margin-bottom: 28px; }
-  .intro-meta { display: flex; gap: 24px; font-size: 13px; color: var(--gray-400); margin-bottom: 32px; }
-  .intro-meta span::before { content: '· '; }
-  .intro-meta span:first-child::before { content: ''; }
-  .btn-start { background: var(--navy); color: white; padding: 15px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; width: 100%; transition: background 0.15s; }
-  .btn-start:hover { background: var(--navy-light); }
+  .btn-next { background: var(--navy); color: white; min-width: 110px; }
+  .btn-next:hover { background: var(--navy2); }
+  .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .results { display: none; }
   .results.active { display: block; }
-  .results-header { margin-bottom: 32px; }
-  .results-tag { display: inline-block; background: var(--navy); color: white; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 14px; }
-  .results-title { font-size: 24px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-  .results-sub { font-size: 15px; color: var(--gray-600); }
 
-  .tier { margin-bottom: 24px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); }
-  .tier-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
-  .tier-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .tier-critical .tier-header { background: var(--red-light); color: var(--red); border-bottom: 1px solid #FECACA; }
-  .tier-critical .tier-dot { background: var(--red); }
-  .tier-friction .tier-header { background: var(--amber-light); color: var(--amber); border-bottom: 1px solid #FDE68A; }
-  .tier-friction .tier-dot { background: var(--amber); }
-  .tier-optimize .tier-header { background: var(--green-light); color: var(--green); border-bottom: 1px solid #A7F3D0; }
-  .tier-optimize .tier-dot { background: var(--green); }
-  .tier-items { background: white; }
-  .tier-item { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); }
-  .tier-item:last-child { border-bottom: none; }
-  .tier-item-title { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
-  .tier-item-body { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+  .results-hero { background: var(--navy); border-radius: 14px; padding: 32px; margin-bottom: 24px; }
+  .results-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .results-title { font-size: 22px; font-weight: 800; color: white; line-height: 1.3; margin-bottom: 10px; }
+  .results-summary { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+  .cap-match { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+  .cap-tag { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .cap-tag.primary { background: var(--teal); color: white; }
+  .cap-tag.secondary { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); }
 
-  .cta-box { background: var(--navy); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 8px; }
-  .cta-box h3 { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; }
-  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 20px; }
-  .cta-box a { display: inline-block; background: white; color: var(--navy); padding: 12px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity 0.15s; }
-  .cta-box a:hover { opacity: 0.9; }
-  .restart { text-align: center; margin-top: 20px; }
+  .findings-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-bottom: 14px; margin-top: 8px; }
+
+  .finding { background: white; border-radius: 12px; border: 1px solid var(--gray-200); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .finding-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--gray-100); }
+  .finding-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .finding-title { font-size: 14px; font-weight: 700; color: var(--gray-800); flex: 1; }
+  .finding-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
+  .finding-body { padding: 14px 18px; font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+  .finding-cta { padding: 0 18px 14px; font-size: 12px; font-weight: 700; color: var(--teal); }
+
+  .sev-critical .finding-dot { background: var(--red); }
+  .sev-critical .finding-pill { background: var(--red-light); color: var(--red); }
+  .sev-friction .finding-dot { background: var(--amber); }
+  .sev-friction .finding-pill { background: var(--amber-light); color: var(--amber); }
+  .sev-optimize .finding-dot { background: var(--green); }
+  .sev-optimize .finding-pill { background: var(--green-light); color: var(--green); }
+
+  .speed-box { background: var(--blue-light); border: 1px solid #BFDBFE; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; }
+  .speed-label { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+  .speed-row { display: flex; align-items: center; gap: 12px; }
+  .speed-track { flex: 1; height: 6px; background: rgba(29,78,216,0.15); border-radius: 4px; overflow: hidden; }
+  .speed-fill { height: 100%; background: var(--blue); border-radius: 4px; }
+  .speed-text { font-size: 12px; color: var(--blue); font-weight: 700; white-space: nowrap; }
+
+  .cta-box { background: var(--navy); border-radius: 14px; padding: 28px; text-align: center; margin-top: 8px; }
+  .cta-box h3 { font-size: 19px; font-weight: 800; color: white; margin-bottom: 8px; }
+  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 20px; line-height: 1.5; }
+  .cta-box a { display: inline-block; background: var(--teal); color: white; padding: 13px 30px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity 0.15s; }
+  .cta-box a:hover { opacity: 0.88; }
+  .restart { text-align: center; margin-top: 16px; }
   .restart button { background: none; border: none; color: var(--gray-400); font-size: 13px; cursor: pointer; text-decoration: underline; }
 </style>
 </head>
@@ -121,24 +134,31 @@
 <div class="brand">
   <div class="brand-mark">S</div>
   <span class="brand-name">Skalatsky & Associates</span>
-  <span class="brand-div">/</span>
+  <span class="brand-sep">/</span>
   <span class="brand-sub">Growth Diagnostic</span>
 </div>
 
-<div class="container">
-
-  <div class="card step active" id="intro">
-    <div class="intro-tag">Free Assessment</div>
-    <div class="intro-title">Find out exactly where your growth is stalling</div>
-    <div class="intro-body">7 questions. 3 minutes. You'll get a personalized pain point map showing your critical gaps, active friction, and optimization opportunities — with specific recommendations based on your situation.</div>
-    <div class="intro-meta">
-      <span>7 questions</span>
-      <span>~3 minutes</span>
-      <span>Instant results</span>
-    </div>
-    <button class="btn-start" onclick="startQuiz()">Start the Diagnostic →</button>
+<div class="hero">
+  <div class="hero-eyebrow">Free · 3 Minutes · Instant Results</div>
+  <div class="hero-title">Find out which capability gap is costing you the most</div>
+  <div class="hero-body">Answer 7 questions. We'll map your exact friction points against S&A's four growth capabilities and show you where to focus first.</div>
+  <div class="pillars">
+    <span class="pillar-chip p-brand">Build a Brand</span>
+    <span class="pillar-chip p-digital">Win Digital</span>
+    <span class="pillar-chip p-revenue">Grow Revenue</span>
+    <span class="pillar-chip p-tech">Tech Products</span>
   </div>
+  <div class="hero-meta">
+    <span>7 questions</span>
+    <span>·</span>
+    <span>No email required</span>
+    <span>·</span>
+    <span>Personalized output</span>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">Start the Diagnostic →</button>
+</div>
 
+<div class="container">
   <div class="progress-wrap" id="progress-wrap" style="display:none;">
     <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     <div class="progress-label" id="progress-label">1 of 7</div>
@@ -147,116 +167,108 @@
   <div class="card step" id="q1">
     <div class="step-num">Question 1 of 7</div>
     <div class="step-q">What best describes your role?</div>
-    <div class="step-hint">This helps us tailor the output to your actual leverage points.</div>
+    <div class="step-hint">This shapes which gaps matter most for your leverage.</div>
     <div class="options">
-      <button class="option" onclick="select(1,'founder')"><div class="option-check"></div><div><div class="option-label">Founder / CEO</div><div class="option-desc">You own strategy and are usually in the weeds too</div></div></button>
-      <button class="option" onclick="select(1,'exec')"><div class="option-check"></div><div><div class="option-label">Executive / VP</div><div class="option-desc">You run a function — revenue, ops, product, or marketing</div></div></button>
-      <button class="option" onclick="select(1,'operator')"><div class="option-check"></div><div><div class="option-label">Operator / Director</div><div class="option-desc">You manage execution and cross-functional work</div></div></button>
-      <button class="option" onclick="select(1,'consultant')"><div class="option-check"></div><div><div class="option-label">Consultant / Advisor</div><div class="option-desc">You work across multiple orgs or clients</div></div></button>
+      <button class="option" onclick="pick(1,'founder')"><div class="option-radio"></div><div><div class="option-label">Founder / CEO</div><div class="option-desc">You own strategy and are usually in the weeds too</div></div></button>
+      <button class="option" onclick="pick(1,'cmo')"><div class="option-radio"></div><div><div class="option-label">CMO / Head of Marketing</div><div class="option-desc">You own brand, demand gen, and growth</div></div></button>
+      <button class="option" onclick="pick(1,'cto')"><div class="option-radio"></div><div><div class="option-label">CTO / Head of Product</div><div class="option-desc">You own the build — roadmap, engineering, platform</div></div></button>
+      <button class="option" onclick="pick(1,'revenue')"><div class="option-radio"></div><div><div class="option-label">CRO / VP Sales</div><div class="option-desc">You own pipeline, quota, and revenue systems</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(1)">Back</button><button class="btn btn-next" id="next1" onclick="next(1)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(1)">Back</button><button class="btn btn-next" id="next1" onclick="goNext(1)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q2">
     <div class="step-num">Question 2 of 7</div>
-    <div class="step-q">How large is your organization?</div>
-    <div class="step-hint">Headcount including contractors and core vendors.</div>
+    <div class="step-q">Where is your company right now?</div>
+    <div class="step-hint">Be honest — different stages have very different leverage points.</div>
     <div class="options">
-      <button class="option" onclick="select(2,'solo')"><div class="option-check"></div><div><div class="option-label">Solo / 1–3 people</div><div class="option-desc">Mostly you, maybe a few part-time helpers</div></div></button>
-      <button class="option" onclick="select(2,'small')"><div class="option-check"></div><div><div class="option-label">Small team (4–20)</div><div class="option-desc">A tight crew, everyone wears multiple hats</div></div></button>
-      <button class="option" onclick="select(2,'mid')"><div class="option-check"></div><div><div class="option-label">Mid-size (21–100)</div><div class="option-desc">Functional teams are forming, process gaps are showing</div></div></button>
-      <button class="option" onclick="select(2,'large')"><div class="option-check"></div><div><div class="option-label">Large (100+)</div><div class="option-desc">Established org with layers, politics, and legacy systems</div></div></button>
+      <button class="option" onclick="pick(2,'pre')"><div class="option-radio"></div><div><div class="option-label">Pre-revenue / Early stage</div><div class="option-desc">Building the foundation — positioning, product, first customers</div></div></button>
+      <button class="option" onclick="pick(2,'growth')"><div class="option-radio"></div><div><div class="option-label">Growth mode ($1M–$20M ARR)</div><div class="option-desc">Revenue exists but systems and team haven't caught up</div></div></button>
+      <button class="option" onclick="pick(2,'scale')"><div class="option-radio"></div><div><div class="option-label">Scaling ($20M+ ARR)</div><div class="option-desc">Established but hitting a ceiling — efficiency, new markets, or new products</div></div></button>
+      <button class="option" onclick="pick(2,'transform')"><div class="option-radio"></div><div><div class="option-label">Transforming an existing business</div><div class="option-desc">Legacy org moving into new channels, AI, or business models</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(2)">Back</button><button class="btn btn-next" id="next2" onclick="next(2)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(2)">Back</button><button class="btn btn-next" id="next2" onclick="goNext(2)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q3">
     <div class="step-num">Question 3 of 7</div>
-    <div class="step-q">How would you rate your execution speed?</div>
-    <div class="step-hint">Be honest — this is where most of the real signal is.</div>
+    <div class="step-q">When a prospect lands on your site or hears your pitch — what happens?</div>
+    <div class="step-hint">This is your brand and messaging signal.</div>
     <div class="options">
-      <button class="option" onclick="select(3,'fast')"><div class="option-check"></div><div><div class="option-label">Fast — we ship and decide quickly</div><div class="option-desc">Things move, sometimes too fast</div></div></button>
-      <button class="option" onclick="select(3,'medium')"><div class="option-check"></div><div><div class="option-label">Medium — decent but inconsistent</div><div class="option-desc">Some things fly, others get stuck for weeks</div></div></button>
-      <button class="option" onclick="select(3,'slow')"><div class="option-check"></div><div><div class="option-label">Slow — everything takes longer than it should</div><div class="option-desc">Approvals, meetings, and rework kill momentum</div></div></button>
-      <button class="option" onclick="select(3,'stalled')"><div class="option-check"></div><div><div class="option-label">Stalled — we're stuck</div><div class="option-desc">Priorities unclear, team not aligned, output flat</div></div></button>
+      <button class="option" onclick="pick(3,'clear')"><div class="option-radio"></div><div><div class="option-label">They get it immediately and engage</div><div class="option-desc">Strong positioning, clear value prop, good conversion</div></div></button>
+      <button class="option" onclick="pick(3,'confused')"><div class="option-radio"></div><div><div class="option-label">They're confused — we can't explain ourselves simply</div><div class="option-desc">Messaging is vague, too technical, or not differentiated</div></div></button>
+      <button class="option" onclick="pick(3,'nosite')"><div class="option-radio"></div><div><div class="option-label">We don't have a real web presence yet</div><div class="option-desc">Site is a placeholder, outdated, or doesn't reflect what we do</div></div></button>
+      <button class="option" onclick="pick(3,'attention')"><div class="option-radio"></div><div><div class="option-label">We struggle to get their attention in the first place</div><div class="option-desc">Traffic is low, brand awareness is weak, nobody knows us</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(3)">Back</button><button class="btn btn-next" id="next3" onclick="next(3)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(3)">Back</button><button class="btn btn-next" id="next3" onclick="goNext(3)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q4">
     <div class="step-num">Question 4 of 7</div>
-    <div class="step-q">Where does work most often get stuck?</div>
-    <div class="step-hint">Pick the one that costs you the most time or money.</div>
+    <div class="step-q">How is inbound working for you right now?</div>
+    <div class="step-hint">SEO, content, social, email — your digital engine.</div>
     <div class="options">
-      <button class="option" onclick="select(4,'decisions')"><div class="option-check"></div><div><div class="option-label">Decisions and approvals</div><div class="option-desc">Nothing moves without someone signing off</div></div></button>
-      <button class="option" onclick="select(4,'handoffs')"><div class="option-check"></div><div><div class="option-label">Handoffs between teams</div><div class="option-desc">Things fall through the cracks between functions</div></div></button>
-      <button class="option" onclick="select(4,'capacity')"><div class="option-check"></div><div><div class="option-label">Capacity — not enough hands</div><div class="option-desc">Good ideas but no one to execute them</div></div></button>
-      <button class="option" onclick="select(4,'clarity')"><div class="option-check"></div><div><div class="option-label">Clarity — unclear priorities or ownership</div><div class="option-desc">People are busy but not on the right things</div></div></button>
+      <button class="option" onclick="pick(4,'working')"><div class="option-radio"></div><div><div class="option-label">It's working — consistent inbound pipeline</div><div class="option-desc">Content and digital channels are producing qualified leads</div></div></button>
+      <button class="option" onclick="pick(4,'weak')"><div class="option-radio"></div><div><div class="option-label">Weak — we show up but don't convert</div><div class="option-desc">Traffic exists but leads don't materialize</div></div></button>
+      <button class="option" onclick="pick(4,'invisible')"><div class="option-radio"></div><div><div class="option-label">Invisible — we don't rank, don't get found</div><div class="option-desc">No real SEO presence, sporadic content, low organic traffic</div></div></button>
+      <button class="option" onclick="pick(4,'manual')"><div class="option-radio"></div><div><div class="option-label">All manual — referrals and outbound only</div><div class="option-desc">No digital engine, growth depends on who we know</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(4)">Back</button><button class="btn btn-next" id="next4" onclick="next(4)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(4)">Back</button><button class="btn btn-next" id="next4" onclick="goNext(4)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q5">
     <div class="step-num">Question 5 of 7</div>
-    <div class="step-q">How would you describe your current tech and ops stack?</div>
-    <div class="step-hint">Tools, systems, automation — how mature is the infrastructure?</div>
+    <div class="step-q">What's the state of your revenue pipeline?</div>
+    <div class="step-hint">Prospecting, outreach, and pipeline velocity.</div>
     <div class="options">
-      <button class="option" onclick="select(5,'none')"><div class="option-check"></div><div><div class="option-label">Mostly manual — email, spreadsheets, calls</div><div class="option-desc">No real systems, high admin overhead</div></div></button>
-      <button class="option" onclick="select(5,'basic')"><div class="option-check"></div><div><div class="option-label">Basic tools — CRM, project manager, Slack</div><div class="option-desc">Some structure but lots of gaps and duplication</div></div></button>
-      <button class="option" onclick="select(5,'moderate')"><div class="option-check"></div><div><div class="option-label">Moderate — integrated systems, some automation</div><div class="option-desc">Things work but there's still too much manual work</div></div></button>
-      <button class="option" onclick="select(5,'advanced')"><div class="option-check"></div><div><div class="option-label">Advanced — automated workflows, real-time data</div><div class="option-desc">Stack is solid, looking for the next unlock</div></div></button>
+      <button class="option" onclick="pick(5,'full')"><div class="option-radio"></div><div><div class="option-label">Pipeline is full — we have a closing problem, not a volume problem</div><div class="option-desc">Plenty of opportunities, need better conversion and speed</div></div></button>
+      <button class="option" onclick="pick(5,'thin')"><div class="option-radio"></div><div><div class="option-label">Pipeline is thin — not enough qualified opportunities</div><div class="option-desc">Top of funnel is the constraint</div></div></button>
+      <button class="option" onclick="pick(5,'manual_outreach')"><div class="option-radio"></div><div><div class="option-label">Outreach is manual and inconsistent</div><div class="option-desc">No SDR motion, no automation, rep-dependent results</div></div></button>
+      <button class="option" onclick="pick(5,'nodata')"><div class="option-radio"></div><div><div class="option-label">We don't have visibility into the pipeline</div><div class="option-desc">CRM is a mess, no real forecasting, flying blind</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(5)">Back</button><button class="btn btn-next" id="next5" onclick="next(5)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(5)">Back</button><button class="btn btn-next" id="next5" onclick="goNext(5)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q6">
     <div class="step-num">Question 6 of 7</div>
-    <div class="step-q">What's your single most important priority in the next 90 days?</div>
-    <div class="step-hint">Not what should be — what actually is, given current pressure.</div>
+    <div class="step-q">How would you describe your tech and product situation?</div>
+    <div class="step-hint">Build velocity, AI readiness, and platform maturity.</div>
     <div class="options">
-      <button class="option" onclick="select(6,'revenue')"><div class="option-check"></div><div><div class="option-label">Revenue growth</div><div class="option-desc">More pipeline, faster close, better retention</div></div></button>
-      <button class="option" onclick="select(6,'efficiency')"><div class="option-check"></div><div><div class="option-label">Operational efficiency</div><div class="option-desc">Do more with less, reduce waste and rework</div></div></button>
-      <button class="option" onclick="select(6,'product')"><div class="option-check"></div><div><div class="option-label">Product or service delivery</div><div class="option-desc">Ship faster, higher quality, better customer experience</div></div></button>
-      <button class="option" onclick="select(6,'team')"><div class="option-check"></div><div><div class="option-label">Team and org structure</div><div class="option-desc">Right people, right roles, right culture</div></div></button>
+      <button class="option" onclick="pick(6,'nobuild')"><div class="option-radio"></div><div><div class="option-label">We need to build something and don't have the team</div><div class="option-desc">App, platform, or tool — we know what we need but can't ship it</div></div></button>
+      <button class="option" onclick="pick(6,'slow')"><div class="option-radio"></div><div><div class="option-label">We have a team but shipping is too slow</div><div class="option-desc">Roadmap backed up, velocity low, technical debt growing</div></div></button>
+      <button class="option" onclick="pick(6,'noai')"><div class="option-radio"></div><div><div class="option-label">We know AI is the unlock but don't know where to start</div><div class="option-desc">Lots of AI noise, no clear strategy or deployment</div></div></button>
+      <button class="option" onclick="pick(6,'solid')"><div class="option-radio"></div><div><div class="option-label">Tech is solid — our gap is marketing and revenue, not product</div><div class="option-desc">Platform is working, need go-to-market help</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(6)">Back</button><button class="btn btn-next" id="next6" onclick="next(6)" disabled>Next →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(6)">Back</button><button class="btn btn-next" id="next6" onclick="goNext(6)" disabled>Next →</button></div>
   </div>
 
   <div class="card step" id="q7">
     <div class="step-num">Question 7 of 7</div>
-    <div class="step-q">What's the single biggest thing blocking your growth right now?</div>
-    <div class="step-hint">The honest answer — not the one you'd say in a board meeting.</div>
+    <div class="step-q">How fast does your org actually move?</div>
+    <div class="step-hint">Not aspirationally — what actually happens when you try to execute something new.</div>
     <div class="options">
-      <button class="option" onclick="select(7,'me')"><div class="option-check"></div><div><div class="option-label">Me — I'm the bottleneck</div><div class="option-desc">Too many decisions run through me, I can't delegate</div></div></button>
-      <button class="option" onclick="select(7,'talent')"><div class="option-check"></div><div><div class="option-label">Talent — wrong people or not enough</div><div class="option-desc">I don't have the team to execute on what I know needs to happen</div></div></button>
-      <button class="option" onclick="select(7,'strategy')"><div class="option-check"></div><div><div class="option-label">Strategy — unclear direction or conflicting priorities</div><div class="option-desc">We're not aligned on what we're actually building toward</div></div></button>
-      <button class="option" onclick="select(7,'systems')"><div class="option-check"></div><div><div class="option-label">Systems — our infrastructure can't support scale</div><div class="option-desc">Manual work, bad data, or broken processes are the ceiling</div></div></button>
+      <button class="option" onclick="pick(7,'fast')"><div class="option-radio"></div><div><div class="option-label">Fast — we decide and ship in days, not months</div><div class="option-desc">Speed is a competitive advantage for us</div></div></button>
+      <button class="option" onclick="pick(7,'medium')"><div class="option-radio"></div><div><div class="option-label">Medium — some things move fast, others get stuck</div><div class="option-desc">Inconsistent — depends on who's driving it</div></div></button>
+      <button class="option" onclick="pick(7,'slow')"><div class="option-radio"></div><div><div class="option-label">Slow — everything takes longer than it should</div><div class="option-desc">Approvals, alignment, and rework kill momentum</div></div></button>
+      <button class="option" onclick="pick(7,'unknown')"><div class="option-radio"></div><div><div class="option-label">We don't measure it — speed isn't something we track</div><div class="option-desc">No real cadence or velocity metrics</div></div></button>
     </div>
-    <div class="nav"><button class="btn btn-back" onclick="back(7)">Back</button><button class="btn btn-next" id="next7" onclick="showResults()" disabled>See My Results →</button></div>
+    <div class="nav"><button class="btn btn-back" onclick="goBack(7)">Back</button><button class="btn btn-next" id="next7" onclick="showResults()" disabled>See My Results →</button></div>
   </div>
 
   <div class="results" id="results">
-    <div class="results-header">
-      <div class="results-tag">Your Pain Point Map</div>
-      <div class="results-title" id="results-title">Growth Diagnostic Results</div>
-      <div class="results-sub">Based on your answers, here's where your growth is actually stalling.</div>
+    <div class="results-hero">
+      <div class="results-eyebrow">Your Gap Map</div>
+      <div class="results-title" id="results-title">Here's where your growth is stalling</div>
+      <div class="results-summary" id="results-summary"></div>
+      <div class="cap-match" id="cap-match"></div>
     </div>
-    <div class="tier tier-critical">
-      <div class="tier-header"><div class="tier-dot"></div>Critical Gaps — Address First</div>
-      <div class="tier-items" id="tier-critical"></div>
-    </div>
-    <div class="tier tier-friction">
-      <div class="tier-header"><div class="tier-dot"></div>Active Friction — Costing You Now</div>
-      <div class="tier-items" id="tier-friction"></div>
-    </div>
-    <div class="tier tier-optimize">
-      <div class="tier-header"><div class="tier-dot"></div>Optimization Areas — Unlock Later</div>
-      <div class="tier-items" id="tier-optimize"></div>
-    </div>
+    <div id="speed-box-wrap"></div>
+    <div class="findings-label">Your findings — prioritized</div>
+    <div id="findings"></div>
     <div class="cta-box">
-      <h3>Want to go deeper?</h3>
-      <p>We do focused 90-minute strategy sessions to turn this into a concrete action plan.</p>
-      <a href="mailto:max@skalatsky.com?subject=Growth Diagnostic — Let's Talk">Book a Strategy Session</a>
+      <h3 id="cta-title">Ready to close these gaps?</h3>
+      <p id="cta-body">S&A delivers in days what traditional firms take months to produce. Let's look at your specific situation.</p>
+      <a href="mailto:max@skalatsky.com?subject=Growth Diagnostic — Let's Talk">Book a 30-Minute Call</a>
     </div>
     <div class="restart"><button onclick="restart()">Start over</button></div>
   </div>
@@ -264,10 +276,10 @@
 </div>
 
 <script>
-const answers = {};
+const A = {};
 
 function startQuiz() {
-  document.getElementById('intro').classList.remove('active');
+  document.querySelector('.hero').style.display = 'none';
   document.getElementById('progress-wrap').style.display = 'flex';
   showStep(1);
 }
@@ -275,26 +287,36 @@ function startQuiz() {
 function showStep(n) {
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('q' + n);
-  if (el) el.classList.add('active');
-  document.getElementById('progress-fill').style.width = ((n - 1) / 7 * 100) + '%';
+  if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  document.getElementById('progress-fill').style.width = ((n-1)/7*100) + '%';
   document.getElementById('progress-label').textContent = n + ' of 7';
 }
 
-function select(q, val) {
-  answers[q] = val;
+function pick(q, val) {
+  A[q] = val;
   document.querySelectorAll('#q' + q + ' .option').forEach(o => o.classList.remove('selected'));
   event.currentTarget.classList.add('selected');
   document.getElementById('next' + q).disabled = false;
 }
 
-function next(q) { if (answers[q]) showStep(q + 1); }
+function goNext(q) { if (A[q]) showStep(q + 1); }
 
-function back(q) {
+function goBack(q) {
   if (q === 1) {
     document.getElementById('progress-wrap').style.display = 'none';
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById('intro').classList.add('active');
+    document.querySelector('.hero').style.display = '';
   } else { showStep(q - 1); }
+}
+
+function cap(label, type) {
+  return `<span class="cap-tag ${type === 'primary' ? 'primary' : 'secondary'}">${label}</span>`;
+}
+
+function finding(sev, title, body, cta) {
+  const sc = sev === 'critical' ? 'sev-critical' : sev === 'friction' ? 'sev-friction' : 'sev-optimize';
+  const sl = sev === 'critical' ? 'Critical Gap' : sev === 'friction' ? 'Active Friction' : 'Optimize';
+  return `<div class="finding ${sc}"><div class="finding-header"><div class="finding-dot"></div><div class="finding-title">${title}</div><div class="finding-pill">${sl}</div></div><div class="finding-body">${body}</div>${cta ? `<div class="finding-cta">→ ${cta}</div>` : ''}</div>`;
 }
 
 function showResults() {
@@ -302,63 +324,61 @@ function showResults() {
   document.getElementById('progress-fill').style.width = '100%';
   document.getElementById('progress-label').textContent = 'Complete';
 
-  const r = answers;
-  const critical = [], friction = [], optimize = [];
-  const roleMap = { founder: 'As a founder', exec: 'As an executive', operator: 'As an operator', consultant: 'As a consultant' };
-  const roleLabel = roleMap[r[1]] || 'In your role';
+  const r = A;
+  const findings = [], caps = [];
 
-  if (r[7] === 'me') critical.push({ title: 'Founder Bottleneck', body: `${roleLabel}, having all decisions run through you is your highest-leverage problem to solve. Delegation frameworks and async decision-making are the unlock.` });
-  else if (r[7] === 'talent') critical.push({ title: 'Talent Gap', body: "You know what needs to happen but can't execute without the right people. Hiring or fractional support for your highest-leverage gaps should be the immediate focus." });
-  else if (r[7] === 'strategy') critical.push({ title: 'Strategic Misalignment', body: 'Without a shared, committed direction, every other investment is undermined. Getting leadership aligned on a 90-day north star is the prerequisite to everything else.' });
-  else if (r[7] === 'systems') critical.push({ title: 'Infrastructure Ceiling', body: 'Your current systems can\'t support the next stage of growth. Manual work and bad data are compounding — this needs a systems audit and a clear automation roadmap.' });
+  if (r[3] === 'confused') { findings.push({ sev:'critical', title:'Positioning Failure', body:"If prospects can't understand you quickly, nothing downstream works — not paid ads, not outreach, not referrals. You're paying a compounding tax on every channel.", cta:'S&A delivers positioning, messaging, and brand architecture in 2–3 days.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
+  else if (r[3] === 'nosite') { findings.push({ sev:'critical', title:'No Web Presence', body:'In 2025, your website is your pitch. An outdated or placeholder site is actively costing you deals — prospects check before they respond to outreach.', cta:'S&A builds conversion-ready sites in 1 week.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
+  else if (r[3] === 'attention') { findings.push({ sev:'friction', title:'Brand Awareness Gap', body:'You may have a great product but no one knows it. Awareness compounds when you build it systematically — and stays flat when it\'s ad hoc.', cta:'S&A builds content and campaign programs that create category presence.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
 
-  if (r[3] === 'slow' || r[3] === 'stalled') critical.push({ title: 'Execution Velocity', body: 'Your team is losing compounding momentum every week you move slowly. Speed is a strategy — identifying and removing the single biggest drag on cycle time is worth more than most initiatives.' });
+  if (r[4] === 'invisible') { findings.push({ sev:'critical', title:'Zero Organic Presence', body:"You don't rank, which means you're not in the consideration set before anyone talks to you. SEO and AEO are compounding assets — every month you wait is a month of compounding you're missing.", cta:'S&A builds and executes SEO/AEO programs in 1 week.' }); caps.push({ label:'Win Digital', type:'primary' }); }
+  else if (r[4] === 'manual') { findings.push({ sev:'critical', title:'No Digital Engine', body:'All-referral growth has a ceiling. When the network slows, there\'s nothing to fall back on. Building a digital engine now — before you need it — is the highest-ROI move.', cta:'S&A builds full digital programs: SEO, social, email in 1 week.' }); caps.push({ label:'Win Digital', type:'primary' }); }
+  else if (r[4] === 'weak') { findings.push({ sev:'friction', title:'Traffic Without Conversion', body:'You have an audience but not a funnel. This is usually a messaging + CTA problem, not a traffic problem. The fix is faster than most teams think.', cta:'S&A optimizes landing pages, CTAs, and nurture sequences.' }); caps.push({ label:'Win Digital', type:'secondary' }); }
 
-  if (r[4] === 'decisions') friction.push({ title: 'Decision Latency', body: 'Approval chains are silently killing throughput. Documenting a decision rights framework (RACI or DACI) and pushing decisions down to the lowest competent level will reclaim weeks per quarter.' });
-  else if (r[4] === 'handoffs') friction.push({ title: 'Cross-functional Handoff Failures', body: 'Work falling between teams is a system design problem, not a people problem. Defining clear ownership and handoff protocols for your top 3 recurring workflows will have an immediate impact.' });
-  else if (r[4] === 'capacity') friction.push({ title: 'Capacity Constraints', body: 'Before hiring, audit whether automation or AI tooling could eliminate 20–30% of existing workload. Then hire against a clear capacity model, not a feeling of being stretched.' });
-  else if (r[4] === 'clarity') friction.push({ title: 'Priority Fog', body: 'Busy teams with no shared priority list create misaligned effort and burnout. A weekly top-3 priorities ritual, visible to all, fixes more than any project management tool.' });
+  if (r[5] === 'thin') { findings.push({ sev:'critical', title:'Thin Pipeline', body:"Not enough qualified opportunities is a top-of-funnel problem. Every week without a systematic outbound motion is a week of compounding you're missing.", cta:'S&A builds SDR automation and CEO-voice outreach in 1–2 weeks.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
+  else if (r[5] === 'manual_outreach') { findings.push({ sev:'critical', title:'No Scalable Outreach Motion', body:"Manual, rep-dependent outreach doesn't scale. Automating the top of funnel while keeping the human touch where it matters is the unlock.", cta:'S&A builds automated SDR + pipeline intelligence systems.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
+  else if (r[5] === 'nodata') { findings.push({ sev:'friction', title:'Pipeline Blindness', body:"You can't optimize what you can't see. No forecasting, no stage velocity data — every decision is a guess.", cta:'S&A builds pipeline intelligence and CRM architecture.' }); caps.push({ label:'Grow Revenue', type:'primary' }); }
+  else if (r[5] === 'full') { findings.push({ sev:'friction', title:'Conversion & Velocity Gap', body:'A full pipeline with a closing problem means the deal motion is broken. Speed-to-close is a competitive weapon.', cta:'S&A builds deal acceleration and pipeline velocity systems.' }); caps.push({ label:'Grow Revenue', type:'secondary' }); }
 
-  if (r[5] === 'none') friction.push({ title: 'Manual Ops Overhead', body: "Operating without systems at your scale means you're paying a massive hidden tax in admin, errors, and lost data. Even one well-configured tool (CRM, project manager) compounds significantly." });
-  else if (r[5] === 'basic') friction.push({ title: 'Fragmented Stack', body: 'Disconnected tools create duplicate work and data gaps. Mapping your top 5 workflows and identifying where handoffs happen manually will surface the highest-ROI integration opportunities.' });
-  else if (r[5] === 'moderate') optimize.push({ title: 'Automation Opportunities', body: 'You have a solid foundation. The next unlock is identifying your top 3 recurring manual workflows and applying AI or no-code automation — typically worth 5–10 hours per person per week.' });
-  else if (r[5] === 'advanced') optimize.push({ title: 'Intelligence Layer', body: 'Your stack is mature. The opportunity is moving from automation to intelligence — using your data to surface decisions, anomalies, and recommendations proactively rather than reactively.' });
+  if (r[6] === 'nobuild') { findings.push({ sev:'critical', title:"Can't Ship What You Need", body:'Having the right idea and no way to build it is a direct revenue cost. Traditional dev shops take 6–12 months and $300–500K. S&A builds enterprise-grade products at a fraction of the cost and timeline.', cta:'S&A delivers iOS, Android, and platform builds in 1 month.' }); caps.push({ label:'Tech Products', type:'primary' }); }
+  else if (r[6] === 'noai') { findings.push({ sev:'critical', title:'No AI Strategy or Deployment', body:'The gap between AI-native companies and everyone else is compounding weekly. You need a strategy and a deployment — not another workshop.', cta:'S&A builds AI strategy and deploys agents in weeks, not quarters.' }); caps.push({ label:'Tech Products', type:'primary' }); }
+  else if (r[6] === 'slow') { findings.push({ sev:'friction', title:'Engineering Velocity Problem', body:'A slow engineering team is a business problem. Every week of delay is a week competitors compound. S&A\'s forward-deployed engineers work alongside your team to accelerate throughput.', cta:'S&A provides forward-deployed engineering to unblock velocity.' }); caps.push({ label:'Tech Products', type:'secondary' }); }
 
-  if (r[6] === 'revenue') {
-    if (r[3] === 'fast') optimize.push({ title: 'Revenue Model Optimization', body: 'With strong execution, your revenue lever is likely conversion or expansion — not pipeline volume. Pricing, packaging, and upsell motion deserve a dedicated 30-day audit.' });
-    else friction.push({ title: 'Revenue Execution Gap', body: 'Revenue growth with slow execution means pipeline is leaking between stages. Mapping your revenue process and identifying where deals or leads stall will show you where to focus.' });
-  } else if (r[6] === 'efficiency') optimize.push({ title: 'Efficiency Audit', body: 'A time-motion analysis of your top 5 recurring processes typically reveals 20–40% waste. Starting with the highest-frequency workflows gives the fastest payback.' });
-  else if (r[6] === 'product') optimize.push({ title: 'Delivery Cycle Compression', body: 'Shipping faster with fewer defects is usually a process problem, not a talent problem. Mapping your current delivery cycle and removing handoffs, approval gates, and rework loops is the lever.' });
-  else if (r[6] === 'team') optimize.push({ title: 'Org Design', body: 'Structural mismatches — wrong spans of control, unclear roles, culture drift — compound over time. A structured org design review every 6 months is high-leverage at any growth stage.' });
+  const speedScore = { fast:95, medium:60, slow:25, unknown:40 }[r[7]] || 50;
+  const speedLabel = { fast:'High execution velocity', medium:'Inconsistent velocity', slow:'Execution drag detected', unknown:'Velocity untracked' }[r[7]];
+  if (r[7] === 'slow') findings.push({ sev:'friction', title:'Execution Drag', body:"Slow orgs pay a compounding cost. S&A's AI operating model compresses time-to-execution across all four capabilities.", cta:null });
+  else if (r[7] === 'unknown') findings.push({ sev:'optimize', title:'No Velocity Baseline', body:'If you\'re not measuring execution speed, you can\'t improve it. Setting a simple cycle-time baseline for your top 3 workstreams takes a day and changes how you manage.', cta:null });
 
-  if (r[2] === 'solo' || r[2] === 'small') optimize.push({ title: 'Leverage Model', body: 'At your size, the highest-ROI move is almost always replacing low-leverage activities (admin, repetitive tasks) with AI or fractional resources so you can stay in your zone of highest value.' });
-  else if (r[2] === 'large' && !friction.find(f => f.title === 'Priority Fog')) friction.push({ title: 'Signal Loss at Scale', body: 'Large orgs systematically filter out bad news before it reaches leadership. Creating direct feedback loops — skip-levels, unfiltered data dashboards, anonymous channels — is critical for staying calibrated.' });
+  if (r[2] === 'pre' && caps.length === 0) { findings.push({ sev:'friction', title:'Foundation First', body:'At the pre-revenue stage, positioning and messaging are the highest-leverage investments. Before you spend on ads or outreach, you need a clear story that resonates.', cta:'S&A builds GTM architecture and positioning in 2–3 days.' }); caps.push({ label:'Build a Brand', type:'primary' }); }
 
-  if (r[3] === 'fast') optimize.push({ title: 'Quality & Rework Rate', body: 'Fast teams often pay a hidden tax in rework and tech debt. Auditing your defect and rework rate will show whether speed is compounding or creating drag.' });
+  const roleMap = { founder:'As a founder', cmo:'As a marketing leader', cto:'As a product/tech leader', revenue:'As a revenue leader' };
+  const roleLabel = roleMap[r[1]] || 'Based on your answers';
+  const critCount = findings.filter(f => f.sev === 'critical').length;
+  const primaryCaps = [...new Set(caps.filter(c => c.type === 'primary').map(c => c.label))];
 
-  const roleSubMap = { founder: 'Founder', exec: 'Executive', operator: 'Operator', consultant: 'Consultant' };
-  document.getElementById('results-title').textContent = `${roleSubMap[r[1]] || 'Growth'} Diagnostic — Your Pain Point Map`;
+  document.getElementById('results-title').textContent = critCount > 0 ? `You have ${critCount} critical gap${critCount > 1 ? 's' : ''} blocking growth` : 'Your growth friction map';
+  document.getElementById('results-summary').textContent = `${roleLabel}, your highest-leverage gaps are in: ${primaryCaps.length ? primaryCaps.join(' and ') : 'execution velocity'}. Here's the full picture.`;
+  document.getElementById('cap-match').innerHTML = [...new Map(caps.map(c => [c.label, c])).values()].map(c => cap(c.label, c.type)).join('');
+  document.getElementById('speed-box-wrap').innerHTML = `<div class="speed-box"><div class="speed-label">Execution Velocity Score</div><div class="speed-row"><div class="speed-track"><div class="speed-fill" style="width:${speedScore}%"></div></div><div class="speed-text">${speedLabel}</div></div></div>`;
 
-  function render(items, id) {
-    document.getElementById(id).innerHTML = items.length
-      ? items.map(i => `<div class="tier-item"><div class="tier-item-title">${i.title}</div><div class="tier-item-body">${i.body}</div></div>`).join('')
-      : '<div class="tier-item"><div class="tier-item-body" style="color:#94A3B8">No items in this category based on your answers.</div></div>';
-  }
-  render(critical, 'tier-critical');
-  render(friction, 'tier-friction');
-  render(optimize, 'tier-optimize');
+  const sorted = [...findings.filter(f=>f.sev==='critical'), ...findings.filter(f=>f.sev==='friction'), ...findings.filter(f=>f.sev==='optimize')];
+  document.getElementById('findings').innerHTML = sorted.length ? sorted.map(f => finding(f.sev, f.title, f.body, f.cta)).join('') : `<div class="finding sev-optimize"><div class="finding-header"><div class="finding-dot"></div><div class="finding-title">Solid Foundation</div></div><div class="finding-body">Your answers suggest a strong baseline. The opportunity is optimization — tightening conversion, compressing cycle times, and deploying AI to extend your lead.</div></div>`;
+
+  const ctaTitles = { 'Build a Brand':'Your brand is leaving revenue on the table', 'Win Digital':'Your digital engine is stalled', 'Grow Revenue':'Your pipeline needs a system, not more reps', 'Tech Products':'You need to build — and S&A can ship it fast' };
+  const ctaBodies = { 'Build a Brand':'S&A delivers positioning, messaging, and brand architecture in 2–3 days. Let\'s look at your specific situation.', 'Win Digital':'S&A builds and executes full digital programs in 1 week. Let\'s talk about your gap.', 'Grow Revenue':'S&A builds SDR automation, CEO-voice outreach, and pipeline intelligence in 1–2 weeks.', 'Tech Products':'S&A builds enterprise-grade products at a fraction of the cost. Let\'s scope your build.' };
+  if (primaryCaps[0]) { document.getElementById('cta-title').textContent = ctaTitles[primaryCaps[0]] || 'Ready to close these gaps?'; document.getElementById('cta-body').textContent = ctaBodies[primaryCaps[0]] || 'S&A delivers in days what traditional firms take months to produce.'; }
 
   document.getElementById('results').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function restart() {
-  Object.keys(answers).forEach(k => delete answers[k]);
+  Object.keys(A).forEach(k => delete A[k]);
   document.getElementById('results').classList.remove('active');
   document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
   document.querySelectorAll('[id^=next]').forEach(b => b.disabled = true);
   document.getElementById('progress-wrap').style.display = 'none';
-  document.getElementById('intro').classList.add('active');
+  document.querySelector('.hero').style.display = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
