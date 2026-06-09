@@ -1,0 +1,369 @@
+Here's the full file — copy everything between the triple backticks:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Diagnostic — Skalatsky & Associates</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0B2545;
+    --navy-light: #1A3A6B;
+    --blue: #1D4ED8;
+    --blue-light: #EFF6FF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #475569;
+    --gray-800: #1E293B;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --radius: 12px;
+    --shadow: 0 2px 16px rgba(11,37,69,0.08);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 80px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
+  .brand-mark { width: 36px; height: 36px; background: var(--navy); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
+  .brand-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .brand-div { color: var(--gray-400); margin: 0 2px; }
+  .brand-sub { font-size: 13px; color: var(--gray-400); font-weight: 500; }
+  .container { width: 100%; max-width: 640px; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .progress-track { flex: 1; height: 4px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.4s ease; }
+  .progress-label { font-size: 12px; color: var(--gray-400); font-weight: 600; white-space: nowrap; }
+
+  .card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); box-shadow: var(--shadow); padding: 36px; }
+  .step { display: none; }
+  .step.active { display: block; }
+  .step-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+  .step-q { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 8px; }
+  .step-hint { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border: 2px solid var(--gray-200); border-radius: 10px; cursor: pointer; transition: all 0.15s ease; background: white; text-align: left; width: 100%; }
+  .option:hover { border-color: var(--blue); background: var(--blue-light); }
+  .option.selected { border-color: var(--blue); background: var(--blue-light); }
+  .option-check { width: 20px; height: 20px; border: 2px solid var(--gray-200); border-radius: 50%; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .option.selected .option-check { background: var(--blue); border-color: var(--blue); }
+  .option.selected .option-check::after { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; display: block; }
+  .option-label { font-size: 15px; font-weight: 600; color: var(--gray-800); }
+  .option-desc { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+  .btn { padding: 12px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-back { background: none; color: var(--gray-600); border: 1px solid var(--gray-200); }
+  .btn-back:hover { background: var(--gray-100); }
+  .btn-next { background: var(--navy); color: white; min-width: 120px; }
+  .btn-next:hover { background: var(--navy-light); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .intro-tag { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 20px; }
+  .intro-title { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1.25; margin-bottom: 14px; }
+  .intro-body { font-size: 15px; color: var(--gray-600); line-height: 1.6; margin-bottom: 28px; }
+  .intro-meta { display: flex; gap: 24px; font-size: 13px; color: var(--gray-400); margin-bottom: 32px; }
+  .intro-meta span::before { content: '· '; }
+  .intro-meta span:first-child::before { content: ''; }
+  .btn-start { background: var(--navy); color: white; padding: 15px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; width: 100%; transition: background 0.15s; }
+  .btn-start:hover { background: var(--navy-light); }
+
+  .results { display: none; }
+  .results.active { display: block; }
+  .results-header { margin-bottom: 32px; }
+  .results-tag { display: inline-block; background: var(--navy); color: white; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 14px; }
+  .results-title { font-size: 24px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .results-sub { font-size: 15px; color: var(--gray-600); }
+
+  .tier { margin-bottom: 24px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); }
+  .tier-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+  .tier-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .tier-critical .tier-header { background: var(--red-light); color: var(--red); border-bottom: 1px solid #FECACA; }
+  .tier-critical .tier-dot { background: var(--red); }
+  .tier-friction .tier-header { background: var(--amber-light); color: var(--amber); border-bottom: 1px solid #FDE68A; }
+  .tier-friction .tier-dot { background: var(--amber); }
+  .tier-optimize .tier-header { background: var(--green-light); color: var(--green); border-bottom: 1px solid #A7F3D0; }
+  .tier-optimize .tier-dot { background: var(--green); }
+  .tier-items { background: white; }
+  .tier-item { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); }
+  .tier-item:last-child { border-bottom: none; }
+  .tier-item-title { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+  .tier-item-body { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+
+  .cta-box { background: var(--navy); border-radius: var(--radius); padding: 28px; text-align: center; margin-top: 8px; }
+  .cta-box h3 { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; }
+  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 20px; }
+  .cta-box a { display: inline-block; background: white; color: var(--navy); padding: 12px 28px; border-radius: 9px; font-size: 14px; font-weight: 700; text-decoration: none; transition: opacity 0.15s; }
+  .cta-box a:hover { opacity: 0.9; }
+  .restart { text-align: center; margin-top: 20px; }
+  .restart button { background: none; border: none; color: var(--gray-400); font-size: 13px; cursor: pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="brand">
+  <div class="brand-mark">S</div>
+  <span class="brand-name">Skalatsky & Associates</span>
+  <span class="brand-div">/</span>
+  <span class="brand-sub">Growth Diagnostic</span>
+</div>
+
+<div class="container">
+
+  <div class="card step active" id="intro">
+    <div class="intro-tag">Free Assessment</div>
+    <div class="intro-title">Find out exactly where your growth is stalling</div>
+    <div class="intro-body">7 questions. 3 minutes. You'll get a personalized pain point map showing your critical gaps, active friction, and optimization opportunities — with specific recommendations based on your situation.</div>
+    <div class="intro-meta">
+      <span>7 questions</span>
+      <span>~3 minutes</span>
+      <span>Instant results</span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Start the Diagnostic →</button>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap" style="display:none;">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">1 of 7</div>
+  </div>
+
+  <div class="card step" id="q1">
+    <div class="step-num">Question 1 of 7</div>
+    <div class="step-q">What best describes your role?</div>
+    <div class="step-hint">This helps us tailor the output to your actual leverage points.</div>
+    <div class="options">
+      <button class="option" onclick="select(1,'founder')"><div class="option-check"></div><div><div class="option-label">Founder / CEO</div><div class="option-desc">You own strategy and are usually in the weeds too</div></div></button>
+      <button class="option" onclick="select(1,'exec')"><div class="option-check"></div><div><div class="option-label">Executive / VP</div><div class="option-desc">You run a function — revenue, ops, product, or marketing</div></div></button>
+      <button class="option" onclick="select(1,'operator')"><div class="option-check"></div><div><div class="option-label">Operator / Director</div><div class="option-desc">You manage execution and cross-functional work</div></div></button>
+      <button class="option" onclick="select(1,'consultant')"><div class="option-check"></div><div><div class="option-label">Consultant / Advisor</div><div class="option-desc">You work across multiple orgs or clients</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(1)">Back</button><button class="btn btn-next" id="next1" onclick="next(1)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q2">
+    <div class="step-num">Question 2 of 7</div>
+    <div class="step-q">How large is your organization?</div>
+    <div class="step-hint">Headcount including contractors and core vendors.</div>
+    <div class="options">
+      <button class="option" onclick="select(2,'solo')"><div class="option-check"></div><div><div class="option-label">Solo / 1–3 people</div><div class="option-desc">Mostly you, maybe a few part-time helpers</div></div></button>
+      <button class="option" onclick="select(2,'small')"><div class="option-check"></div><div><div class="option-label">Small team (4–20)</div><div class="option-desc">A tight crew, everyone wears multiple hats</div></div></button>
+      <button class="option" onclick="select(2,'mid')"><div class="option-check"></div><div><div class="option-label">Mid-size (21–100)</div><div class="option-desc">Functional teams are forming, process gaps are showing</div></div></button>
+      <button class="option" onclick="select(2,'large')"><div class="option-check"></div><div><div class="option-label">Large (100+)</div><div class="option-desc">Established org with layers, politics, and legacy systems</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(2)">Back</button><button class="btn btn-next" id="next2" onclick="next(2)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q3">
+    <div class="step-num">Question 3 of 7</div>
+    <div class="step-q">How would you rate your execution speed?</div>
+    <div class="step-hint">Be honest — this is where most of the real signal is.</div>
+    <div class="options">
+      <button class="option" onclick="select(3,'fast')"><div class="option-check"></div><div><div class="option-label">Fast — we ship and decide quickly</div><div class="option-desc">Things move, sometimes too fast</div></div></button>
+      <button class="option" onclick="select(3,'medium')"><div class="option-check"></div><div><div class="option-label">Medium — decent but inconsistent</div><div class="option-desc">Some things fly, others get stuck for weeks</div></div></button>
+      <button class="option" onclick="select(3,'slow')"><div class="option-check"></div><div><div class="option-label">Slow — everything takes longer than it should</div><div class="option-desc">Approvals, meetings, and rework kill momentum</div></div></button>
+      <button class="option" onclick="select(3,'stalled')"><div class="option-check"></div><div><div class="option-label">Stalled — we're stuck</div><div class="option-desc">Priorities unclear, team not aligned, output flat</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(3)">Back</button><button class="btn btn-next" id="next3" onclick="next(3)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q4">
+    <div class="step-num">Question 4 of 7</div>
+    <div class="step-q">Where does work most often get stuck?</div>
+    <div class="step-hint">Pick the one that costs you the most time or money.</div>
+    <div class="options">
+      <button class="option" onclick="select(4,'decisions')"><div class="option-check"></div><div><div class="option-label">Decisions and approvals</div><div class="option-desc">Nothing moves without someone signing off</div></div></button>
+      <button class="option" onclick="select(4,'handoffs')"><div class="option-check"></div><div><div class="option-label">Handoffs between teams</div><div class="option-desc">Things fall through the cracks between functions</div></div></button>
+      <button class="option" onclick="select(4,'capacity')"><div class="option-check"></div><div><div class="option-label">Capacity — not enough hands</div><div class="option-desc">Good ideas but no one to execute them</div></div></button>
+      <button class="option" onclick="select(4,'clarity')"><div class="option-check"></div><div><div class="option-label">Clarity — unclear priorities or ownership</div><div class="option-desc">People are busy but not on the right things</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(4)">Back</button><button class="btn btn-next" id="next4" onclick="next(4)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q5">
+    <div class="step-num">Question 5 of 7</div>
+    <div class="step-q">How would you describe your current tech and ops stack?</div>
+    <div class="step-hint">Tools, systems, automation — how mature is the infrastructure?</div>
+    <div class="options">
+      <button class="option" onclick="select(5,'none')"><div class="option-check"></div><div><div class="option-label">Mostly manual — email, spreadsheets, calls</div><div class="option-desc">No real systems, high admin overhead</div></div></button>
+      <button class="option" onclick="select(5,'basic')"><div class="option-check"></div><div><div class="option-label">Basic tools — CRM, project manager, Slack</div><div class="option-desc">Some structure but lots of gaps and duplication</div></div></button>
+      <button class="option" onclick="select(5,'moderate')"><div class="option-check"></div><div><div class="option-label">Moderate — integrated systems, some automation</div><div class="option-desc">Things work but there's still too much manual work</div></div></button>
+      <button class="option" onclick="select(5,'advanced')"><div class="option-check"></div><div><div class="option-label">Advanced — automated workflows, real-time data</div><div class="option-desc">Stack is solid, looking for the next unlock</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(5)">Back</button><button class="btn btn-next" id="next5" onclick="next(5)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q6">
+    <div class="step-num">Question 6 of 7</div>
+    <div class="step-q">What's your single most important priority in the next 90 days?</div>
+    <div class="step-hint">Not what should be — what actually is, given current pressure.</div>
+    <div class="options">
+      <button class="option" onclick="select(6,'revenue')"><div class="option-check"></div><div><div class="option-label">Revenue growth</div><div class="option-desc">More pipeline, faster close, better retention</div></div></button>
+      <button class="option" onclick="select(6,'efficiency')"><div class="option-check"></div><div><div class="option-label">Operational efficiency</div><div class="option-desc">Do more with less, reduce waste and rework</div></div></button>
+      <button class="option" onclick="select(6,'product')"><div class="option-check"></div><div><div class="option-label">Product or service delivery</div><div class="option-desc">Ship faster, higher quality, better customer experience</div></div></button>
+      <button class="option" onclick="select(6,'team')"><div class="option-check"></div><div><div class="option-label">Team and org structure</div><div class="option-desc">Right people, right roles, right culture</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(6)">Back</button><button class="btn btn-next" id="next6" onclick="next(6)" disabled>Next →</button></div>
+  </div>
+
+  <div class="card step" id="q7">
+    <div class="step-num">Question 7 of 7</div>
+    <div class="step-q">What's the single biggest thing blocking your growth right now?</div>
+    <div class="step-hint">The honest answer — not the one you'd say in a board meeting.</div>
+    <div class="options">
+      <button class="option" onclick="select(7,'me')"><div class="option-check"></div><div><div class="option-label">Me — I'm the bottleneck</div><div class="option-desc">Too many decisions run through me, I can't delegate</div></div></button>
+      <button class="option" onclick="select(7,'talent')"><div class="option-check"></div><div><div class="option-label">Talent — wrong people or not enough</div><div class="option-desc">I don't have the team to execute on what I know needs to happen</div></div></button>
+      <button class="option" onclick="select(7,'strategy')"><div class="option-check"></div><div><div class="option-label">Strategy — unclear direction or conflicting priorities</div><div class="option-desc">We're not aligned on what we're actually building toward</div></div></button>
+      <button class="option" onclick="select(7,'systems')"><div class="option-check"></div><div><div class="option-label">Systems — our infrastructure can't support scale</div><div class="option-desc">Manual work, bad data, or broken processes are the ceiling</div></div></button>
+    </div>
+    <div class="nav"><button class="btn btn-back" onclick="back(7)">Back</button><button class="btn btn-next" id="next7" onclick="showResults()" disabled>See My Results →</button></div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="results-header">
+      <div class="results-tag">Your Pain Point Map</div>
+      <div class="results-title" id="results-title">Growth Diagnostic Results</div>
+      <div class="results-sub">Based on your answers, here's where your growth is actually stalling.</div>
+    </div>
+    <div class="tier tier-critical">
+      <div class="tier-header"><div class="tier-dot"></div>Critical Gaps — Address First</div>
+      <div class="tier-items" id="tier-critical"></div>
+    </div>
+    <div class="tier tier-friction">
+      <div class="tier-header"><div class="tier-dot"></div>Active Friction — Costing You Now</div>
+      <div class="tier-items" id="tier-friction"></div>
+    </div>
+    <div class="tier tier-optimize">
+      <div class="tier-header"><div class="tier-dot"></div>Optimization Areas — Unlock Later</div>
+      <div class="tier-items" id="tier-optimize"></div>
+    </div>
+    <div class="cta-box">
+      <h3>Want to go deeper?</h3>
+      <p>We do focused 90-minute strategy sessions to turn this into a concrete action plan.</p>
+      <a href="mailto:max@skalatsky.com?subject=Growth Diagnostic — Let's Talk">Book a Strategy Session</a>
+    </div>
+    <div class="restart"><button onclick="restart()">Start over</button></div>
+  </div>
+
+</div>
+
+<script>
+const answers = {};
+
+function startQuiz() {
+  document.getElementById('intro').classList.remove('active');
+  document.getElementById('progress-wrap').style.display = 'flex';
+  showStep(1);
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('q' + n);
+  if (el) el.classList.add('active');
+  document.getElementById('progress-fill').style.width = ((n - 1) / 7 * 100) + '%';
+  document.getElementById('progress-label').textContent = n + ' of 7';
+}
+
+function select(q, val) {
+  answers[q] = val;
+  document.querySelectorAll('#q' + q + ' .option').forEach(o => o.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('next' + q).disabled = false;
+}
+
+function next(q) { if (answers[q]) showStep(q + 1); }
+
+function back(q) {
+  if (q === 1) {
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('intro').classList.add('active');
+  } else { showStep(q - 1); }
+}
+
+function showResults() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-label').textContent = 'Complete';
+
+  const r = answers;
+  const critical = [], friction = [], optimize = [];
+  const roleMap = { founder: 'As a founder', exec: 'As an executive', operator: 'As an operator', consultant: 'As a consultant' };
+  const roleLabel = roleMap[r[1]] || 'In your role';
+
+  if (r[7] === 'me') critical.push({ title: 'Founder Bottleneck', body: `${roleLabel}, having all decisions run through you is your highest-leverage problem to solve. Delegation frameworks and async decision-making are the unlock.` });
+  else if (r[7] === 'talent') critical.push({ title: 'Talent Gap', body: "You know what needs to happen but can't execute without the right people. Hiring or fractional support for your highest-leverage gaps should be the immediate focus." });
+  else if (r[7] === 'strategy') critical.push({ title: 'Strategic Misalignment', body: 'Without a shared, committed direction, every other investment is undermined. Getting leadership aligned on a 90-day north star is the prerequisite to everything else.' });
+  else if (r[7] === 'systems') critical.push({ title: 'Infrastructure Ceiling', body: 'Your current systems can\'t support the next stage of growth. Manual work and bad data are compounding — this needs a systems audit and a clear automation roadmap.' });
+
+  if (r[3] === 'slow' || r[3] === 'stalled') critical.push({ title: 'Execution Velocity', body: 'Your team is losing compounding momentum every week you move slowly. Speed is a strategy — identifying and removing the single biggest drag on cycle time is worth more than most initiatives.' });
+
+  if (r[4] === 'decisions') friction.push({ title: 'Decision Latency', body: 'Approval chains are silently killing throughput. Documenting a decision rights framework (RACI or DACI) and pushing decisions down to the lowest competent level will reclaim weeks per quarter.' });
+  else if (r[4] === 'handoffs') friction.push({ title: 'Cross-functional Handoff Failures', body: 'Work falling between teams is a system design problem, not a people problem. Defining clear ownership and handoff protocols for your top 3 recurring workflows will have an immediate impact.' });
+  else if (r[4] === 'capacity') friction.push({ title: 'Capacity Constraints', body: 'Before hiring, audit whether automation or AI tooling could eliminate 20–30% of existing workload. Then hire against a clear capacity model, not a feeling of being stretched.' });
+  else if (r[4] === 'clarity') friction.push({ title: 'Priority Fog', body: 'Busy teams with no shared priority list create misaligned effort and burnout. A weekly top-3 priorities ritual, visible to all, fixes more than any project management tool.' });
+
+  if (r[5] === 'none') friction.push({ title: 'Manual Ops Overhead', body: "Operating without systems at your scale means you're paying a massive hidden tax in admin, errors, and lost data. Even one well-configured tool (CRM, project manager) compounds significantly." });
+  else if (r[5] === 'basic') friction.push({ title: 'Fragmented Stack', body: 'Disconnected tools create duplicate work and data gaps. Mapping your top 5 workflows and identifying where handoffs happen manually will surface the highest-ROI integration opportunities.' });
+  else if (r[5] === 'moderate') optimize.push({ title: 'Automation Opportunities', body: 'You have a solid foundation. The next unlock is identifying your top 3 recurring manual workflows and applying AI or no-code automation — typically worth 5–10 hours per person per week.' });
+  else if (r[5] === 'advanced') optimize.push({ title: 'Intelligence Layer', body: 'Your stack is mature. The opportunity is moving from automation to intelligence — using your data to surface decisions, anomalies, and recommendations proactively rather than reactively.' });
+
+  if (r[6] === 'revenue') {
+    if (r[3] === 'fast') optimize.push({ title: 'Revenue Model Optimization', body: 'With strong execution, your revenue lever is likely conversion or expansion — not pipeline volume. Pricing, packaging, and upsell motion deserve a dedicated 30-day audit.' });
+    else friction.push({ title: 'Revenue Execution Gap', body: 'Revenue growth with slow execution means pipeline is leaking between stages. Mapping your revenue process and identifying where deals or leads stall will show you where to focus.' });
+  } else if (r[6] === 'efficiency') optimize.push({ title: 'Efficiency Audit', body: 'A time-motion analysis of your top 5 recurring processes typically reveals 20–40% waste. Starting with the highest-frequency workflows gives the fastest payback.' });
+  else if (r[6] === 'product') optimize.push({ title: 'Delivery Cycle Compression', body: 'Shipping faster with fewer defects is usually a process problem, not a talent problem. Mapping your current delivery cycle and removing handoffs, approval gates, and rework loops is the lever.' });
+  else if (r[6] === 'team') optimize.push({ title: 'Org Design', body: 'Structural mismatches — wrong spans of control, unclear roles, culture drift — compound over time. A structured org design review every 6 months is high-leverage at any growth stage.' });
+
+  if (r[2] === 'solo' || r[2] === 'small') optimize.push({ title: 'Leverage Model', body: 'At your size, the highest-ROI move is almost always replacing low-leverage activities (admin, repetitive tasks) with AI or fractional resources so you can stay in your zone of highest value.' });
+  else if (r[2] === 'large' && !friction.find(f => f.title === 'Priority Fog')) friction.push({ title: 'Signal Loss at Scale', body: 'Large orgs systematically filter out bad news before it reaches leadership. Creating direct feedback loops — skip-levels, unfiltered data dashboards, anonymous channels — is critical for staying calibrated.' });
+
+  if (r[3] === 'fast') optimize.push({ title: 'Quality & Rework Rate', body: 'Fast teams often pay a hidden tax in rework and tech debt. Auditing your defect and rework rate will show whether speed is compounding or creating drag.' });
+
+  const roleSubMap = { founder: 'Founder', exec: 'Executive', operator: 'Operator', consultant: 'Consultant' };
+  document.getElementById('results-title').textContent = `${roleSubMap[r[1]] || 'Growth'} Diagnostic — Your Pain Point Map`;
+
+  function render(items, id) {
+    document.getElementById(id).innerHTML = items.length
+      ? items.map(i => `<div class="tier-item"><div class="tier-item-title">${i.title}</div><div class="tier-item-body">${i.body}</div></div>`).join('')
+      : '<div class="tier-item"><div class="tier-item-body" style="color:#94A3B8">No items in this category based on your answers.</div></div>';
+  }
+  render(critical, 'tier-critical');
+  render(friction, 'tier-friction');
+  render(optimize, 'tier-optimize');
+
+  document.getElementById('results').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById('results').classList.remove('active');
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('[id^=next]').forEach(b => b.disabled = true);
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('intro').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
