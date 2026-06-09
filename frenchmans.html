@@ -1297,10 +1297,9 @@ function selectPersona(p){
 function signIn(){
   var execSel = document.getElementById('card-exec').classList.contains('selected');
   var staffSel = document.getElementById('card-staff').classList.contains('selected');
-  var email = document.getElementById('login-email').value;
-  if(execSel || email.indexOf('jzaloom') > -1){ goTo('exec'); }
-  else if(staffSel || email.indexOf('akempf') > -1){ goTo('staff-fnb'); }
-  else if(staffSel || email.indexOf('rmirucki') > -1){ goTo('staff'); }
+  if(execSel){ goTo('exec'); }
+  else if(staffSel && staffMode === 'alex'){ goTo('staff-fnb'); }
+  else if(staffSel && staffMode === 'rene'){ goTo('staff'); }
   else { goTo('home'); }
 }
 function goTo(s){
