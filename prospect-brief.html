@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&A Prospect Brief Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #f0f0f0;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 24px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: #006699;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .form-section {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 10px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  input, select, textarea {
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #f0f0f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #006699;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #444;
+  }
+
+  select option {
+    background: #111;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  .generate-btn {
+    width: 100%;
+    padding: 14px;
+    background: #006699;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    letter-spacing: 0.2px;
+    margin-top: 8px;
+  }
+
+  .generate-btn:hover { background: #0077aa; }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: #555;
+    font-size: 13px;
+  }
+
+  .loading.active { display: block; }
+
+  .loading-bar {
+    width: 100%;
+    height: 2px;
+    background: #1e1e1e;
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+
+  .loading-bar-fill {
+    height: 100%;
+    background: #006699;
+    border-radius: 2px;
+    animation: loading 2s ease-in-out infinite;
+  }
+
+  @keyframes loading {
+    0% { width: 0%; margin-left: 0; }
+    50% { width: 70%; margin-left: 0; }
+    100% { width: 0%; margin-left: 100%; }
+  }
+
+  .brief-output {
+    display: none;
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .brief-output.active { display: block; }
+
+  .brief-header {
+    background: #006699;
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .brief-header-left h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 2px;
+  }
+
+  .brief-header-left p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .brief-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    transition: opacity 0.15s;
+  }
+
+  .action-btn:hover { opacity: 0.85; }
+
+  .btn-copy {
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+
+  .btn-new {
+    background: white;
+    color: #006699;
+  }
+
+  .brief-body {
+    padding: 28px;
+  }
+
+  .brief-section {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .brief-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #006699;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+  }
+
+  .section-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #ccc;
+    white-space: pre-wrap;
+  }
+
+  .section-content strong {
+    color: #f0f0f0;
+    font-weight: 600;
+  }
+
+  .meta-bar {
+    display: flex;
+    gap: 20px;
+    padding: 14px 28px;
+    background: #0d0d0d;
+    border-top: 1px solid #1e1e1e;
+    font-size: 11px;
+    color: #555;
+  }
+
+  .meta-item span {
+    color: #888;
+    font-weight: 500;
+  }
+
+  .error-msg {
+    display: none;
+    background: #1a0a0a;
+    border: 1px solid #3a1515;
+    border-radius: 8px;
+    padding: 16px 20px;
+    color: #cc4444;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+
+  .error-msg.active { display: block; }
+
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .brief-header { flex-direction: column; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-mark">S&A</div>
+      <h1>Prospect Brief Generator</h1>
+    </div>
+    <p>Enter what you know. Get a WonWay-style brief in seconds.</p>
+  </div>
+
+  <div class="form-section" id="formSection">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prospect Name</label>
+        <input type="text" id="prospectName" placeholder="Greg Paulus" />
+      </div>
+      <div class="form-group">
+        <label>Company</label>
+        <input type="text" id="companyName" placeholder="WonWay Health" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Industry / Vertical</label>
+        <input type="text" id="industry" placeholder="Healthcare, SaaS, Private Club..." />
+      </div>
+      <div class="form-group">
+        <label>Source</label>
+        <select id="source">
+          <option value="">How did this come in?</option>
+          <option value="Esteban referral">Esteban referral</option>
+          <option value="Brett referral">Brett referral</option>
+          <option value="Mari referral">Mari referral</option>
+          <option value="Inbound">Inbound</option>
+          <option value="Max direct">Max direct</option>
+          <option value="Event / conference">Event / conference</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full">
+        <label>What do you know about their situation?</label>
+        <textarea id="situation" placeholder="30-year healthcare sales veteran with an AI prototype built on Perplexity. Has at least one qualified prospect. Looking to productize and go to market..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full">
+        <label>What have they already tried or built? (optional)</label>
+        <textarea id="existing" placeholder="Built a Perplexity-based prototype. Partner Andrea has been doing the technical work. No hosting solution yet..." style="min-height: 60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full">
+        <label>Anything else relevant? (optional)</label>
+        <textarea id="notes" placeholder="Has a paying prospect already. Justin flagged the key question is how much is codified vs still in Greg's head..." style="min-height: 60px;"></textarea>
+      </div>
+    </div>
+
+    <button class="generate-btn" id="generateBtn" onclick="generateBrief()">Generate Prospect Brief</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="loading" id="loadingState">
+    <p>Building your brief...</p>
+    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  </div>
+
+  <div class="brief-output" id="briefOutput">
+    <div class="brief-header">
+      <div class="brief-header-left">
+        <h2 id="briefTitle">Prospect Brief</h2>
+        <p id="briefMeta">S&A Internal | Confidential</p>
+      </div>
+      <div class="brief-actions">
+        <button class="action-btn btn-copy" onclick="copyBrief()">Copy</button>
+        <button class="action-btn btn-new" onclick="resetForm()">New Brief</button>
+      </div>
+    </div>
+    <div class="brief-body" id="briefBody"></div>
+    <div class="meta-bar">
+      <div class="meta-item">S&A Internal Use Only</div>
+      <div class="meta-item">Generated <span id="briefDate"></span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SECTIONS = [
+  { key: "problem", label: "What We Think The Problem Is" },
+  { key: "competitive", label: "Competitive Context" },
+  { key: "listening", label: "What We Are Listening For" },
+  { key: "options", label: "Engagement Options" },
+  { key: "next", label: "What Happens Next" },
+  { key: "opener", label: "The One Opening Question" }
+];
+
+async function generateBrief() {
+  const name = document.getElementById('prospectName').value.trim();
+  const company = document.getElementById('companyName').value.trim();
+  const industry = document.getElementById('industry').value.trim();
+  const source = document.getElementById('source').value;
+  const situation = document.getElementById('situation').value.trim();
+  const existing = document.getElementById('existing').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+
+  if (!name || !company || !situation) {
+    showError('Please fill in prospect name, company, and their situation before generating.');
+    return;
+  }
+
+  hideError();
+  setLoading(true);
+
+  const prompt = `You are Archimedes, the internal AI advisor for Skalatsky & Associates (S&A), a marketing, product, and technology firm founded by Max Skalatsky. Max is a former FBI Special Agent, 15-year strategy consultant, and former Global VP of Product Marketing at SAP. S&A's core value proposition is time compression and labor arbitrage via AI — they go from zero to working deliverable faster than any traditional firm.
+
+Generate an internal prospect brief in the style of the WonWay Health brief Max wrote on June 16, 2026. That brief was direct, punchy, intelligence-driven, and gave the team exactly what they needed to show up as peers rather than salespeople.
+
+PROSPECT DETAILS:
+Name: ${name}
+Company: ${company}
+Industry: ${industry || 'Not specified'}
+Source: ${source || 'Not specified'}
+Situation: ${situation}
+What they have built or tried: ${existing || 'Unknown'}
+Additional context: ${notes || 'None'}
+
+S&A's proven engagement types based on real client work:
+- Website and digital presence rebuild (Els, nonprofit client)
+- iOS app build and launch (NTT / No Tees Tour, $210K engagement)
+- AI training delivery (Els for Autism, July 2026)
+- Marketing architecture and GTM strategy
+- Product definition and prototype hardening
+- Full launch motion (brand, digital, content, demand gen)
+
+Generate the brief as a JSON object with exactly these keys:
+{
+  "problem": "2-3 sentences on what we think the real problem is underneath the surface ask",
+  "competitive": "Named competitors or alternatives they are likely aware of or using, with one sentence each on why S&A is different",
+  "listening": "4 specific things to listen for in the first meeting — written as questions or signals, not instructions",
+  "options": "3-4 engagement options with a one sentence description of each and what it leads to",
+  "next": "3 scenarios: if ready to move, if needs time, if not a fit — one sentence each",
+  "opener": "The single best opening question for this specific prospect"
+}
+
+Return ONLY the JSON object. No preamble, no markdown, no backticks.`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(i => i.text || "").join("").trim();
+
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      const cleaned = text.replace(/```json|```/g, "").trim();
+      parsed = JSON.parse(cleaned);
+    }
+
+    renderBrief(parsed, name, company);
+
+  } catch (err) {
+    setLoading(false);
+    showError('Something went wrong generating the brief. Try again.');
+    console.error(err);
+  }
+}
+
+function renderBrief(data, name, company) {
+  setLoading(false);
+
+  document.getElementById('briefTitle').textContent = `${name} — ${company}`;
+  document.getElementById('briefMeta').textContent = `S&A Internal | Confidential`;
+  document.getElementById('briefDate').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  const body = document.getElementById('briefBody');
+  body.innerHTML = '';
+
+  SECTIONS.forEach(section => {
+    if (!data[section.key]) return;
+    const div = document.createElement('div');
+    div.className = 'brief-section';
+    div.innerHTML = `
+      <div class="section-label">${section.label}</div>
+      <div class="section-content">${formatContent(data[section.key])}</div>
+    `;
+    body.appendChild(div);
+  });
+
+  document.getElementById('briefOutput').classList.add('active');
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('briefOutput').scrollIntoView({ behavior: 'smooth' });
+}
+
+function formatContent(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+function copyBrief() {
+  const name = document.getElementById('briefTitle').textContent;
+  const date = document.getElementById('briefDate').textContent;
+  let text = `${name}\nS&A Internal | Confidential\n${date}\n\n`;
+
+  SECTIONS.forEach(section => {
+    const el = document.querySelector(`.brief-section .section-label`);
+    const sections = document.querySelectorAll('.brief-section');
+    sections.forEach(s => {
+      const label = s.querySelector('.section-label').textContent;
+      const content = s.querySelector('.section-content').innerText;
+      text += `${label.toUpperCase()}\n${content}\n\n`;
+    });
+  });
+
+  const sections = document.querySelectorAll('.brief-section');
+  let copyText = `${name}\nS&A Internal | Confidential\n${date}\n\n`;
+  sections.forEach(s => {
+    const label = s.querySelector('.section-label').textContent;
+    const content = s.querySelector('.section-content').innerText;
+    copyText += `— ${label} —\n${content}\n\n`;
+  });
+
+  navigator.clipboard.writeText(copyText).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+function resetForm() {
+  document.getElementById('briefOutput').classList.remove('active');
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('briefBody').innerHTML = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setLoading(state) {
+  document.getElementById('loadingState').classList.toggle('active', state);
+  document.getElementById('generateBtn').disabled = state;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('active');
+}
+
+function hideError() {
+  document.getElementById('errorMsg').classList.remove('active');
+}
+</script>
+</body>
+</html>
