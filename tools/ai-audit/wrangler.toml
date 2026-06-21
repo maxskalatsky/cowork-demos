@@ -1,0 +1,7 @@
+name = "sa-ai-audit-dev"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ALLOW_ORIGIN = "*"
+FINDINGS_MODE = "rules"
