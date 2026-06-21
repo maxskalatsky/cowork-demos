@@ -23,6 +23,21 @@
  * uncomment the KV block at the bottom and bind a KV namespace named AUDITS in wrangler.toml.
  */
 
+const KNOWN_BRANDS = new Set([
+  "espn.com","nike.com","apple.com","google.com","amazon.com",
+  "microsoft.com","facebook.com","instagram.com","twitter.com","x.com",
+  "linkedin.com","netflix.com","disney.com","coca-cola.com","pepsi.com",
+  "ford.com","gm.com","bmw.com","mercedes.com","adidas.com",
+  "nordstrom.com","walmart.com","target.com","homedepot.com","lowes.com",
+  "mcdonalds.com","starbucks.com","salesforce.com","oracle.com","sap.com",
+  "ibm.com","intel.com","cisco.com","adobe.com","nfl.com",
+  "nba.com","mlb.com","nhl.com","cnn.com","foxnews.com",
+  "nytimes.com","wsj.com","bloomberg.com","forbes.com","huffpost.com",
+  "reddit.com","youtube.com","tiktok.com","snapchat.com","uber.com",
+  "lyft.com","airbnb.com","doordash.com","stripe.com","shopify.com",
+  "squarespace.com","wix.com",
+]);
+
 export default {
   async fetch(request, env) {
     const cors = {
@@ -40,6 +55,15 @@ export default {
     const target = normalizeUrl(body.url);
     if (!target) return json({ error: "invalid url" }, 400, cors);
 
+    // Known brand check — returns early, no email required
+    const hostname = new URL(target).hostname.replace(/^www\./, "");
+    if (KNOWN_BRANDS.has(hostname)) {
+      return json({
+        known_brand: true,
+        message: "This tool is designed for private and growth stage businesses. Enterprise and globally recognized brands signal differently. Email signal@skalatsky.com for an enterprise conversation.",
+      }, 200, cors);
+    }
+
     const email = (body.email || "").trim().toLowerCase();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json({ error: "A valid work email is required." }, 400, cors);
@@ -49,7 +73,7 @@ export default {
     if (env.AUDITS) {
       const prior = await env.AUDITS.get(email);
       if (prior) {
-        return json({ error: "You have already run a free Signal. Email audit@skalatsky.com to discuss your results." }, 429, cors);
+        return json({ error: "You have already run a free Signal. Email signal@skalatsky.com to discuss your results." }, 429, cors);
       }
     }
 
