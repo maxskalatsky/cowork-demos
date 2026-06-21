@@ -40,6 +40,19 @@ export default {
     const target = normalizeUrl(body.url);
     if (!target) return json({ error: "invalid url" }, 400, cors);
 
+    const email = (body.email || "").trim().toLowerCase();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return json({ error: "A valid work email is required." }, 400, cors);
+    }
+
+    // One free Signal per email — check KV before running anything expensive
+    if (env.AUDITS) {
+      const prior = await env.AUDITS.get(email);
+      if (prior) {
+        return json({ error: "You have already run a free Signal. Email audit@skalatsky.com to discuss your results." }, 429, cors);
+      }
+    }
+
     try {
       // 1. crawl --------------------------------------------------------------
       const page = await dataForSeoOnPage(target, env);   // raw on-page signals
@@ -73,6 +86,18 @@ export default {
           const s2 = capJson.indexOf("{"); const e3 = capJson.lastIndexOf("}");
           if (s2 > -1 && e3 > -1) { const p2 = JSON.parse(capJson.slice(s2, e3 + 1)); if (p2.status && p2.gap) capability = p2; }
         } catch {}
+      }
+
+      // Log audit to KV
+      if (env.AUDITS) {
+        await env.AUDITS.put(email, JSON.stringify({
+          email,
+          url: target,
+          timestamp: new Date().toISOString(),
+          seoScore: scores.total,
+          seoGrade,
+          agentLevel: agent.level,
+        }));
       }
 
       report.positioning = positioning;

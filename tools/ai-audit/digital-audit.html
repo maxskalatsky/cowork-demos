@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>S&A Digital Audit — Dev</title>
+<title>The Digital Signal — Dev</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
 <style>
@@ -96,9 +96,9 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 </head>
 <body>
 <div class="wrap">
-  <span class="dev-badge">DEV — sa-ai-audit-dev.saaudit.workers.dev</span>
-  <h1>S&A Digital Audit</h1>
-  <p class="sub">Test environment. Points to dev worker only.</p>
+  <span class="dev-badge">DEV — THE DIGITAL SIGNAL</span>
+  <h1>The Digital Signal</h1>
+  <p class="sub">Your website is the front door to your business. Find out what signal it is sending.</p>
 
   <div id="sa-audit">
     <div id="sa-intake">
@@ -123,12 +123,16 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q3" value="nothing"><span>We have not done anything yet.</span></label>
         </div>
         <div class="sa-field">
+          <label for="sa-email">Your work email</label>
+          <input type="email" id="sa-email" class="sa-input" placeholder="you@company.com" autocomplete="email" required>
+        </div>
+        <div class="sa-field" style="margin-top:16px">
           <label for="sa-url">Your website</label>
           <input type="url" id="sa-url" class="sa-input" placeholder="yourbusiness.com" autocomplete="url" inputmode="url">
         </div>
         <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Run My Free Audit</button></div>
         <p id="sa-err" class="sa-err"></p>
-        <p class="sa-note">Dev environment. Worker: sa-ai-audit-dev.saaudit.workers.dev</p>
+        <p class="sa-note">Free. One per business. Results appear here instantly.</p>
       </div>
     </div>
 
@@ -164,8 +168,8 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         <div class="sa-agent-row"><div class="sa-agent-level" id="sa-alevel"></div><p class="sa-agent-line" id="sa-aline"></p></div>
         <div class="sa-meter" id="sa-meter"></div>
       </div>
-      <p class="sa-section-label">Build the Product</p>
-      <div class="sa-cap-card" id="sa-cap-card">
+      <p class="sa-section-label" style="display:none">Build the Product</p>
+      <div class="sa-cap-card" id="sa-cap-card" style="display:none">
         <p class="sa-cap-gap" id="sa-cap-gap"></p>
         <p class="sa-cap-consequence" id="sa-cap-consequence"></p>
       </div>
@@ -204,7 +208,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     return {q1:val('q1'),q2:val('q2'),q3:val('q3')};
   }
 
-  var LIMIT_KEY='sa_audit_done_dev_v2';
+  var LIMIT_KEY='sa_audit_done_dev_v3';
   function loadLimit(){ try{ return JSON.parse(localStorage.getItem(LIMIT_KEY)||'{}'); }catch(e){ return {}; } }
   function saveLimit(m){ try{ localStorage.setItem(LIMIT_KEY,JSON.stringify(m)); }catch(e){} }
 
@@ -213,18 +217,21 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     err.style.display='none';
     var a=answers();
     if(!a.q1||!a.q2||!a.q3){ err.textContent='Please answer all three questions first.'; err.style.display='block'; return; }
+    var emailVal=($('sa-email').value||'').trim();
+    if(!emailVal||emailVal.indexOf('@')<1){ err.textContent='Please enter a valid work email.'; err.style.display='block'; return; }
     var u=normalizeUrl($('sa-url').value);
     if(!u){ err.textContent='Please enter a valid website address.'; err.style.display='block'; return; }
-    var key=u.hostname.replace(/^www\./,'').toLowerCase();
+    var cacheKey=emailVal.toLowerCase();
     var done=loadLimit();
-    if(done[key]){ render(done[key]); return; }
+    if(done[cacheKey]){ render(done[cacheKey]); return; }
     startLoading();
-    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,answers:a}) })
+    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal,answers:a}) })
       .then(function(res){ return res.json(); })
       .then(function(rep){
+        if(rep.error){ stopLoading(); err.textContent=rep.error; err.style.display='block'; return; }
         rep.displayUrl=u.hostname.replace(/^www\./,'');
         rep.answers=a;
-        done[key]=rep; saveLimit(done);
+        done[cacheKey]=rep; saveLimit(done);
         render(rep);
       })
       .catch(function(){

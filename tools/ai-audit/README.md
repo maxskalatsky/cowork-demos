@@ -1,15 +1,21 @@
-# S&A Digital Audit Tool
+# The Digital Signal
+
+Free website benchmark tool. One audit per business. Results appear instantly.
 
 ## What Is Here Now
 
-The dev environment for the S&A Digital Audit tool. Everything in this folder is isolated from production — no change here touches the live site until you explicitly promote it.
+The dev environment for The Digital Signal. Everything in this folder is isolated from production — no change here touches the live site until you explicitly promote it.
 
 **Files**
-- `worker.js` — Cloudflare Worker that crawls a submitted URL via DataForSEO, scores it on Anya's SEO rubric, runs agent readiness checks, and returns a JSON report.
-- `digital-audit.html` — standalone audit page that calls the dev worker. Open it directly in a browser — no local server needed.
-- `wrangler.toml` — deploy config pointing at the dev worker (`sa-ai-audit-dev`).
+- `worker.js` — Cloudflare Worker: crawls the submitted URL via DataForSEO, runs positioning analysis, scores SEO on Anya's rubric, checks agent readiness, enforces one-per-email via KV, logs every run.
+- `digital-audit.html` — standalone audit page that calls the dev worker. Open directly in a browser — no local server needed.
+- `wrangler.toml` — deploy config for the dev worker (`sa-ai-audit-dev`). KV namespace `AUDITS` is stubbed here; bind it after creating the namespace.
 
-**Agent readiness scoring** is rules-based and runs entirely from signals fetched directly from the target site — no external API required. Baseline is 40 (EMERGING). Points are added for: `llms.txt` present (+20), robots.txt not blocking known AI crawlers (+15), schema markup (+10), semantic heading structure (+10), meaningful plain-text content (+5). Cap is 100. BASIC only shows when the score falls below 40.
+**Agent readiness scoring** is rules-based, no external API. Baseline 40 (EMERGING). Points added for: `llms.txt` present (+20), robots.txt not blocking AI crawlers (+15), schema markup (+10), semantic headings (+10), meaningful text (+5). Cap 100. BASIC only below 40.
+
+**Email gate + KV rate limiting.** Every audit requires a valid email. The worker checks Cloudflare KV before running — same email gets a clean error, not a second audit. Every successful run is logged to KV with email, URL, timestamp, and scores.
+
+**Build the Product section** is hidden pending spec. The card and section label are `display:none` in the HTML. Do not remove them — they will be enabled when the section is defined.
 
 **Dev worker:** `https://sa-ai-audit-dev.saaudit.workers.dev`
 
@@ -18,43 +24,46 @@ The dev environment for the S&A Digital Audit tool. Everything in this folder is
 npx wrangler deploy
 ```
 
-**Test locally:** open `digital-audit.html` in a browser. It calls the live dev worker and returns real audit results with no server setup.
+**Test locally:** open `digital-audit.html` in a browser. Fill in all three questions, a work email, and a website URL.
 
 ---
 
 ## What Needs To Happen Before Production
 
-1. **Wire up Cloudflare URL Scanner.** Create a Cloudflare API token with URL Scanner read and write permissions scoped to account `9d33c8a45a0c3b125d36bd7fd5ff224e`. Set it as a worker secret:
+1. **Wire up Cloudflare KV namespace `AUDITS`** for rate limiting and audit logging. Already stubbed in `wrangler.toml`. Create the namespace and add the real ID:
    ```
-   npx wrangler secret put CLOUDFLARE_API_TOKEN
+   npx wrangler kv namespace create AUDITS
    ```
-   The worker currently uses the rules-based scorer because no valid token exists. Restoring the CF URL Scanner path requires the token and updating `scoreAgentReadiness` back to the API version.
+   Then update `wrangler.toml` with the returned ID. Verify email rate limiting is working end-to-end before launch — run the same email twice and confirm the second request returns the limit message.
 
-2. **Lock down CORS.** Change `ALLOW_ORIGIN` in `wrangler.toml` from `"*"` to `"https://skalatsky.com"` before deploying to production.
+2. **Spec and build the Build the Product section.** Pending definition. Do not launch without it. The card is hidden in the HTML but the `capability` object is already returned by the worker when `ANTHROPIC_API_KEY` is set.
 
-3. **Add the Anthropic API key** to activate LLM polish mode:
+3. **Lock down CORS.** Change `ALLOW_ORIGIN` in `wrangler.toml` from `"*"` to `"https://skalatsky.com"`.
+
+4. **Add the Anthropic API key** and set `FINDINGS_MODE = "llm"` to activate Claude-polished findings and the digital capability assessment:
    ```
    npx wrangler secret put ANTHROPIC_API_KEY
    ```
 
-4. **Switch findings mode to LLM.** In `wrangler.toml`, set `FINDINGS_MODE = "llm"`. This hands the four findings to Claude for site-specific rewriting after the rules pass runs.
+5. **Add a valid Cloudflare API token** if reinstating the URL Scanner path for agent readiness scoring:
+   ```
+   npx wrangler secret put CLOUDFLARE_API_TOKEN
+   ```
+   Token needs URL Scanner read and write permissions on account `9d33c8a45a0c3b125d36bd7fd5ff224e`.
 
-5. **Verify scores before flipping production.** Run audits against several real sites from the dev worker and confirm the report sections render correctly — SEO grade, all four findings, agent readiness level, positioning check, and digital capability assessment.
+6. **Replace the audit section in `skalatsky.com/index.html`** with the final markup from `digital-audit.html`. Update `SA_WORKER_URL` in the production page to `https://sa-ai-audit.saaudit.workers.dev`.
 
 ---
 
 ## How To Promote To Production
 
-1. **Deploy worker to production.** From inside this folder, deploy using the production worker name:
+1. Deploy to the production worker from inside this folder:
    ```
    npx wrangler deploy --name sa-ai-audit
    ```
 
-2. **Update skalatsky.com.** Replace the audit section in `skalatsky.com/index.html` with the final markup from `digital-audit.html`.
+2. Replace the audit section in `skalatsky.com/index.html` with the final markup from `digital-audit.html`.
 
-3. **Point the production page at the production worker.** In the production `index.html`, update `SA_WORKER_URL` to:
-   ```
-   https://sa-ai-audit.saaudit.workers.dev
-   ```
+3. Update `SA_WORKER_URL` in the production page to `https://sa-ai-audit.saaudit.workers.dev`.
 
-4. **Push to production and verify.** Confirm all three report sections render correctly end-to-end: SEO grade and four findings, agent readiness level and meter, positioning and digital capability cards.
+4. Verify all sections render correctly end-to-end: positioning tags and verdict, SEO grade and four findings, agent readiness level and meter. Confirm the Build the Product section does not render.

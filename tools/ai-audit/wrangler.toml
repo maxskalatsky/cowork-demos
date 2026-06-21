@@ -5,3 +5,7 @@ compatibility_date = "2024-01-01"
 [vars]
 ALLOW_ORIGIN = "*"
 FINDINGS_MODE = "rules"
+
+[[kv_namespaces]]
+binding = "AUDITS"
+id = "af67756957b3402d9e81d1c1ad3d4179"
