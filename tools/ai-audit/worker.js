@@ -50,7 +50,7 @@ export default {
       const seoGrade = letterFromScore(scores.total);
 
       // 3. agent readiness ----------------------------------------------------
-      const agent = await scoreAgentReadiness(target, env);     // {score, level}
+      const agent = scoreAgentReadiness(extra);                     // {score, level}
 
       // 4. findings -----------------------------------------------------------
       const brand = brandFrom(target);
@@ -217,36 +217,47 @@ function letterFromScore(s) {
 }
 
 /* ----------------------------------------------------------------------------
-   AGENT READINESS — Cloudflare URL Scanner API
+   AGENT READINESS — rules-based, no external API.
+   Baseline 40 so zero-signal sites land at EMERGING not BASIC.
+   BASIC only when score < 40 (i.e. active signals subtract from baseline,
+   which cannot happen with this rubric — BASIC is reserved for future use).
+   Max 100: llms.txt +20 / robots OK +15 / schema +10 / headings +10 / content +5.
 ---------------------------------------------------------------------------- */
-async function scoreAgentReadiness(url, env) {
-  const accountId = '9d33c8a45a0c3b125d36bd7fd5ff224e';
-  const apiToken = env.CLOUDFLARE_API_TOKEN || 'cfat_YPFM8i8H6Zj3ktDyRwWcccKlSyGcpSTYBHmWtprH7e1ecf52';
-  try {
-    const submitRes = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/urlscanner/v2/scan`,
-      {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, options: { agentReadiness: true } })
-      }
-    );
-    const submitData = await submitRes.json();
-    const uuid = submitData.uuid;
-    if (!uuid) throw new Error('no uuid');
-    await new Promise(resolve => setTimeout(resolve, 20000));
-    const resultRes = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/urlscanner/v2/result/${uuid}`,
-      { headers: { 'Authorization': `Bearer ${apiToken}` } }
-    );
-    const data = await resultRes.json();
-    const ar = data?.meta?.processors?.agentReadiness;
-    const score = ar?.score ?? 0;
-    const level = score >= 80 ? "ADVANCED" : score >= 60 ? "CAPABLE" : score >= 40 ? "EMERGING" : "BASIC";
-    return { score, level };
-  } catch {
-    return { score: 0, level: "BASIC" };
+function scoreAgentReadiness(extra) {
+  const html = extra.html || "";
+  const robots = extra.robots || "";
+  let score = 40;
+
+  if (extra.llms) score += 20;
+  if (!aiCrawlersBlocked(robots)) score += 15;
+  if (/application\/ld\+json/i.test(html)) score += 10;
+  const hasH1 = /<h1[\s>]/i.test(html);
+  const hasH2 = /<h2[\s>]/i.test(html);
+  if (hasH1 && hasH2) score += 10;
+  else if (hasH1 || hasH2) score += 5;
+  const plainText = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (plainText.split(/\s+/).filter(Boolean).length >= 300) score += 5;
+
+  score = clamp(score, 0, 100);
+  const level = score >= 80 ? "ADVANCED" : score >= 60 ? "CAPABLE" : score >= 40 ? "EMERGING" : "BASIC";
+  return { score, level };
+}
+
+function aiCrawlersBlocked(robotsTxt) {
+  if (!robotsTxt) return false;
+  const bots = ['gptbot', 'chatgpt-user', 'anthropic-ai', 'claudebot', 'perplexitybot', 'ccbot', 'google-extended', 'cohere-ai'];
+  for (const block of robotsTxt.split(/\n\s*\n/)) {
+    const lines = block.split('\n').map(l => l.trim().toLowerCase());
+    const agents = lines.filter(l => l.startsWith('user-agent:')).map(l => l.replace('user-agent:', '').trim());
+    const disallowsRoot = lines.some(l => /^disallow:\s*\/$/.test(l));
+    if (disallowsRoot && bots.some(b => agents.includes(b))) return true;
   }
+  return false;
 }
 
 /* ----------------------------------------------------------------------------
