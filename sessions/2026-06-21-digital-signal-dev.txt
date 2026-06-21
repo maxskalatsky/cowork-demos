@@ -1,0 +1,135 @@
+SESSION SUMMARY — The Digital Signal
+Date: 2026-06-21
+Files: tools/ai-audit/worker.js, tools/ai-audit/digital-audit.html, tools/ai-audit/wrangler.toml
+Dev worker: https://sa-ai-audit-dev.saaudit.workers.dev
+
+
+─── WHAT WAS BUILT ────────────────────────────────────────────────────────────
+
+Renamed the product from "S&A Digital Audit" to The Digital Signal.
+
+Agent readiness scoring
+  - Tried Cloudflare URL Scanner. Token was invalid (auth error), always failed.
+  - Replaced with rules-based scorer that fetches signals directly from the site.
+  - Baseline 40 (EMERGING floor). Points: llms.txt +20, robots not blocking AI
+    crawlers +15, schema markup +10, semantic headings +10, text >= 300 words +5.
+  - Cap 100. BASIC only below 40. skalatsky.com scores ADVANCED (80).
+
+Positioning section — full rebuild
+  Back end: scorePositioning() runs three independent tests on fetched HTML:
+    THE HOOK   → lands / partial / missing
+               Strong H1 + specific or emotionally compelling language
+    THE FIT    → clear / partial / unclear
+               Clear service/product description visible early, no heavy jargon
+    THE RELEVANCE → connects / partial / missing
+               Second-person language, outcome or persona framing
+  Trust killer disqualifier: generic filler in opening 500 chars, 3+ AI buzzwords,
+    4+ competing CTAs, or content overload with no subheadings.
+  Twelve-verdict library matched to combinations. Color green/yellow/red.
+  Returns: { hook, fit, relevance, disqualifier, color, verdict }
+
+  Front end: left border color, three labeled tags (THE HOOK — lands, etc.),
+    single TRUST KILLER tag when disqualifier fires, verdict as plain sentence.
+  Give First removed entirely.
+
+Email gate + KV rate limiting
+  - Email required on every audit request (client + server validation).
+  - Worker checks Cloudflare KV namespace AUDITS before running.
+  - Same email blocked with: "You have already run a free Signal. Email
+    signal@skalatsky.com to discuss your results."
+  - Every successful audit logged to KV: email, url, timestamp, seoScore,
+    seoGrade, agentLevel.
+  - KV namespace AUDITS created, ID af67756957b3402d9e81d1c1ad3d4179, bound
+    in wrangler.toml.
+
+Known brand gate
+  - 57-domain KNOWN_BRANDS Set checked before email validation.
+  - Returns { known_brand: true, message: "..." } immediately, no audit runs.
+  - Front end shows a blue-bordered card with message and signal@skalatsky.com
+    mailto button. All three report sections hidden.
+  - List includes: espn, nike, apple, google, amazon, microsoft, facebook,
+    instagram, twitter, x, linkedin, netflix, disney, coca-cola, pepsi, ford,
+    gm, bmw, mercedes, adidas, nordstrom, walmart, target, homedepot, lowes,
+    mcdonalds, starbucks, salesforce, oracle, sap, ibm, intel, cisco, adobe,
+    nfl, nba, mlb, nhl, cnn, foxnews, nytimes, wsj, bloomberg, forbes,
+    huffpost, reddit, youtube, tiktok, snapchat, uber, lyft, airbnb, doordash,
+    stripe, shopify, squarespace, wix.
+
+UI changes
+  - Grade modifier removed (B+ shows as B, no plus or minus).
+  - Score counter (x / 100) hidden via display:none CSS.
+  - Build the Product section hidden (display:none on both label and card).
+    Section is specced but not yet built — pending definition.
+  - Email field added to intake form between Q3 and website URL.
+  - All instances of audit@skalatsky.com updated to signal@skalatsky.com.
+  - localStorage cache key bumped to v3, now keyed by email not URL hostname.
+
+CLAUDE.md + README updated
+  - CLAUDE.md: product name, acceptance criteria, email gate, KV requirements,
+    Build the Product section status, loop rule.
+  - README: product name The Digital Signal, pre-production checklist updated
+    with KV wiring, Build section pending spec, CORS lockdown, LLM mode.
+
+
+─── CURRENT STATE ──────────────────────────────────────────────────────────────
+
+Live and working on dev worker:
+  - Email gate enforced server-side
+  - KV rate limiting working (confirmed via --remote CLI read)
+  - Known brand gate active
+  - Positioning section returning correct tags and verdicts
+  - Agent readiness rules-based, skalatsky.com = ADVANCED
+
+Test results from this session:
+  skalatsky.com   SEO B+, agent ADVANCED, hook lands, fit clear, relevance partial
+  espn.com        known_brand true, returned immediately, no audit run
+  nobull.com      hook lands, fit partial, relevance partial, yellow, correct verdict
+
+KV namespace AUDITS
+  ID:  af67756957b3402d9e81d1c1ad3d4179
+  Note: wrangler kv commands default to LOCAL — always add --remote flag to
+  read/write the actual Cloudflare namespace.
+
+
+─── OPEN ITEMS ─────────────────────────────────────────────────────────────────
+
+1. BUILD THE PRODUCT SECTION — not specced, not built. Card is hidden. Do not
+   launch without it. The worker already returns a capability object when
+   ANTHROPIC_API_KEY is set (gap + consequence via Claude). Front end just needs
+   the spec for what to show.
+
+2. ANTHROPIC API KEY — not set on dev worker. Needed for:
+   - LLM polish mode (set FINDINGS_MODE=llm in wrangler.toml)
+   - Digital capability assessment (the Build the Product section)
+   Set with: npx wrangler secret put ANTHROPIC_API_KEY
+
+3. ALLOW_ORIGIN — currently "*". Must be set to "https://skalatsky.com" before
+   production deploy.
+
+4. PRODUCTION DEPLOY — not done. Steps in README:
+   - npx wrangler deploy --name sa-ai-audit
+   - Replace audit section in skalatsky.com/index.html
+   - Update SA_WORKER_URL to sa-ai-audit.saaudit.workers.dev
+
+5. CLOUDFLARE URL SCANNER — token was invalid, abandoned. Agent readiness is
+   rules-based for now. If reinstating, need a valid token with URL Scanner
+   read/write on account 9d33c8a45a0c3b125d36bd7fd5ff224e.
+
+6. KV RATE LIMIT EMAIL — the limit message now says signal@skalatsky.com.
+   Confirm that inbox is monitored before launch.
+
+7. SKALATSKY.COM RELEVANCE — scores "partial" not "connects". Site doesn't have
+   enough second-person (you/your) language or explicit outcome framing to hit
+   "connects". Worth fixing the site copy before launch so the demo site scores
+   well on its own tool.
+
+
+─── WHERE WE LEFT OFF ──────────────────────────────────────────────────────────
+
+Last commit: c72e184
+Message: "Add known brand gate with 57-domain list, brand card UI, update email
+to signal@skalatsky.com"
+
+All code is on main, pushed to GitHub. Dev worker is live and tested. Next
+logical step is speccing the Build the Product section or doing the production
+deploy once the open items above are resolved.
