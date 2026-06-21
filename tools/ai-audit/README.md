@@ -1,126 +1,60 @@
-\# S\&A Digital Audit Tool — Dev Environment
+# S&A Digital Audit Tool
 
+## What Is Here Now
 
+The dev environment for the S&A Digital Audit tool. Everything in this folder is isolated from production — no change here touches the live site until you explicitly promote it.
 
-Isolated development environment for the S\&A AI Audit tool.
+**Files**
+- `worker.js` — Cloudflare Worker that crawls a submitted URL via DataForSEO, scores it on Anya's SEO rubric, runs agent readiness checks, and returns a JSON report.
+- `digital-audit.html` — standalone audit page that calls the dev worker. Open it directly in a browser — no local server needed.
+- `wrangler.toml` — deploy config pointing at the dev worker (`sa-ai-audit-dev`).
 
-This folder is the single source of truth for all dev work on this tool.
+**Agent readiness scoring** is rules-based and runs entirely from signals fetched directly from the target site — no external API required. Baseline is 40 (EMERGING). Points are added for: `llms.txt` present (+20), robots.txt not blocking known AI crawlers (+15), schema markup (+10), semantic heading structure (+10), meaningful plain-text content (+5). Cap is 100. BASIC only shows when the score falls below 40.
 
-Nothing in here touches production.
+**Dev worker:** `https://sa-ai-audit-dev.saaudit.workers.dev`
 
-
-
-\## File Structure
-
-
-
-\- `digital-audit.html` — standalone audit page, self-contained, no skalatsky.com dependencies
-
-\- `worker.js` — Cloudflare Worker source code, version controlled here
-
-\- `wrangler.toml` — Cloudflare deploy config for the dev worker
-
-\- `README.md` — this file
-
-
-
-\## Environments
-
-
-
-| Environment | HTML File | Worker | URL |
-
-|---|---|---|---|
-
-| Dev | digital-audit.html | sa-ai-audit-dev | sa-ai-audit-dev.saaudit.workers.dev |
-
-| Production | skalatsky.com/index.html | sa-ai-audit | sa-ai-audit.saaudit.workers.dev |
-
-
-
-\## Rules
-
-
-
-\- Never point digital-audit.html at the production worker
-
-\- Never edit worker.js in the Cloudflare dashboard directly. Edit here and deploy via Wrangler
-
-\- All changes go through this repo before touching production
-
-\- Test every audit run locally before pushing to production
-
-
-
-\## How to Deploy the Dev Worker
-
-
-
-From the terminal inside this folder:
-
-
-
-```powershell
-
-cd C:\\Users\\max\\cowork-demos\\tools\\ai-audit
-
+**Deploy** from inside this folder:
+```
 npx wrangler deploy
-
 ```
 
+**Test locally:** open `digital-audit.html` in a browser. It calls the live dev worker and returns real audit results with no server setup.
 
+---
 
-\## How to Set Secrets
+## What Needs To Happen Before Production
 
+1. **Wire up Cloudflare URL Scanner.** Create a Cloudflare API token with URL Scanner read and write permissions scoped to account `9d33c8a45a0c3b125d36bd7fd5ff224e`. Set it as a worker secret:
+   ```
+   npx wrangler secret put CLOUDFLARE_API_TOKEN
+   ```
+   The worker currently uses the rules-based scorer because no valid token exists. Restoring the CF URL Scanner path requires the token and updating `scoreAgentReadiness` back to the API version.
 
+2. **Lock down CORS.** Change `ALLOW_ORIGIN` in `wrangler.toml` from `"*"` to `"https://skalatsky.com"` before deploying to production.
 
-Run once per secret. Wrangler will prompt you to paste the value:
+3. **Add the Anthropic API key** to activate LLM polish mode:
+   ```
+   npx wrangler secret put ANTHROPIC_API_KEY
+   ```
 
+4. **Switch findings mode to LLM.** In `wrangler.toml`, set `FINDINGS_MODE = "llm"`. This hands the four findings to Claude for site-specific rewriting after the rules pass runs.
 
+5. **Verify scores before flipping production.** Run audits against several real sites from the dev worker and confirm the report sections render correctly — SEO grade, all four findings, agent readiness level, positioning check, and digital capability assessment.
 
-```powershell
+---
 
-npx wrangler secret put DATAFORSEO\_LOGIN
+## How To Promote To Production
 
-npx wrangler secret put DATAFORSEO\_PASSWORD
+1. **Deploy worker to production.** From inside this folder, deploy using the production worker name:
+   ```
+   npx wrangler deploy --name sa-ai-audit
+   ```
 
-npx wrangler secret put ANTHROPIC\_API\_KEY
+2. **Update skalatsky.com.** Replace the audit section in `skalatsky.com/index.html` with the final markup from `digital-audit.html`.
 
-```
+3. **Point the production page at the production worker.** In the production `index.html`, update `SA_WORKER_URL` to:
+   ```
+   https://sa-ai-audit.saaudit.workers.dev
+   ```
 
-
-
-\## How to Promote to Production
-
-
-
-When the dev build is ready and tested:
-
-
-
-1\. Copy the final worker.js to the production worker via wrangler using the production worker name
-
-2\. Replace the audit section in skalatsky.com index.html with the final markup from digital-audit.html
-
-3\. Update the worker URL in the production index.html to point back to sa-ai-audit.saaudit.workers.dev
-
-4\. Push to production and verify
-
-
-
-\## Local Preview
-
-
-
-Open digital-audit.html directly in a browser. It calls the live dev worker so you get real audit results without any local server needed.
-
-
-
-\## GitHub Pages Preview
-
-
-
-Enable GitHub Pages on the cowork-demos repo to get a shareable URL:
-
-`https://maxskalatsky.github.io/cowork-demos/tools/ai-audit/digital-audit.html`
-
+4. **Push to production and verify.** Confirm all three report sections render correctly end-to-end: SEO grade and four findings, agent readiness level and meter, positioning and digital capability cards.
