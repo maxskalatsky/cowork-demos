@@ -59,35 +59,8 @@ export default {
         report = await polishWithClaude(report, page, brand, env); // optional rewording
       }
       report.url = target;
-      // Check 1 — Positioning (rules based, no Claude)
-      const posVerdicts = {
-        green: "The story lands. A stranger knows what you do and why it matters without having to work for it.",
-        yellow_strong: "The headline works. What comes next does not — a stranger still cannot tell specifically what you deliver.",
-        yellow_weak: "The page has content but no clear story. A stranger leaves knowing something exists here but not what or why it matters to them.",
-        orange: "The headline is not pulling its weight and the page never recovers. Strangers are leaving before they understand what you do.",
-        red: "There is no clear story here. A stranger cannot tell what the business does, who it serves, or why it is different from anyone else.",
-      };
-      const posHtml = extra.html || "";
-      const posText = posHtml.replace(/<style[\s\S]*?<\/style>/gi,"").replace(/<script[\s\S]*?<\/script>/gi,"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
-      const hasH1 = /<h1\b/i.test(posHtml);
-      const hasH2 = /<h2\b/i.test(posHtml);
-      const wordCount = posText.split(/\s+/).filter(Boolean).length;
-      const hasSchema = /application\/ld\+json/i.test(posHtml);
-      const hasGiveFirst = /free|download|tool|calculator|template|guide|checklist|resource|try|demo|sample/i.test(posText) && !/contact|schedule|call|book a|get in touch|request a/i.test(posText.slice(0, 500));
-      let posKey, posColor, headlineResult, menuResult;
-      if (!hasH1 && wordCount < 100) {
-        posKey = "red"; posColor = "red"; headlineResult = "fail"; menuResult = "fail";
-      } else if (!hasH1 || wordCount < 150) {
-        posKey = "orange"; posColor = "red"; headlineResult = "fail"; menuResult = "fail";
-      } else if (!hasH2 || wordCount < 300) {
-        posKey = "yellow_weak"; posColor = "yellow"; headlineResult = "partial"; menuResult = "fail";
-      } else if (wordCount < 600 || !hasSchema) {
-        posKey = "yellow_strong"; posColor = "yellow"; headlineResult = "pass"; menuResult = "partial";
-      } else {
-        posKey = "green"; posColor = "green"; headlineResult = "pass"; menuResult = "pass";
-      }
-      const giveResult = hasGiveFirst ? "pass" : "fail";
-      const positioning = { color: posColor, verdict: posVerdicts[posKey], headline_result: headlineResult, menu_result: menuResult, give_result: giveResult };
+      // Check 1 — Positioning
+      const positioning = scorePositioning(extra.html || "");
 
       // Check 3 — Digital Capability
       let capability = { status: "passive", gap: "", consequence: "" };
@@ -214,6 +187,108 @@ function letterFromScore(s) {
   if (L === "F") return "F";
   const ones = s % 10;
   return L + (ones >= 7 ? "+" : ones <= 2 ? "−" : "");
+}
+
+/* ----------------------------------------------------------------------------
+   POSITIONING — three tests + one trust-killer disqualifier.
+   Returns { hook, fit, relevance, disqualifier, color, verdict }.
+---------------------------------------------------------------------------- */
+function scorePositioning(html) {
+  const clean = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "");
+  const text = clean.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const first500  = text.slice(0, 500);
+  const first1500 = text.slice(0, 1500);
+
+  // ── TRUST KILLER ──────────────────────────────────────────────────────────
+  const fillerRx = /\b(we help (businesses|companies|organizations) (grow|succeed|thrive|reach their potential)|solutions for (your needs|every need|businesses)|your (success|goals) (is|are) our|comprehensive (solutions|services)|best[- ]in[- ]class|world[- ]class (service|solution|quality)|innovative solutions|we are committed to excellence|one[- ]stop (shop|solution)|end[- ]to[- ]end solution|full[- ]service (agency|firm|provider))\b/i;
+  const buzzRx = /\b(ai[- ]powered|cutting[- ]edge|revolutionary|disruptive|next[- ]gen(eration)?|state[- ]of[- ]the[- ]art|synerg|paradigm[- ]shift|leverage (ai|the|our|your|data|technology)|future[- ]proof)\b/gi;
+  const buzzCount = (text.match(buzzRx) || []).length;
+  const ctaRx = /\b(get started|get a (free|quote)|sign up( for| now| free)?|book (a |an |your )?(call|demo|consultation|meeting|appointment)|schedule (a |an |your )?(call|demo|consultation)|contact us( today)?|request (a |an )?(demo|consultation|quote|proposal))\b/gi;
+  const ctaCount = (text.match(ctaRx) || []).length;
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  const hasSubheadings = /<h[2-6][\s>]/i.test(html);
+
+  const disqualifier =
+    fillerRx.test(first500) ||
+    buzzCount >= 3 ||
+    ctaCount > 4 ||
+    (wordCount > 700 && !hasSubheadings);
+
+  // ── THE HOOK ──────────────────────────────────────────────────────────────
+  const hasH1 = /<h1[\s>]/i.test(html);
+  const h1Raw = (clean.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1] || "";
+  const h1Text = h1Raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const genericH1 = /^(welcome|home|about|our services?|solutions|leading|premier|trusted|reliable|professional|innovative|your (success|partner|journey)|we are|we help)/i.test(h1Text) || h1Text.length < 4;
+  const specificRx = /(\d[\d,]*\+?|\$[\d,.]+[km]?|%|\b(without|stop |tired of|struggling|finally|guarantee[d]?|proven|exactly|specifically|the only|the best|the fastest)|for (startups?|founders?|agencies?|brands?|ecommerce|healthcare|legal|finance|realtors?|coaches?|consultants?))/i;
+  const emotionalRx = /\b(stop |no more |never again|finally|guaranteed|honest|straight|real results|actually works)\b/i;
+
+  let hook;
+  if (!hasH1 || genericH1) {
+    hook = "missing";
+  } else if (specificRx.test(first1500) || emotionalRx.test(first500)) {
+    hook = "lands";
+  } else {
+    hook = "partial";
+  }
+
+  // ── THE FIT ───────────────────────────────────────────────────────────────
+  const serviceVerbRx = /\b(we |i )(build|create|design|develop|write|produce|manage|run|deliver|offer|provide|make|handle|craft|launch|grow|scale|train|coach|audit|consult|advise)\b/i;
+  const productNounRx = /\b(software|app|platform|tool|agency|studio|firm|consultanc|coach(ing)?|course|program|subscription|membership|shop|store|brand|collection|apparel|gear|equipment|training|workshop|service|system|technology)\b/i;
+  const jargonRx = /\b(ecosystem|paradigm|synergy|holistic approach|robust solution|scalable|turnkey|agnostic|frictionless|seamless experience|leverage our|empower your)\b/gi;
+  const jargonCount = (first1500.match(jargonRx) || []).length;
+  const hasServiceVerb = serviceVerbRx.test(first1500);
+  const hasProductNoun = productNounRx.test(first1500);
+
+  let fit;
+  if (hasServiceVerb && hasProductNoun && jargonCount === 0) {
+    fit = "clear";
+  } else if (hasServiceVerb || hasProductNoun) {
+    fit = "partial";
+  } else {
+    fit = "unclear";
+  }
+
+  // ── THE RELEVANCE ─────────────────────────────────────────────────────────
+  const youCount = (first1500.match(/\b(you|your)\b/gi) || []).length;
+  const outcomeRx = /\b(so (you can|that you)|which means (you|your)|grow(th|ing)?|increas(e|ing)|sav(e|ing)|boost(ing)?|more (leads?|sales|revenue|clients?|customers?)|less (time|hassle|cost|stress)|without (the hassle|having to))\b/i;
+  const personaRx = /\bfor (you|your (team|business|company|brand|startup|agency)|founders?|owners?|managers?|professionals?|coaches?|consultants?|entrepreneurs?)\b/i;
+
+  let relevance;
+  if (youCount >= 4 && (outcomeRx.test(first1500) || personaRx.test(first1500))) {
+    relevance = "connects";
+  } else if (youCount >= 2 || personaRx.test(first1500) || outcomeRx.test(first1500)) {
+    relevance = "partial";
+  } else {
+    relevance = "missing";
+  }
+
+  // ── COLOR ─────────────────────────────────────────────────────────────────
+  const failCount = (hook === "missing" ? 1 : 0) + (fit === "unclear" ? 1 : 0) + (relevance === "missing" ? 1 : 0);
+  const color = (!disqualifier && hook === "lands" && fit === "clear" && relevance === "connects")
+    ? "green"
+    : (disqualifier || failCount >= 2) ? "red" : "yellow";
+
+  // ── VERDICT ───────────────────────────────────────────────────────────────
+  let verdict;
+  if (disqualifier) {
+    verdict = (hook === "partial" && fit === "partial")
+      ? "Too many things competing for attention and none of them winning. Strip it back and start with one clear idea."
+      : "Too much noise, not enough signal. A stranger cannot find the story through all the clutter.";
+  } else if (hook === "missing" && fit === "unclear"  && relevance === "missing")  { verdict = "Nothing here earns the next click. A stranger lands and leaves without knowing what you do or why it matters.";
+  } else if (hook === "missing" && fit === "clear"    && relevance === "missing")  { verdict = "The offer is clear but nothing pulls you in. You know what they do but not why you should care.";
+  } else if (hook === "missing" && fit === "clear"    && relevance === "connects") { verdict = "The substance is there but the opening does not earn it. Fix the first five seconds and the rest lands.";
+  } else if (hook === "lands"   && fit === "unclear"  && relevance === "missing")  { verdict = "Strong opening, weak follow through. You get their attention and then lose them.";
+  } else if (hook === "lands"   && fit === "clear"    && relevance === "missing")  { verdict = "Clear and compelling but it does not connect to the reader. Missing the why it matters to me moment.";
+  } else if (hook === "lands"   && fit === "unclear"  && relevance === "connects") { verdict = "The energy is right but the offer is buried. A stranger cannot tell what you actually do.";
+  } else if (hook === "lands"   && fit === "clear"    && relevance === "connects") { verdict = "Clean, clear, and relevant. A stranger knows exactly what this is and whether it is for them.";
+  } else if (hook === "partial" && fit === "partial"  && relevance === "connects") { verdict = "The bones are good. Sharpen the opening and clarify the offer and this site does real work.";
+  } else if (hook === "partial" && fit === "partial"  && relevance === "partial")  { verdict = "Directionally right but not landing yet. Every element needs one more pass of clarity and confidence.";
+  } else if (hook === "lands"   && fit === "partial"  && relevance === "partial")  { verdict = "Strong first impression that does not quite deliver. The opening earns the click but the page does not close it.";
+  } else { verdict = "Directionally right but not landing yet. Every element needs one more pass of clarity and confidence."; }
+
+  return { hook, fit, relevance, disqualifier, color, verdict };
 }
 
 /* ----------------------------------------------------------------------------

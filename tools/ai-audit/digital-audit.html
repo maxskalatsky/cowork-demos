@@ -77,7 +77,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-meter{display:flex;gap:6px;}
 #sa-audit .sa-seg{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);transition:all .4s ease;}
 #sa-audit .sa-seg.sa-on{color:#fff;border-color:transparent;transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,31,64,.14);}
-#sa-audit .sa-pos-card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--line);border-radius:10px;padding:22px 24px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
+#sa-audit .sa-pos-card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:22px 24px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-pos-card.sa-in{opacity:1;transform:none;}
 #sa-audit .sa-pos-verdict{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 6px;}
 #sa-audit .sa-pos-tests{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
@@ -204,7 +204,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     return {q1:val('q1'),q2:val('q2'),q3:val('q3')};
   }
 
-  var LIMIT_KEY='sa_audit_done_dev_v1';
+  var LIMIT_KEY='sa_audit_done_dev_v2';
   function loadLimit(){ try{ return JSON.parse(localStorage.getItem(LIMIT_KEY)||'{}'); }catch(e){ return {}; } }
   function saveLimit(m){ try{ localStorage.setItem(LIMIT_KEY,JSON.stringify(m)); }catch(e){} }
 
@@ -284,12 +284,21 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     });
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:'#00C99C',yellow:'#d8a200',red:'#cf3b3b'};
-    posCard.style.borderTopColor=posColors[pos.color]||'#e2eaf0';
+    posCard.style.borderLeftColor=posColors[pos.color]||'#e2eaf0';
     $('sa-pos-verdict').textContent=pos.verdict||'';
     var posTests=$('sa-pos-tests'); posTests.innerHTML='';
-    if(pos.headline_result){ var ht=document.createElement('span'); ht.className='sa-pos-tag'; ht.textContent='Headline: '+pos.headline_result; var hc=pos.headline_result==='pass'?'#00C99C':pos.headline_result==='partial'?'#d8a200':'#cf3b3b'; ht.style.borderColor=hc; ht.style.color=hc; posTests.appendChild(ht); }
-    if(pos.menu_result){ var mt=document.createElement('span'); mt.className='sa-pos-tag'; mt.textContent='What you deliver: '+pos.menu_result; var mc=pos.menu_result==='pass'?'#00C99C':pos.menu_result==='partial'?'#d8a200':'#cf3b3b'; mt.style.borderColor=mc; mt.style.color=mc; posTests.appendChild(mt); }
-    if(pos.give_result){ var gt=document.createElement('span'); gt.className='sa-pos-tag'; gt.textContent='Give First: '+pos.give_result; var gc=pos.give_result==='pass'?'#00a583':'#cf3b3b'; gt.style.borderColor=gc; gt.style.color=gc; posTests.appendChild(gt); }
+    if(pos.disqualifier){
+      var tk=document.createElement('span'); tk.className='sa-pos-tag';
+      tk.textContent='TRUST KILLER'; tk.style.borderColor='#cf3b3b'; tk.style.color='#cf3b3b';
+      posTests.appendChild(tk);
+    } else {
+      var tagC=function(v){ return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b'; };
+      [{l:'THE HOOK',v:pos.hook},{l:'THE FIT',v:pos.fit},{l:'THE RELEVANCE',v:pos.relevance}].forEach(function(t){
+        var el=document.createElement('span'); el.className='sa-pos-tag';
+        el.textContent=t.l+' — '+(t.v||''); var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
+        posTests.appendChild(el);
+      });
+    }
     $('sa-cap-gap').textContent=(r.capability&&r.capability.gap)||'';
     $('sa-cap-consequence').textContent=(r.capability&&r.capability.consequence)||'';
     $('sa-close-lead').textContent='';
