@@ -47,7 +47,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-gauge-letter{font-size:48px;font-weight:700;line-height:1;}
 #sa-audit .sa-gauge-letter small{font-size:22px;vertical-align:super;}
 #sa-audit .sa-gauge-score{display:none;}
-#sa-audit .sa-hero-d{font-size:14px;font-weight:600;color:var(--ink);margin:0;line-height:1.5;}
+#sa-audit .sa-hero-d{font-size:14px;font-weight:600;color:var(--ink);margin:14px 0 0;line-height:1.5;}
 #sa-audit .sa-find-wrap{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 #sa-audit .sa-find{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 17px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-find.sa-in{opacity:1;transform:none;}
@@ -74,7 +74,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-redo{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted2);font-size:12.5px;font-family:inherit;text-decoration:underline;cursor:pointer;}
 #sa-audit .sa-brand-msg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--p);border-radius:10px;padding:28px 30px;margin-top:10px;}
 #sa-audit .sa-brand-txt{font-size:15px;color:#4b5563;margin:0 0 22px;line-height:1.65;}
-@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}}
+@media(max-width:640px){#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}}
 </style>
 </head>
 <body>
@@ -102,7 +102,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 
     <div id="sa-loading" class="sa-loading">
       <div class="sa-scan"><svg width="110" height="110" viewBox="0 0 120 120"><circle class="sa-scan-ring" cx="60" cy="60" r="52"></circle><circle class="sa-scan-arc" cx="60" cy="60" r="52"></circle></svg></div>
-      <p class="sa-loading-txt" id="sa-loading-txt">Crawling your site...</p>
+      <p class="sa-loading-txt" id="sa-loading-txt">Reading your front door.</p>
     </div>
 
     <div id="sa-brand-wrap" style="display:none">
@@ -129,11 +129,9 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
             <svg width="140" height="140" viewBox="0 0 150 150"><circle class="sa-track" cx="75" cy="75" r="64"></circle><circle class="sa-prog" id="sa-prog" cx="75" cy="75" r="64"></circle></svg>
             <div class="sa-gauge-center"><div class="sa-gauge-letter" id="sa-gletter"></div><div class="sa-gauge-score" id="sa-gscore"></div></div>
           </div>
-          <div class="sa-hero-meta">
-            <p class="sa-hero-d" id="sa-gdesc"></p>
-          </div>
         </div>
         <div class="sa-find-wrap" id="sa-finds"></div>
+        <p class="sa-hero-d" id="sa-gdesc"></p>
       </div>
       <p class="sa-section-label">Agent readiness</p>
       <div class="sa-agent" id="sa-agent-card">
@@ -216,7 +214,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-intake').style.display='block';
   });
 
-  var msgs=['Crawling your site...','Reading what Google sees...','Scanning AI search readiness...','Writing your report...'];
+  var msgs=['Reading your front door.','Checking what Google thinks.','Looking for what others miss.','Finding your biggest opportunity.','Pulling it all together.'];
   var t=null;
   function startLoading(){
     btn.disabled=true; $('sa-intake').style.display='none'; $('sa-report').style.display='none';

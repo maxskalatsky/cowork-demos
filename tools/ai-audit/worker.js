@@ -582,7 +582,8 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     "Sound like a knowledgeable advisor pointing at something the owner has not seen yet, not a tool generating generic advice. " +
     "Be encouraging but direct. Never be harsh. Never use the word audit. Never be generic. " +
     "If you cannot generate a specific confident observation based on what you read, return nothing. " +
-    "The response must be two to three sentences maximum.";
+    "The response must be exactly two sentences. Hard limit: two sentences, no more. If you cannot say it in two sentences, cut — do not add a third. " +
+    "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
 
   const userContent =
     `Page content: ${plainText}\n\n` +
@@ -612,8 +613,8 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     if (!res.ok) { const errBody = await res.text(); console.warn("Forward Signal HTTP error:", res.status, errBody || "(empty body)"); return null; }
     const data = await res.json();
     if (data?.error) { console.warn("Forward Signal API error:", JSON.stringify(data.error)); return null; }
-    const text = (data?.content?.[0]?.text || "").trim();
-    return text || null;
+    const raw = (data?.content?.[0]?.text || "").trim();
+    return raw ? sanitizeForwardSignal(raw) : null;
   } catch (e) {
     console.warn("Forward Signal exception:", String(e));
     return null;
@@ -623,6 +624,26 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
 /* ----------------------------------------------------------------------------
    helpers
 ---------------------------------------------------------------------------- */
+function sanitizeForwardSignal(text) {
+  let s = text
+    .replace(/\s*—\s*/g, ", ")   // em dash with spaces → comma + space
+    .replace(/—/g, "")            // bare em dash → nothing
+    .replace(/\*/g, "")           // asterisks → nothing
+    .replace(/[#`]/g, "")         // pound signs and backticks → nothing
+    .replace(/  +/g, " ")         // collapse double spaces
+    .trim();
+  // Hard cap: at most 2 sentences — cut at the end of the 2nd sentence boundary.
+  let count = 0, cutAt = s.length;
+  const rx = /[.!?](?=\s|$)/g;
+  let m;
+  while ((m = rx.exec(s)) !== null) { count++; if (count === 2) { cutAt = m.index + 1; break; } }
+  s = s.slice(0, cutAt).trim();
+  if (s.length <= 400) return s;
+  // Truncate at the nearest sentence boundary before 400 chars, never mid-sentence.
+  const boundary = s.slice(0, 400).lastIndexOf(". ");
+  return boundary > 0 ? s.slice(0, boundary + 1).trim() : s.slice(0, 400).trim();
+}
+
 function finding(category, status, byBand) { return { category, status, text: byBand[status] }; }
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
