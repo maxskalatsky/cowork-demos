@@ -99,19 +99,6 @@ export default {
       // Check 1 — Positioning
       const positioning = scorePositioning(extra.html || "");
 
-      // Check 3 — Digital Capability
-      let capability = { status: "passive", gap: "", consequence: "" };
-      if (env.ANTHROPIC_API_KEY) {
-        try {
-          const capText = (extra.html || "").replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 3000);
-          const capRes = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 300, messages: [{ role: "user", content: `You are a digital product analyst. Is this website doing real work for the business or just sitting there?\nReal work = member portals, booking, e-commerce, transactional features, dynamic accounts.\nSitting there = static brochure, contact forms only.\nReturn ONLY valid JSON: {"status":"working"|"passive","gap":"one sentence on what the digital presence is failing to do","consequence":"one sentence on the business cost of that gap"}\nHomepage copy:\n${capText}` }] }) });
-          const capData = await capRes.json();
-          const capJson = capData?.content?.[0]?.text || "";
-          const s2 = capJson.indexOf("{"); const e3 = capJson.lastIndexOf("}");
-          if (s2 > -1 && e3 > -1) { const p2 = JSON.parse(capJson.slice(s2, e3 + 1)); if (p2.status && p2.gap) capability = p2; }
-        } catch {}
-      }
-
       // Log audit to KV
       if (env.AUDITS) {
         await env.AUDITS.put(email, JSON.stringify({
@@ -125,7 +112,6 @@ export default {
       }
 
       report.positioning = positioning;
-      report.capability = capability;
       return json(report, 200, cors);
     } catch (e) {
       return json({ error: "audit failed", detail: String(e) }, 502, cors);

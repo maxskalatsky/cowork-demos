@@ -17,18 +17,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit{--p:#006699;--b2:#004F82;--teal:#00C99C;--ink:#1a1a1a;--muted:#777;--muted2:#9ca3af;--line:#e2eaf0;--line2:#d0dce8;--soft:#f7f9fb;--softblue:#f0f6fb;--gA:#00a583;--gC:#d8a200;--gD:#e07b21;--gF:#cf3b3b;max-width:760px;margin:0 auto;color:var(--ink);}
 #sa-audit *,#sa-audit *::before,#sa-audit *::after{box-sizing:border-box;}
 #sa-audit .sa-panel{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,31,64,.06);padding:30px;}
-#sa-audit .sa-q{margin-bottom:24px;}
-#sa-audit .sa-q-label{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 12px;display:flex;gap:9px;align-items:baseline;}
-#sa-audit .sa-q-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--softblue);color:var(--p);font-size:12px;font-weight:700;flex:0 0 auto;}
-#sa-audit .sa-opt{display:flex;align-items:center;gap:11px;border:1px solid var(--line2);border-radius:8px;padding:11px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;}
-#sa-audit .sa-opt:hover{border-color:var(--p);background:var(--softblue);}
-#sa-audit .sa-opt .sa-dot{width:17px;height:17px;border-radius:50%;border:2px solid #c2ccd8;flex:0 0 auto;position:relative;transition:border-color .15s;}
-#sa-audit .sa-opt input{position:absolute;opacity:0;width:0;height:0;}
-#sa-audit .sa-opt span{font-size:14px;color:#4b5563;}
-#sa-audit .sa-opt.sa-on{border-color:var(--p);background:var(--softblue);}
-#sa-audit .sa-opt.sa-on span{color:var(--ink);}
-#sa-audit .sa-opt.sa-on .sa-dot{border-color:var(--p);}
-#sa-audit .sa-opt.sa-on .sa-dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--p);}
 #sa-audit .sa-field label{display:block;font-size:15px;font-weight:600;margin:0 0 11px;}
 #sa-audit .sa-input{width:100%;font-size:15px;font-family:inherit;color:var(--ink);padding:13px 15px;border:1px solid var(--line2);border-radius:8px;outline:none;transition:border-color .15s,box-shadow .15s;}
 #sa-audit .sa-input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,102,153,.12);}
@@ -83,10 +71,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-pos-tests{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
 #sa-audit .sa-pos-divider{border:none;border-top:1px solid var(--line);margin:0 0 14px;}
 #sa-audit .sa-pos-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 14px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted2);}
-#sa-audit .sa-cap-card{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:14px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
-#sa-audit .sa-cap-card.sa-in{opacity:1;transform:none;}
-#sa-audit .sa-cap-gap{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 8px;}
-#sa-audit .sa-cap-consequence{font-size:13px;color:#4b5563;margin:0;line-height:1.55;}
 #sa-audit .sa-close{text-align:center;margin:28px 0 4px;}
 #sa-audit .sa-close-lead{font-size:14px;color:var(--muted);max-width:540px;margin:0 auto 16px;}
 #sa-audit .sa-close-q{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 16px;}
@@ -105,25 +89,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   <div id="sa-audit">
     <div id="sa-intake">
       <div class="sa-panel">
-        <div class="sa-q">
-          <p class="sa-q-label"><span class="sa-q-n">1</span>What best describes your business right now?</p>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q1" value="stalled"><span>We have revenue and customers but growth has stalled.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q1" value="growing"><span>We are growing and need to accelerate.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q1" value="established"><span>We are established and know something is not working.</span></label>
-        </div>
-        <div class="sa-q">
-          <p class="sa-q-label"><span class="sa-q-n">2</span>What matters most to you right now?</p>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q2" value="traffic"><span>More traffic and visibility.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q2" value="leads"><span>More leads and conversions.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q2" value="both"><span>I need both and do not know where to start.</span></label>
-        </div>
-        <div class="sa-q">
-          <p class="sa-q-label"><span class="sa-q-n">3</span>What have you done about it so far?</p>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q3" value="tried"><span>We have tried a few things but nothing has stuck.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q3" value="hired"><span>We hired someone and did not see results.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q3" value="know"><span>We know what needs to be done but cannot execute it.</span></label>
-          <label class="sa-opt"><span class="sa-dot"></span><input type="radio" name="q3" value="nothing"><span>We have not done anything yet.</span></label>
-        </div>
         <div class="sa-field">
           <label for="sa-email">Your work email</label>
           <input type="email" id="sa-email" class="sa-input" placeholder="you@company.com" autocomplete="email" required>
@@ -132,7 +97,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <label for="sa-url">Your website</label>
           <input type="url" id="sa-url" class="sa-input" placeholder="yourbusiness.com" autocomplete="url" inputmode="url">
         </div>
-        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Run My Free Audit</button></div>
+        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Run My Digital Signal</button></div>
         <p id="sa-err" class="sa-err"></p>
         <p class="sa-note">Free. One per business. Results appear here instantly.</p>
       </div>
@@ -178,11 +143,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         <div class="sa-agent-row"><div class="sa-agent-level" id="sa-alevel"></div><p class="sa-agent-line" id="sa-aline"></p></div>
         <div class="sa-meter" id="sa-meter"></div>
       </div>
-      <p class="sa-section-label" style="display:none">Build the Product</p>
-      <div class="sa-cap-card" id="sa-cap-card" style="display:none">
-        <p class="sa-cap-gap" id="sa-cap-gap"></p>
-        <p class="sa-cap-consequence" id="sa-cap-consequence"></p>
-      </div>
       <div class="sa-close">
         <p class="sa-close-lead" id="sa-close-lead"></p>
         <p class="sa-close-q">If any of this resonates, let's talk.</p>
@@ -200,24 +160,11 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   var root = document.getElementById('sa-audit');
   var $ = function(id){ return document.getElementById(id); };
 
-  root.querySelectorAll('.sa-opt input').forEach(function(inp){
-    inp.addEventListener('change', function(){
-      root.querySelectorAll('input[name="'+inp.name+'"]').forEach(function(o){
-        o.closest('.sa-opt').classList.toggle('sa-on', o.checked);
-      });
-    });
-  });
-
   function normalizeUrl(raw){
     var v=(raw||'').trim(); if(!v) return null;
     if(!/^https?:\/\//i.test(v)) v='https://'+v;
     try{ var u=new URL(v); return (u.hostname&&u.hostname.indexOf('.')>-1)?u:null; }catch(e){ return null; }
   }
-  function answers(){
-    function val(n){ var el=root.querySelector('input[name="'+n+'"]:checked'); return el?el.value:null; }
-    return {q1:val('q1'),q2:val('q2'),q3:val('q3')};
-  }
-
   var LIMIT_KEY='sa_audit_done_dev_v3';
   function loadLimit(){ try{ return JSON.parse(localStorage.getItem(LIMIT_KEY)||'{}'); }catch(e){ return {}; } }
   function saveLimit(m){ try{ localStorage.setItem(LIMIT_KEY,JSON.stringify(m)); }catch(e){} }
@@ -225,8 +172,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   var btn=$('sa-run'), err=$('sa-err');
   btn.addEventListener('click', function(){
     err.style.display='none';
-    var a=answers();
-    if(!a.q1||!a.q2||!a.q3){ err.textContent='Please answer all three questions first.'; err.style.display='block'; return; }
     var emailVal=($('sa-email').value||'').trim();
     if(!emailVal||emailVal.indexOf('@')<1){ err.textContent='Please enter a valid work email.'; err.style.display='block'; return; }
     var u=normalizeUrl($('sa-url').value);
@@ -235,7 +180,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var done=loadLimit();
     if(done[cacheKey]){ render(done[cacheKey]); return; }
     startLoading();
-    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal,answers:a}) })
+    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal}) })
       .then(function(res){ return res.json(); })
       .then(function(rep){
         if(rep.error){ stopLoading(); err.textContent=rep.error; err.style.display='block'; return; }
@@ -245,7 +190,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           return;
         }
         rep.displayUrl=u.hostname.replace(/^www\./,'');
-        rep.answers=a;
         done[cacheKey]=rep; saveLimit(done);
         render(rep);
       })
@@ -326,8 +270,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         posTests.appendChild(el);
       });
     }
-    $('sa-cap-gap').textContent=(r.capability&&r.capability.gap)||'';
-    $('sa-cap-consequence').textContent=(r.capability&&r.capability.consequence)||'';
     $('sa-close-lead').textContent='';
     $('sa-report').style.display='block';
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
@@ -338,7 +280,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       var idx=LEVELS.indexOf(r.agentLevel);
       meter.querySelectorAll('.sa-seg').forEach(function(seg,i){ setTimeout(function(){ if(i<=idx){ seg.classList.add('sa-on'); seg.style.background=AC[r.agentLevel]; } },500+i*140); });
       setTimeout(function(){ posCard.classList.add('sa-in'); },150);
-      setTimeout(function(){ $('sa-cap-card').classList.add('sa-in'); },900);
     }); });
   }
 
