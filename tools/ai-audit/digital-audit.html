@@ -21,7 +21,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-input{width:100%;font-size:15px;font-family:inherit;color:var(--ink);padding:13px 15px;border:1px solid var(--line2);border-radius:8px;outline:none;transition:border-color .15s,box-shadow .15s;}
 #sa-audit .sa-input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,102,153,.12);}
 #sa-audit .sa-input::placeholder{color:#9aa2af;}
-#sa-audit .sa-btn{display:inline-block;background:#006699;color:#fff;font-size:15px;font-weight:700;font-family:inherit;padding:13px 32px;border:none;border-radius:8px;cursor:pointer;transition:background .15s;}
+#sa-audit .sa-btn{display:inline-block;background:#006699;color:#fff;font-size:15px;font-weight:700;font-family:inherit;padding:13px 32px;border:none;border-radius:8px;cursor:pointer;transition:background .15s;text-decoration:none;}
 #sa-audit .sa-btn:hover{background:#004F82;}
 #sa-audit .sa-cta{text-align:center;margin-top:24px;}
 #sa-audit .sa-err{color:var(--gF);font-size:13.5px;margin:12px 0 0;display:none;text-align:center;}
@@ -37,7 +37,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-rhead{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:0 0 4px;text-align:center;}
 #sa-audit .sa-rurl{font-size:16px;font-weight:700;color:var(--b2);word-break:break-all;margin:0 0 22px;text-align:center;}
 #sa-audit .sa-section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:22px 0 8px;padding-top:6px;border-top:1px solid var(--line);}
-#sa-audit .sa-hero{display:flex;align-items:center;gap:28px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--p);border-radius:12px;box-shadow:0 10px 30px rgba(0,31,64,.06);padding:28px;}
+#sa-audit .sa-hero{display:flex;align-items:center;gap:28px;background:#fff;border:1px solid var(--line);border-left:4px solid #e2eaf0;border-radius:12px;box-shadow:0 10px 30px rgba(0,31,64,.06);padding:28px;}
 #sa-audit .sa-gauge{position:relative;width:140px;height:140px;flex:0 0 auto;}
 #sa-audit .sa-gauge svg{transform:rotate(-90deg);}
 #sa-audit .sa-gauge .sa-track{fill:none;stroke:var(--line);stroke-width:11;}
@@ -46,9 +46,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-gauge-letter{font-size:48px;font-weight:700;line-height:1;}
 #sa-audit .sa-gauge-letter small{font-size:22px;vertical-align:super;}
 #sa-audit .sa-gauge-score{display:none;}
-#sa-audit .sa-hero-k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:0 0 6px;}
-#sa-audit .sa-hero-t{font-size:20px;font-weight:700;color:var(--ink);margin:0 0 7px;}
-#sa-audit .sa-hero-d{font-size:14px;color:var(--muted);margin:0;}
+#sa-audit .sa-hero-d{font-size:16px;font-weight:600;color:var(--ink);margin:0;line-height:1.5;}
 #sa-audit .sa-find-wrap{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 #sa-audit .sa-find{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:16px 17px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-find.sa-in{opacity:1;transform:none;}
@@ -56,15 +54,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-find-cat{font-size:14px;font-weight:700;color:var(--ink);}
 #sa-audit .sa-pill{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 9px;border-radius:999px;}
 #sa-audit .sa-find-txt{font-size:13px;color:#4b5563;margin:0;line-height:1.55;}
-#sa-audit .sa-agent{margin-top:18px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:24px 26px;}
-#sa-audit .sa-agent-k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:0 0 16px;}
+#sa-audit .sa-agent{margin-top:18px;background:#fff;border:1px solid var(--line);border-left:4px solid #e2eaf0;border-radius:12px;padding:24px 26px;}
 #sa-audit .sa-agent-row{display:flex;align-items:center;gap:18px;margin-bottom:18px;}
 #sa-audit .sa-agent-level{font-size:22px;font-weight:700;letter-spacing:.03em;color:#fff;padding:9px 18px;border-radius:8px;flex:0 0 auto;opacity:0;transform:scale(.9);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1);}
 #sa-audit .sa-agent-level.sa-in{opacity:1;transform:none;}
 #sa-audit .sa-agent-line{font-size:14px;color:#4b5563;margin:0;}
 #sa-audit .sa-meter{display:flex;gap:6px;}
 #sa-audit .sa-seg{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);transition:all .4s ease;}
-#sa-audit .sa-seg.sa-on{color:#fff;border-color:transparent;transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,31,64,.14);}
+#sa-audit .sa-seg.sa-on{color:#007a68;background:#e6faf6;border-color:#b0ddd6;transform:translateY(-2px);}
 #sa-audit .sa-pos-card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:22px 24px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-pos-card.sa-in{opacity:1;transform:none;}
 #sa-audit .sa-pos-verdict{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 6px;}
@@ -119,27 +116,25 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     <div id="sa-report" class="sa-report">
       <p class="sa-rhead">Benchmark results for</p>
       <p class="sa-rurl" id="sa-rurl"></p>
-      <p class="sa-section-label">Position the Brand</p>
+      <p class="sa-section-label">Position the brand</p>
       <div class="sa-pos-card" id="sa-pos-card">
         <div class="sa-pos-tests" id="sa-pos-tests"></div>
         <hr class="sa-pos-divider">
         <p class="sa-pos-verdict" id="sa-pos-verdict"></p>
       </div>
-      <p class="sa-section-label">Drive Demand</p>
-      <div class="sa-hero">
+      <p class="sa-section-label">SEO readiness</p>
+      <div class="sa-hero" id="sa-seo-card">
         <div class="sa-gauge">
           <svg width="140" height="140" viewBox="0 0 150 150"><circle class="sa-track" cx="75" cy="75" r="64"></circle><circle class="sa-prog" id="sa-prog" cx="75" cy="75" r="64"></circle></svg>
           <div class="sa-gauge-center"><div class="sa-gauge-letter" id="sa-gletter"></div><div class="sa-gauge-score" id="sa-gscore"></div></div>
         </div>
         <div class="sa-hero-meta">
-          <p class="sa-hero-k">SEO Grade</p>
-          <p class="sa-hero-t" id="sa-gtitle"></p>
           <p class="sa-hero-d" id="sa-gdesc"></p>
         </div>
       </div>
       <div class="sa-find-wrap" id="sa-finds"></div>
-      <div class="sa-agent">
-        <p class="sa-agent-k">Agent Readiness — can AI assistants read your site?</p>
+      <p class="sa-section-label">Agent readiness</p>
+      <div class="sa-agent" id="sa-agent-card">
         <div class="sa-agent-row"><div class="sa-agent-level" id="sa-alevel"></div><p class="sa-agent-line" id="sa-aline"></p></div>
         <div class="sa-meter" id="sa-meter"></div>
       </div>
@@ -227,7 +222,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   function stopLoading(){ clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='block'; btn.disabled=false; }
 
   var GC={A:'#00a583',B:'#1f9d57',C:'#d8a200',D:'#e07b21',F:'#cf3b3b'};
-  var STATUS={strong:{l:'Strong',c:'#00a583'},ok:{l:'Fair',c:'#d8a200'},weak:{l:'Needs work',c:'#e07b21'},critical:{l:'Critical',c:'#cf3b3b'}};
+  var STATUS={strong:{l:'Strong',c:'#00a583',bg:'rgba(0,165,131,0.07)'},ok:{l:'Fair',c:'#d8a200',bg:'rgba(216,162,0,0.07)'},weak:{l:'Needs work',c:'#e07b21',bg:'rgba(224,123,33,0.07)'},critical:{l:'Critical',c:'#cf3b3b',bg:'rgba(207,59,59,0.07)'}};
   var LEVELS=['BASIC','EMERGING','CAPABLE','ADVANCED'];
   var AC={BASIC:'#cf3b3b',EMERGING:'#e07b21',CAPABLE:'#d8a200',ADVANCED:'#00a583'};
 
@@ -238,15 +233,15 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var col=GC[base]||'#d8a200';
     $('sa-gletter').innerHTML=base;
     $('sa-gletter').style.color=col;
-    $('sa-gtitle').textContent=r.seoGradeTitle;
     $('sa-gdesc').textContent=r.seoGradeDesc;
+    $('sa-seo-card').style.borderLeftColor=col;
     var C=2*Math.PI*64; var prog=$('sa-prog');
     prog.style.stroke=col; prog.style.strokeDasharray=C; prog.style.strokeDashoffset=C;
     var sc=$('sa-gscore'); sc.textContent='0 / 100';
     var wrap=$('sa-finds'); wrap.innerHTML='';
     r.findings.forEach(function(f){
       var s=STATUS[f.status]||STATUS.ok;
-      var el=document.createElement('div'); el.className='sa-find'; el.style.borderLeftColor=s.c;
+      var el=document.createElement('div'); el.className='sa-find'; el.style.borderLeftColor=s.c; el.style.background=s.bg;
       el.innerHTML='<div class="sa-find-top"><span class="sa-find-cat"></span><span class="sa-pill"></span></div><p class="sa-find-txt"></p>';
       el.querySelector('.sa-find-cat').textContent=f.category;
       var pill=el.querySelector('.sa-pill'); pill.textContent=s.l; pill.style.background=s.c;
@@ -255,6 +250,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     });
     var lvl=$('sa-alevel'); lvl.textContent=r.agentLevel; lvl.style.background=AC[r.agentLevel]||'#d8a200';
     $('sa-aline').textContent=r.agentLine;
+    $('sa-agent-card').style.borderLeftColor=AC[r.agentLevel]||'#d8a200';
     var meter=$('sa-meter'); meter.innerHTML='';
     LEVELS.forEach(function(n){
       var seg=document.createElement('div'); seg.className='sa-seg'; seg.textContent=n;
@@ -271,9 +267,10 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       posTests.appendChild(tk);
     } else {
       var tagC=function(v){ return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b'; };
-      [{l:'THE HOOK',v:pos.hook},{l:'THE FIT',v:pos.fit},{l:'THE RELEVANCE',v:pos.relevance}].forEach(function(t){
+      var tagDisp={lands:'strong',partial:'partial',missing:'missing',clear:'clear',unclear:'unclear',connects:'strong'};
+      [{n:'hook',v:pos.hook},{n:'fit',v:pos.fit},{n:'relevance',v:pos.relevance}].forEach(function(t){
         var el=document.createElement('span'); el.className='sa-pos-tag';
-        el.textContent=t.l+' — '+(t.v||''); var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
+        el.textContent='The '+t.n+' is '+(tagDisp[t.v]||t.v||''); var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
         posTests.appendChild(el);
       });
     }
@@ -287,7 +284,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       wrap.querySelectorAll('.sa-find').forEach(function(el,i){ setTimeout(function(){ el.classList.add('sa-in'); },250+i*130); });
       setTimeout(function(){ lvl.classList.add('sa-in'); },300);
       var idx=LEVELS.indexOf(r.agentLevel);
-      meter.querySelectorAll('.sa-seg').forEach(function(seg,i){ setTimeout(function(){ if(i<=idx){ seg.classList.add('sa-on'); seg.style.background=AC[r.agentLevel]; } },500+i*140); });
+      meter.querySelectorAll('.sa-seg').forEach(function(seg,i){ setTimeout(function(){ if(i<=idx){ seg.classList.add('sa-on'); } },500+i*140); });
       setTimeout(function(){ posCard.classList.add('sa-in'); },150);
     }); });
   }
