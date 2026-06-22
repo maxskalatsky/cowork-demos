@@ -111,6 +111,14 @@ export default {
         }));
       }
 
+      // Forward Signal — Claude-generated opportunity observation
+      if (env.ANTHROPIC_API_KEY) {
+        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, env);
+        if (fwd) report.forwardSignal = fwd;
+      } else {
+        console.warn("ANTHROPIC_API_KEY not bound — Forward Signal skipped");
+      }
+
       report.businessName = brand;
       report.positioning = positioning;
       return json(report, 200, cors);
@@ -320,14 +328,16 @@ function scorePositioning(html) {
 
   // hook = lands
   } else if (hook === "lands" && fit === "clear"   && relevance === "connects") {
-    verdict = "Clean, clear, and relevant. A stranger knows exactly what this is, who it is for, and whether it is worth their time.";
+    verdict = "This site is firing on all cylinders. The opening lands, the offer is clear, and the reader immediately sees what is in it for them.";
   } else if (hook === "lands" && fit === "clear"   && relevance === "partial") {
-    verdict = "Strong fundamentals with a targeting gap. The hook lands and the offer is clear, but the page has not fully connected to the specific reader it is trying to reach.";
+    verdict = "Strong fundamentals with a targeting gap. The brand lands and the offer is clear, but it speaks to everyone rather than pulling the right person in by name.";
   } else if (hook === "lands" && fit === "clear"   && relevance === "missing") {
     verdict = "Clear and compelling but it does not connect to the reader. The offer is visible but the why it matters to me moment never arrives.";
   } else if (hook === "lands" && fit === "partial" && relevance === "connects") {
     verdict = "The opening grabs attention and the relevance is there, but the offer is not sharp enough to close it. Tighten what you do and for whom.";
-  } else if (hook === "lands" && (fit === "partial" || fit === "unclear") && relevance === "partial") {
+  } else if (hook === "lands" && fit === "partial" && relevance === "partial") {
+    verdict = "Strong first impression that does not quite deliver. The opening earns the click but the page does not close it.";
+  } else if (hook === "lands" && fit === "unclear" && relevance === "partial") {
     verdict = "Strong first impression that does not quite deliver. The opening earns the click but the page does not close it.";
   } else if (hook === "lands" && fit === "partial" && relevance === "missing") {
     verdict = "The opening works but the page loses the reader. The offer is hazy and there is no connection to why it matters.";
@@ -550,6 +560,64 @@ async function polishWithClaude(report, page, brand, env) {
     if (Array.isArray(parsed.findings) && parsed.findings.length === 4) report.findings = parsed.findings;
   } catch { /* fall back to rules wording */ }
   return report;
+}
+
+/* ----------------------------------------------------------------------------
+   THE FORWARD SIGNAL — single Claude call for highest-leverage opportunity.
+---------------------------------------------------------------------------- */
+async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, env) {
+  const plainText = (pageHtml || "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 3000);
+
+  const systemPrompt =
+    "You are a senior marketing and GTM advisor reviewing a private company website. " +
+    "Based on the positioning verdict, SEO grade, and agent readiness provided, generate exactly one observation " +
+    "identifying the single highest leverage opportunity this business is leaving on the table right now. " +
+    "Frame it as an opportunity not a problem. Be specific to what you read on the page. " +
+    "Sound like a knowledgeable advisor pointing at something the owner has not seen yet, not a tool generating generic advice. " +
+    "Be encouraging but direct. Never be harsh. Never use the word audit. Never be generic. " +
+    "If you cannot generate a specific confident observation based on what you read, return nothing. " +
+    "The response must be two to three sentences maximum.";
+
+  const userContent =
+    `Page content: ${plainText}\n\n` +
+    `Positioning verdict: ${positioning.verdict}\n` +
+    `Hook: ${positioning.hook}, Fit: ${positioning.fit}, Relevance: ${positioning.relevance}\n` +
+    `SEO grade: ${seoGrade}\n` +
+    `Finding statuses: ${findings.map(f => `${f.category}: ${f.status}`).join(", ")}\n` +
+    `Agent readiness: ${agentLevel}`;
+
+  try {
+    const apiKey = (env.ANTHROPIC_API_KEY || "").trim();
+    const reqBody = JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 250,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userContent }],
+    });
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: reqBody,
+    });
+    if (!res.ok) { console.warn("Forward Signal HTTP error:", res.status); return null; }
+    const data = await res.json();
+    if (data?.error) { console.warn("Forward Signal API error:", JSON.stringify(data.error)); return null; }
+    const text = (data?.content?.[0]?.text || "").trim();
+    return text || null;
+  } catch (e) {
+    console.warn("Forward Signal exception:", String(e));
+    return null;
+  }
 }
 
 /* ----------------------------------------------------------------------------

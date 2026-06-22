@@ -34,10 +34,11 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 @keyframes sa-spin{to{stroke-dashoffset:-400;}}
 #sa-audit .sa-loading-txt{font-size:14.5px;color:var(--b2);font-weight:600;}
 #sa-audit .sa-report{display:none;margin-top:10px;}
-#sa-audit .sa-rhead{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:0 0 4px;text-align:center;}
-#sa-audit .sa-rurl{font-size:16px;font-weight:700;color:var(--b2);word-break:break-all;margin:0 0 22px;text-align:center;}
+#sa-audit .sa-rtitle{font-size:18px;font-weight:700;color:var(--b2);word-break:break-word;margin:0 0 6px;}
+#sa-audit .sa-rtagline{font-size:13px;color:var(--muted);margin:0 0 24px;}
 #sa-audit .sa-section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:22px 0 8px;padding-top:6px;border-top:1px solid var(--line);}
-#sa-audit .sa-hero{display:flex;align-items:center;gap:28px;background:#fff;border:1px solid var(--line);border-left:4px solid #e2eaf0;border-radius:12px;box-shadow:0 10px 30px rgba(0,31,64,.06);padding:28px;}
+#sa-audit .sa-hero{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-left:4px solid #e2eaf0;border-radius:12px;box-shadow:0 10px 30px rgba(0,31,64,.06);padding:28px;}
+#sa-audit .sa-seo-top{display:flex;align-items:center;gap:28px;}
 #sa-audit .sa-gauge{position:relative;width:140px;height:140px;flex:0 0 auto;}
 #sa-audit .sa-gauge svg{transform:rotate(-90deg);}
 #sa-audit .sa-gauge .sa-track{fill:none;stroke:var(--line);stroke-width:11;}
@@ -46,25 +47,24 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-gauge-letter{font-size:48px;font-weight:700;line-height:1;}
 #sa-audit .sa-gauge-letter small{font-size:22px;vertical-align:super;}
 #sa-audit .sa-gauge-score{display:none;}
-#sa-audit .sa-hero-d{font-size:16px;font-weight:600;color:var(--ink);margin:0;line-height:1.5;}
+#sa-audit .sa-hero-d{font-size:14px;font-weight:600;color:var(--ink);margin:0;line-height:1.5;}
 #sa-audit .sa-find-wrap{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 #sa-audit .sa-find{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:16px 17px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-find.sa-in{opacity:1;transform:none;}
 #sa-audit .sa-find-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
 #sa-audit .sa-find-cat{font-size:14px;font-weight:700;color:var(--ink);}
 #sa-audit .sa-pill{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 9px;border-radius:999px;}
-#sa-audit .sa-find-txt{font-size:13px;color:#4b5563;margin:0;line-height:1.55;}
+#sa-audit .sa-find-txt{font-size:11px;color:#4b5563;margin:0;line-height:1.55;}
 #sa-audit .sa-agent{margin-top:18px;background:#fff;border:1px solid var(--line);border-left:4px solid #e2eaf0;border-radius:12px;padding:24px 26px;}
-#sa-audit .sa-agent-row{display:flex;align-items:center;gap:18px;margin-bottom:18px;}
+#sa-audit .sa-agent-row{display:flex;align-items:center;gap:18px;}
 #sa-audit .sa-agent-level{font-size:22px;font-weight:700;letter-spacing:.03em;color:#fff;padding:9px 18px;border-radius:8px;flex:0 0 auto;opacity:0;transform:scale(.9);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1);}
 #sa-audit .sa-agent-level.sa-in{opacity:1;transform:none;}
 #sa-audit .sa-agent-line{font-size:14px;color:#4b5563;margin:0;}
-#sa-audit .sa-meter{display:flex;gap:6px;}
-#sa-audit .sa-seg{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:#fff;border:1px solid var(--line);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);transition:all .4s ease;}
-#sa-audit .sa-seg.sa-on{color:#007a68;background:#e6faf6;border-color:#b0ddd6;transform:translateY(-2px);}
+#sa-audit .sa-fwd-card{margin-top:18px;background:#E6F1FB;border:1px solid #b8d4f0;border-left:4px solid #185FA5;border-radius:12px;padding:24px 26px;}
+#sa-audit .sa-fwd-txt{font-size:14px;color:#042C53;margin:0;line-height:1.65;}
 #sa-audit .sa-pos-card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:22px 24px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;}
 #sa-audit .sa-pos-card.sa-in{opacity:1;transform:none;}
-#sa-audit .sa-pos-verdict{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 6px;}
+#sa-audit .sa-pos-verdict{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 6px;}
 #sa-audit .sa-pos-tests{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
 #sa-audit .sa-pos-divider{border:none;border-top:1px solid var(--line);margin:0 0 14px;}
 #sa-audit .sa-pos-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 14px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted2);}
@@ -74,17 +74,17 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-redo{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted2);font-size:12.5px;font-family:inherit;text-decoration:underline;cursor:pointer;}
 #sa-audit .sa-brand-msg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--p);border-radius:10px;padding:28px 30px;margin-top:10px;}
 #sa-audit .sa-brand-txt{font-size:15px;color:#4b5563;margin:0 0 22px;line-height:1.65;}
-@media(max-width:640px){#sa-audit .sa-hero{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}}
+@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <span class="dev-badge">DEV — THE DIGITAL SIGNAL</span>
-  <h1>The Digital Signal</h1>
-  <p class="sub">Your website is the front door to your business. Find out what signal it is sending.</p>
 
   <div id="sa-audit">
     <div id="sa-intake">
+      <h1>The Digital Signal</h1>
+      <p class="sub">Your website is the front door to your business. Find out what signal it is sending.</p>
       <div class="sa-panel">
         <div class="sa-field">
           <label for="sa-email">Your work email</label>
@@ -114,8 +114,8 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     </div>
 
     <div id="sa-report" class="sa-report">
-      <p class="sa-rhead">Benchmark results for</p>
-      <p class="sa-rurl" id="sa-rurl"></p>
+      <p class="sa-rtitle" id="sa-rurl"></p>
+      <p class="sa-rtagline">Your website is the front door to your business. Find out what signal it is sending.</p>
       <p class="sa-section-label">Position the brand</p>
       <div class="sa-pos-card" id="sa-pos-card">
         <div class="sa-pos-tests" id="sa-pos-tests"></div>
@@ -124,19 +124,24 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       </div>
       <p class="sa-section-label">SEO readiness</p>
       <div class="sa-hero" id="sa-seo-card">
-        <div class="sa-gauge">
-          <svg width="140" height="140" viewBox="0 0 150 150"><circle class="sa-track" cx="75" cy="75" r="64"></circle><circle class="sa-prog" id="sa-prog" cx="75" cy="75" r="64"></circle></svg>
-          <div class="sa-gauge-center"><div class="sa-gauge-letter" id="sa-gletter"></div><div class="sa-gauge-score" id="sa-gscore"></div></div>
+        <div class="sa-seo-top">
+          <div class="sa-gauge">
+            <svg width="140" height="140" viewBox="0 0 150 150"><circle class="sa-track" cx="75" cy="75" r="64"></circle><circle class="sa-prog" id="sa-prog" cx="75" cy="75" r="64"></circle></svg>
+            <div class="sa-gauge-center"><div class="sa-gauge-letter" id="sa-gletter"></div><div class="sa-gauge-score" id="sa-gscore"></div></div>
+          </div>
+          <div class="sa-hero-meta">
+            <p class="sa-hero-d" id="sa-gdesc"></p>
+          </div>
         </div>
-        <div class="sa-hero-meta">
-          <p class="sa-hero-d" id="sa-gdesc"></p>
-        </div>
+        <div class="sa-find-wrap" id="sa-finds"></div>
       </div>
-      <div class="sa-find-wrap" id="sa-finds"></div>
       <p class="sa-section-label">Agent readiness</p>
       <div class="sa-agent" id="sa-agent-card">
         <div class="sa-agent-row"><div class="sa-agent-level" id="sa-alevel"></div><p class="sa-agent-line" id="sa-aline"></p></div>
-        <div class="sa-meter" id="sa-meter"></div>
+      </div>
+      <div id="sa-fwd-section" style="display:none">
+        <p class="sa-section-label">The forward signal</p>
+        <div class="sa-fwd-card"><p class="sa-fwd-txt" id="sa-fwd-txt"></p></div>
       </div>
       <div class="sa-close">
         <p class="sa-close-lead" id="sa-close-lead"></p>
@@ -223,12 +228,11 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 
   var GC={A:'#00a583',B:'#1f9d57',C:'#d8a200',D:'#e07b21',F:'#cf3b3b'};
   var STATUS={strong:{l:'Strong',c:'#00a583',bg:'rgba(0,165,131,0.07)'},ok:{l:'Fair',c:'#d8a200',bg:'rgba(216,162,0,0.07)'},weak:{l:'Needs work',c:'#e07b21',bg:'rgba(224,123,33,0.07)'},critical:{l:'Critical',c:'#cf3b3b',bg:'rgba(207,59,59,0.07)'}};
-  var LEVELS=['BASIC','EMERGING','CAPABLE','ADVANCED'];
   var AC={BASIC:'#cf3b3b',EMERGING:'#e07b21',CAPABLE:'#d8a200',ADVANCED:'#00a583'};
 
   function render(r){
     clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='none'; btn.disabled=false;
-    $('sa-rurl').textContent=r.displayUrl||r.url;
+    $('sa-rurl').textContent='The Digital Signal: '+(r.displayUrl||r.url);
     var base=r.seoGrade.charAt(0);
     var col=GC[base]||'#d8a200';
     $('sa-gletter').innerHTML=base;
@@ -242,20 +246,17 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     r.findings.forEach(function(f){
       var s=STATUS[f.status]||STATUS.ok;
       var el=document.createElement('div'); el.className='sa-find'; el.style.borderLeftColor=s.c; el.style.background=s.bg;
-      el.innerHTML='<div class="sa-find-top"><span class="sa-find-cat"></span><span class="sa-pill"></span></div><p class="sa-find-txt"></p>';
+      el.innerHTML='<div class="sa-find-top"><span class="sa-find-cat"></span></div><p class="sa-find-txt"></p>';
       el.querySelector('.sa-find-cat').textContent=f.category;
-      var pill=el.querySelector('.sa-pill'); pill.textContent=s.l; pill.style.background=s.c;
       el.querySelector('.sa-find-txt').textContent=f.text;
       wrap.appendChild(el);
     });
     var lvl=$('sa-alevel'); lvl.textContent=r.agentLevel; lvl.style.background=AC[r.agentLevel]||'#d8a200';
     $('sa-aline').textContent=r.agentLine;
     $('sa-agent-card').style.borderLeftColor=AC[r.agentLevel]||'#d8a200';
-    var meter=$('sa-meter'); meter.innerHTML='';
-    LEVELS.forEach(function(n){
-      var seg=document.createElement('div'); seg.className='sa-seg'; seg.textContent=n;
-      meter.appendChild(seg);
-    });
+    var fwdSection=$('sa-fwd-section');
+    if(r.forwardSignal){$('sa-fwd-txt').textContent=r.forwardSignal;fwdSection.style.display='block';}
+    else{fwdSection.style.display='none';}
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:'#00C99C',yellow:'#d8a200',red:'#cf3b3b'};
     posCard.style.borderLeftColor=posColors[pos.color]||'#e2eaf0';
@@ -283,8 +284,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       countUp(sc,r.seoScore,1300);
       wrap.querySelectorAll('.sa-find').forEach(function(el,i){ setTimeout(function(){ el.classList.add('sa-in'); },250+i*130); });
       setTimeout(function(){ lvl.classList.add('sa-in'); },300);
-      var idx=LEVELS.indexOf(r.agentLevel);
-      meter.querySelectorAll('.sa-seg').forEach(function(seg,i){ setTimeout(function(){ if(i<=idx){ seg.classList.add('sa-on'); } },500+i*140); });
       setTimeout(function(){ posCard.classList.add('sa-in'); },150);
     }); });
   }
