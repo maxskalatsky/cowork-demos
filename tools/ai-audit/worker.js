@@ -609,7 +609,7 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
       },
       body: reqBody,
     });
-    if (!res.ok) { console.warn("Forward Signal HTTP error:", res.status); return null; }
+    if (!res.ok) { const errBody = await res.text(); console.warn("Forward Signal HTTP error:", res.status, errBody || "(empty body)"); return null; }
     const data = await res.json();
     if (data?.error) { console.warn("Forward Signal API error:", JSON.stringify(data.error)); return null; }
     const text = (data?.content?.[0]?.text || "").trim();
