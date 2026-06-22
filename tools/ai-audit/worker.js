@@ -87,7 +87,7 @@ export default {
       const seoGrade = letterFromScore(scores.total);
 
       // 3. agent readiness ----------------------------------------------------
-      const agent = scoreAgentReadiness(extra);                     // {score, level}
+      const agent = scoreAgentReadiness(extra, scores, seoGrade);    // {score, level}
 
       // 4. findings -----------------------------------------------------------
       const brand = extractBrand(target, extra.html || "", page.meta?.title);
@@ -246,11 +246,11 @@ function scorePositioning(html) {
   const wordCount = text.split(/\s+/).filter(Boolean).length;
   const hasSubheadings = /<h[2-6][\s>]/i.test(html);
 
-  const disqualifier =
-    fillerRx.test(first500) ||
-    buzzCount >= 3 ||
-    ctaCount > 4 ||
-    (wordCount > 700 && !hasSubheadings);
+  const disqualifierFiller = fillerRx.test(first500);
+  const disqualifierBuzz   = buzzCount >= 3;
+  const disqualifierCta    = ctaCount > 4;
+  const disqualifierWall   = wordCount > 700 && !hasSubheadings;
+  const disqualifier = disqualifierFiller || disqualifierBuzz || disqualifierCta || disqualifierWall;
 
   // ── THE HOOK ──────────────────────────────────────────────────────────────
   const hasH1 = /<h1[\s>]/i.test(html);
@@ -309,20 +309,72 @@ function scorePositioning(html) {
   // ── VERDICT ───────────────────────────────────────────────────────────────
   let verdict;
   if (disqualifier) {
-    verdict = (hook === "partial" && fit === "partial")
-      ? "Too many things competing for attention and none of them winning. Strip it back and start with one clear idea."
-      : "Too much noise, not enough signal. A stranger cannot find the story through all the clutter.";
-  } else if (hook === "missing" && fit === "unclear"  && relevance === "missing")  { verdict = "Nothing here earns the next click. A stranger lands and leaves without knowing what you do or why it matters.";
-  } else if (hook === "missing" && fit === "clear"    && relevance === "missing")  { verdict = "The offer is clear but nothing pulls you in. You know what they do but not why you should care.";
-  } else if (hook === "missing" && fit === "clear"    && relevance === "connects") { verdict = "The substance is there but the opening does not earn it. Fix the first five seconds and the rest lands.";
-  } else if (hook === "lands"   && fit === "unclear"  && relevance === "missing")  { verdict = "Strong opening, weak follow through. You get their attention and then lose them.";
-  } else if (hook === "lands"   && fit === "clear"    && relevance === "missing")  { verdict = "Clear and compelling but it does not connect to the reader. Missing the why it matters to me moment.";
-  } else if (hook === "lands"   && fit === "unclear"  && relevance === "connects") { verdict = "The energy is right but the offer is buried. A stranger cannot tell what you actually do.";
-  } else if (hook === "lands"   && fit === "clear"    && relevance === "connects") { verdict = "Clean, clear, and relevant. A stranger knows exactly what this is and whether it is for them.";
-  } else if (hook === "partial" && fit === "partial"  && relevance === "connects") { verdict = "The bones are good. Sharpen the opening and clarify the offer and this site does real work.";
-  } else if (hook === "partial" && fit === "partial"  && relevance === "partial")  { verdict = "Directionally right but not landing yet. Every element needs one more pass of clarity and confidence.";
-  } else if (hook === "lands"   && fit === "partial"  && relevance === "partial")  { verdict = "Strong first impression that does not quite deliver. The opening earns the click but the page does not close it.";
-  } else { verdict = "Directionally right but not landing yet. Every element needs one more pass of clarity and confidence."; }
+    if (disqualifierFiller)
+      verdict = "The language on this site signals nothing. Phrases like 'we help businesses grow' are placeholders, not positioning. A stranger reads this and cannot tell what you do or who you serve.";
+    else if (disqualifierBuzz)
+      verdict = "Too much jargon, not enough substance. Strip the buzzwords and say the specific thing you do for the specific people you serve.";
+    else if (disqualifierCta)
+      verdict = "Every line is pushing for action before making a case. Pull back the calls to action and build the argument first.";
+    else
+      verdict = "No structure, no signal. A wall of copy without headings means a reader cannot find what matters, and neither can Google.";
+
+  // hook = lands
+  } else if (hook === "lands" && fit === "clear"   && relevance === "connects") {
+    verdict = "Clean, clear, and relevant. A stranger knows exactly what this is, who it is for, and whether it is worth their time.";
+  } else if (hook === "lands" && fit === "clear"   && relevance === "partial") {
+    verdict = "Strong fundamentals with a targeting gap. The hook lands and the offer is clear, but the page has not fully connected to the specific reader it is trying to reach.";
+  } else if (hook === "lands" && fit === "clear"   && relevance === "missing") {
+    verdict = "Clear and compelling but it does not connect to the reader. The offer is visible but the why it matters to me moment never arrives.";
+  } else if (hook === "lands" && fit === "partial" && relevance === "connects") {
+    verdict = "The opening grabs attention and the relevance is there, but the offer is not sharp enough to close it. Tighten what you do and for whom.";
+  } else if (hook === "lands" && (fit === "partial" || fit === "unclear") && relevance === "partial") {
+    verdict = "Strong first impression that does not quite deliver. The opening earns the click but the page does not close it.";
+  } else if (hook === "lands" && fit === "partial" && relevance === "missing") {
+    verdict = "The opening works but the page loses the reader. The offer is hazy and there is no connection to why it matters.";
+  } else if (hook === "lands" && fit === "unclear" && relevance === "connects") {
+    verdict = "The energy is right but the offer is buried. A stranger feels something here but cannot tell what they are supposed to do next.";
+  } else if (hook === "lands" && fit === "unclear" && relevance === "missing") {
+    verdict = "Strong opening, weak follow through. The hook grabs attention but the offer and the connection to the reader both fall away before the page earns anything.";
+
+  // hook = partial
+  } else if (hook === "partial" && fit === "clear" && relevance === "connects") {
+    verdict = "Clear and relevant but the opening does not earn it. A sharper hook would turn this from a good site into one that converts.";
+  } else if (hook === "partial" && fit === "clear" && relevance === "partial") {
+    verdict = "The offer is clear but the site is not making a case for itself. Sharpen the opening and connect it to a specific outcome for the reader.";
+  } else if (hook === "partial" && fit === "clear" && relevance === "missing") {
+    verdict = "Clear enough to read but not compelling enough to act. No hook, no connection, no reason for a stranger to care.";
+  } else if (hook === "partial" && fit === "partial" && relevance === "connects") {
+    verdict = "The bones are good. Sharpen the opening and clarify the offer and this site does real work.";
+  } else if (hook === "partial" && fit === "partial" && relevance === "partial") {
+    verdict = "Not landing yet. The hook is soft, the offer is unclear, and the reader has no real reason to engage. Every element needs a sharper point of view.";
+  } else if (hook === "partial" && fit === "partial" && relevance === "missing") {
+    verdict = "Soft opening, vague offer, no connection to the reader. Pick one thing this site is for and say it plainly at the top.";
+  } else if (hook === "partial" && fit === "unclear" && relevance === "connects") {
+    verdict = "The reader connects with the message but cannot tell what is being offered. Clarity of fit is the missing piece.";
+  } else if (hook === "partial" && fit === "unclear" && relevance === "partial") {
+    verdict = "Starting to land but not sticking. The opening is vague, the offer is buried, and the reader has to work too hard to find the point.";
+  } else if (hook === "partial" && fit === "unclear" && relevance === "missing") {
+    verdict = "No hook, no clear offer, no connection to the reader. This site is not yet doing any work for the business.";
+
+  // hook = missing + fit = unclear (any relevance)
+  } else if (hook === "missing" && fit === "unclear") {
+    verdict = "The site is not doing its job yet. A stranger cannot tell what this is, who it is for, or why it matters.";
+
+  // hook = missing + fit = clear
+  } else if (hook === "missing" && fit === "clear" && relevance === "connects") {
+    verdict = "The substance is there but the opening does not earn it. Fix the first five seconds and the rest lands.";
+  } else if (hook === "missing" && fit === "clear" && relevance === "partial") {
+    verdict = "Clear enough to understand but not compelling enough to act. The fit is there but nothing pulls the reader in.";
+  } else if (hook === "missing" && fit === "clear" && relevance === "missing") {
+    verdict = "The offer is visible but nothing earns the reader's attention. No hook, no connection, no reason to stay.";
+
+  // hook = missing + fit = partial (any relevance)
+  } else if (hook === "missing" && fit === "partial") {
+    verdict = "Hard to tell what this is or why it matters from the outside. The offer is implied but never earned, and the reader has no reason to dig deeper.";
+
+  } else {
+    verdict = "This site is not yet making its case. The opening, the offer, and the connection to the reader all need work before a stranger would stop and engage.";
+  }
 
   return { hook, fit, relevance, disqualifier, color, verdict };
 }
@@ -334,7 +386,7 @@ function scorePositioning(html) {
    which cannot happen with this rubric — BASIC is reserved for future use).
    Max 100: llms.txt +20 / robots OK +15 / schema +10 / headings +10 / content +5.
 ---------------------------------------------------------------------------- */
-function scoreAgentReadiness(extra) {
+function scoreAgentReadiness(extra, scores, seoGrade) {
   const html = extra.html || "";
   const robots = extra.robots || "";
   let score = 40;
@@ -355,7 +407,23 @@ function scoreAgentReadiness(extra) {
   if (plainText.split(/\s+/).filter(Boolean).length >= 300) score += 5;
 
   score = clamp(score, 0, 100);
-  const level = score >= 80 ? "ADVANCED" : score >= 60 ? "CAPABLE" : score >= 40 ? "EMERGING" : "BASIC";
+  let level = score >= 80 ? "ADVANCED" : score >= 60 ? "CAPABLE" : score >= 40 ? "EMERGING" : "BASIC";
+
+  // SEO-quality gates: AI readiness cannot outrun the underlying content and authority.
+  // A site Google cannot parse is a site AI assistants cannot parse either.
+  const base = (seoGrade || "F").charAt(0);
+  const contentBand = scores.content >= 24 ? "strong" : scores.content >= 18 ? "ok" : scores.content >= 12 ? "weak" : "critical";
+  const authBand    = scores.auth    >=  8 ? "strong" : scores.auth    >=  6 ? "ok" : scores.auth    >=  4 ? "weak" : "critical";
+
+  // F grade: cap at EMERGING regardless of signals
+  if (base === "F" && (level === "CAPABLE" || level === "ADVANCED")) level = "EMERGING";
+  // D grade + critical authority: cap at EMERGING
+  if (base === "D" && authBand === "critical" && (level === "CAPABLE" || level === "ADVANCED")) level = "EMERGING";
+  // ADVANCED requires strong content AND strong authority
+  if (level === "ADVANCED" && !(contentBand === "strong" && authBand === "strong")) level = "CAPABLE";
+  // CAPABLE requires at least ok content AND at least weak (non-critical) authority
+  if (level === "CAPABLE" && !((contentBand === "strong" || contentBand === "ok") && authBand !== "critical")) level = "EMERGING";
+
   return { score, level };
 }
 
