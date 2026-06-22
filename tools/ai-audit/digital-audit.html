@@ -99,7 +99,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         </div>
         <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Run My Digital Signal</button></div>
         <p id="sa-err" class="sa-err"></p>
-        <p class="sa-note">Free. One per business. Results appear here instantly.</p>
+        <p class="sa-note">Free. One per email. Results appear here instantly.</p>
       </div>
     </div>
 
@@ -146,7 +146,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       <div class="sa-close">
         <p class="sa-close-lead" id="sa-close-lead"></p>
         <p class="sa-close-q">If any of this resonates, let's talk.</p>
-        <a class="sa-btn" href="mailto:signal@skalatsky.com">signal@skalatsky.com</a>
+        <a class="sa-btn" id="sa-mail-cta" href="mailto:signal@skalatsky.com">signal@skalatsky.com</a>
         <button class="sa-redo" id="sa-redo" type="button">Run another website</button>
       </div>
     </div>
@@ -181,8 +181,15 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     if(done[cacheKey]){ render(done[cacheKey]); return; }
     startLoading();
     fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal}) })
-      .then(function(res){ return res.json(); })
+      .then(function(res){ var s=res.status; return res.json().then(function(d){ d._s=s; return d; }); })
       .then(function(rep){
+        if(rep._s===429){
+          stopLoading();
+          var subj=encodeURIComponent('My Digital Signal Results');
+          var bod=encodeURIComponent('Hi, I already ran The Digital Signal for '+u.href+' and would like to discuss my results.');
+          err.innerHTML='You have already run a free Signal. <a href="mailto:signal@skalatsky.com?subject='+subj+'&body='+bod+'" style="color:inherit;font-weight:700;text-decoration:underline">Email signal@skalatsky.com</a> to discuss your results.';
+          err.style.display='block'; return;
+        }
         if(rep.error){ stopLoading(); err.textContent=rep.error; err.style.display='block'; return; }
         if(rep.known_brand){
           clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='none'; btn.disabled=false;
@@ -271,6 +278,8 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       });
     }
     $('sa-close-lead').textContent='';
+    var bizName=r.businessName||(r.displayUrl||r.url);
+    $('sa-mail-cta').href='mailto:signal@skalatsky.com?subject='+encodeURIComponent('Signal results for '+bizName);
     $('sa-report').style.display='block';
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
       prog.style.strokeDashoffset=C*(1-r.seoScore/100);

@@ -90,7 +90,7 @@ export default {
       const agent = scoreAgentReadiness(extra);                     // {score, level}
 
       // 4. findings -----------------------------------------------------------
-      const brand = brandFrom(target);
+      const brand = extractBrand(target, extra.html || "", page.meta?.title);
       let report = buildRulesReport(brand, scores, seoGrade, agent, page);
       if ((env.FINDINGS_MODE || "rules") === "llm" && env.ANTHROPIC_API_KEY) {
         report = await polishWithClaude(report, page, brand, env); // optional rewording
@@ -111,6 +111,7 @@ export default {
         }));
       }
 
+      report.businessName = brand;
       report.positioning = positioning;
       return json(report, 200, cors);
     } catch (e) {
@@ -489,7 +490,16 @@ async function polishWithClaude(report, page, brand, env) {
 function finding(category, status, byBand) { return { category, status, text: byBand[status] }; }
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-function brandFrom(url) { try { return new URL(url).hostname.replace(/^www\./, "").split(".")[0]; } catch { return "your site"; } }
+function extractBrand(url, html, metaTitle) {
+  const strip = t => (t || "").trim().replace(/\s*[-|–—·]\s.*$/, "").trim();
+  const fromTitle = strip(metaTitle) || strip(((html || "").match(/<title[^>]*>([^<]+)<\/title>/i) || [])[1]);
+  if (fromTitle && fromTitle.length > 2 && fromTitle.length < 80) return fromTitle;
+  const ogM = (html || "").match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+           || (html || "").match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
+  const fromOg = strip((ogM || [])[1]);
+  if (fromOg && fromOg.length > 2 && fromOg.length < 80) return fromOg;
+  try { return new URL(url).hostname.replace(/^www\./, "").split(".")[0]; } catch { return "your site"; }
+}
 function normalizeUrl(raw) {
   if (!raw) return null;
   let v = String(raw).trim();
