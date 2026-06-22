@@ -33,7 +33,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-scan .sa-scan-arc{fill:none;stroke:var(--p);stroke-width:6;stroke-linecap:round;stroke-dasharray:80 320;animation:sa-spin 1s linear infinite;}
 @keyframes sa-spin{to{stroke-dashoffset:-400;}}
 #sa-audit .sa-loading-txt{font-size:14.5px;color:var(--b2);font-weight:600;}
-#sa-audit .sa-report{display:none;margin-top:10px;}
 #sa-audit .sa-rtitle{font-size:18px;font-weight:700;color:var(--b2);word-break:break-word;margin:0 0 6px;}
 #sa-audit .sa-rtagline{font-size:13px;color:var(--muted);margin:0 0 24px;}
 #sa-audit .sa-section-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:22px 0 8px;padding-top:6px;border-top:1px solid var(--line);}
@@ -74,7 +73,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-redo{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted2);font-size:12.5px;font-family:inherit;text-decoration:underline;cursor:pointer;}
 #sa-audit .sa-brand-msg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--p);border-radius:10px;padding:28px 30px;margin-top:10px;}
 #sa-audit .sa-brand-txt{font-size:15px;color:#4b5563;margin:0 0 22px;line-height:1.65;}
-@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}}
+#sa-audit .sa-optional-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);background:#f0f4f8;border-radius:4px;padding:2px 7px;margin-left:7px;vertical-align:middle;}
+#sa-audit .sa-field-hint{font-size:12px;color:var(--muted2);margin:6px 0 0;}
+#sa-audit .sa-fwd-comp{font-size:11.5px;color:#185FA5;margin:8px 0 0;opacity:0.8;}
+#sa-audit .sa-report{display:none;margin-top:10px;padding-bottom:80px;}
+#sa-audit .sa-sticky-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:0.5px solid var(--line);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 -2px 12px rgba(0,31,64,.06);}
+#sa-audit .sa-sticky-text{font-size:14px;font-weight:600;color:var(--ink);margin:0;}
+#sa-audit .sa-sticky-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}#sa-audit .sa-sticky-bar{flex-direction:column;align-items:flex-start;gap:10px;}#sa-audit .sa-sticky-right{align-items:flex-start;}}
 </style>
 </head>
 <body>
@@ -94,7 +100,12 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <label for="sa-url">Your website</label>
           <input type="url" id="sa-url" class="sa-input" placeholder="yourbusiness.com" autocomplete="url" inputmode="url">
         </div>
-        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Run My Digital Signal</button></div>
+        <div class="sa-field" style="margin-top:16px">
+          <label for="sa-admired">A site you admire <span class="sa-optional-tag">optional</span></label>
+          <input type="url" id="sa-admired" class="sa-input" placeholder="inspiration.com" autocomplete="off" inputmode="url">
+          <p class="sa-field-hint">Any site you think does this well. We will use it to sharpen your signal.</p>
+        </div>
+        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Show Me My Signal</button></div>
         <p id="sa-err" class="sa-err"></p>
         <p class="sa-note">Free. One per email. Results appear here instantly.</p>
       </div>
@@ -141,11 +152,15 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       </div>
       <div id="sa-fwd-section" style="display:none">
         <p class="sa-section-label">The forward signal</p>
-        <div class="sa-fwd-card"><p class="sa-fwd-txt" id="sa-fwd-txt"></p></div>
+        <div class="sa-fwd-card">
+          <p class="sa-fwd-txt" id="sa-fwd-txt"></p>
+          <p class="sa-fwd-comp" id="sa-fwd-comp" style="display:none"></p>
+        </div>
       </div>
-      <div class="sa-close">
-        <p class="sa-close-lead" id="sa-close-lead"></p>
-        <p class="sa-close-q">If any of this resonates, let's talk.</p>
+    </div>
+    <div id="sa-sticky" class="sa-sticky-bar" style="display:none">
+      <p class="sa-sticky-text">If any of this resonates, let's talk.</p>
+      <div class="sa-sticky-right">
         <a class="sa-btn" id="sa-mail-cta" href="mailto:signal@skalatsky.com">signal@skalatsky.com</a>
         <button class="sa-redo" id="sa-redo" type="button">Run another website</button>
       </div>
@@ -176,11 +191,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     if(!emailVal||emailVal.indexOf('@')<1){ err.textContent='Please enter a valid work email.'; err.style.display='block'; return; }
     var u=normalizeUrl($('sa-url').value);
     if(!u){ err.textContent='Please enter a valid website address.'; err.style.display='block'; return; }
+    var admiredVal=($('sa-admired').value||'').trim();
     var cacheKey=emailVal.toLowerCase();
     var done=loadLimit();
     if(done[cacheKey]){ render(done[cacheKey]); return; }
     startLoading();
-    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal}) })
+    var fetchBody={url:u.href,email:emailVal};
+    if(admiredVal) fetchBody.admiredUrl=admiredVal;
+    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(fetchBody) })
       .then(function(res){ var s=res.status; return res.json().then(function(d){ d._s=s; return d; }); })
       .then(function(rep){
         if(rep._s===429){
@@ -208,6 +226,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 
   $('sa-redo').addEventListener('click', function(){
     $('sa-report').style.display='none';
+    $('sa-sticky').style.display='none';
     $('sa-intake').style.display='block';
   });
 
@@ -258,6 +277,9 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var fwdSection=$('sa-fwd-section');
     if(r.forwardSignal){$('sa-fwd-txt').textContent=r.forwardSignal;fwdSection.style.display='block';}
     else{fwdSection.style.display='none';}
+    var fwdComp=$('sa-fwd-comp');
+    if(r.forwardSignal&&r.forwardSignalAdmired){fwdComp.textContent='Informed by your comparison with '+r.forwardSignalAdmired;fwdComp.style.display='block';}
+    else{fwdComp.style.display='none';}
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:'#00C99C',yellow:'#d8a200',red:'#cf3b3b'};
     posCard.style.borderLeftColor=posColors[pos.color]||'#e2eaf0';
@@ -276,10 +298,10 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         posTests.appendChild(el);
       });
     }
-    $('sa-close-lead').textContent='';
     var bizName=r.businessName||(r.displayUrl||r.url);
     $('sa-mail-cta').href='mailto:signal@skalatsky.com?subject='+encodeURIComponent('Signal results for '+bizName);
     $('sa-report').style.display='block';
+    $('sa-sticky').style.display='flex';
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
       prog.style.strokeDashoffset=C*(1-r.seoScore/100);
       countUp(sc,r.seoScore,1300);

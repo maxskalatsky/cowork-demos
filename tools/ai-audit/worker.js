@@ -54,6 +54,7 @@ export default {
 
     const target = normalizeUrl(body.url);
     if (!target) return json({ error: "invalid url" }, 400, cors);
+    const admiredUrl = normalizeUrl(body.admiredUrl || "");
 
     // Known brand check — returns early, no email required
     const hostname = new URL(target).hostname.replace(/^www\./, "");
@@ -81,6 +82,8 @@ export default {
       // 1. crawl --------------------------------------------------------------
       const rawPage = await dataForSeoOnPage(target, env);  // raw on-page signals
       const extra = await fetchAgentSignals(target);        // robots.txt / llms.txt / raw HTML
+      let admiredHtml = "";
+      if (admiredUrl) { try { admiredHtml = await (await fetch(admiredUrl)).text(); } catch {} }
 
       // If DataForSEO meta is empty (title + word_count both null), it could not
       // fully parse the page — common with JS-heavy frameworks. Detect the
@@ -129,8 +132,11 @@ export default {
 
       // Forward Signal — Claude-generated opportunity observation
       if (env.ANTHROPIC_API_KEY) {
-        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, env);
-        if (fwd) report.forwardSignal = fwd;
+        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, env, admiredHtml, admiredUrl);
+        if (fwd) {
+          report.forwardSignal = fwd;
+          if (admiredUrl) report.forwardSignalAdmired = admiredUrl;
+        }
       } else {
         console.warn("ANTHROPIC_API_KEY not bound — Forward Signal skipped");
       }
@@ -479,36 +485,36 @@ function buildRulesReport(brand, scores, seoGrade, agent, page) {
 
   const visibility = finding("Visibility", band(scores.onpage, 30), {
     critical: c.no_title
-      ? `${B} pages are missing the title tags Google reads first, so you show up as a blank guess in search results when you show up at all.`
-      : `${B} is missing core on-page tags Google uses to rank pages, so you are competing for almost nothing you could be winning.`,
+      ? `${B} pages are missing the title tags search engines read first, so you show up as a blank guess in search results when you show up at all.`
+      : `${B} is missing core on-page tags search engines use to rank pages, so you are competing for almost nothing you could be winning.`,
     weak: c.duplicate_title
-      ? `Several pages share the same title, so Google can't tell them apart or rank them for different searches.`
+      ? `Several pages share the same title, so search engines can't tell them apart or rank them for different searches.`
       : `Titles and descriptions read like internal labels rather than what your buyers actually search for.`,
-    ok: `Google can index ${B} cleanly; the opportunity now is targeting the specific phrases your buyers use.`,
-    strong: `${B} is fully indexed with clear, distinct titles, so Google knows exactly what to rank you for.`,
+    ok: `Search engines can index ${B} cleanly; the opportunity now is targeting the specific phrases your buyers use.`,
+    strong: `${B} is fully indexed with clear, distinct titles, so search engines know exactly what to rank you for.`,
   });
 
   const firstImp = finding("First Impressions", band(scores.tech, 30), {
-    critical: `Core pages load slowly enough that most visitors leave before seeing anything, and Google counts that against you.`,
+    critical: `Core pages load slowly enough that most visitors leave before seeing anything, and search engines count that against you.`,
     weak: `The site is fine on desktop but lags on mobile, where most of your traffic actually arrives.`,
     ok: `Load speed is reasonable; tightening images and scripts would move ${B} from fine to fast.`,
-    strong: `Pages load fast and stay stable as they render on desktop and mobile, exactly what Google rewards.`,
+    strong: `Pages load fast and stay stable as they render on desktop and mobile, exactly what search engines and AI reward.`,
   });
 
   const structure = finding("Content Structure", band(scores.content, 30), {
-    critical: `Pages have little heading structure, so Google and AI assistants can't parse what ${B} does or who it serves.`,
+    critical: `Pages have little heading structure, so search engines and AI assistants can't parse what ${B} does or who it serves.`,
     weak: ((meta.content?.plain_text_word_count ?? 0) < 300)
-      ? `Key pages are too thin for Google to treat them as authoritative answers.`
+      ? `Key pages are too thin for search engines to treat them as authoritative answers.`
       : `Headings skip levels and repeat, so the page hierarchy reads as confusing to a search engine.`,
     ok: `Content is organized well enough to read; clear Q&A sections would help ${B} appear in AI and featured results.`,
-    strong: `Content is cleanly structured with clear headings, which both Google and AI assistants can read and quote.`,
+    strong: `Content is cleanly structured with clear headings, which both search engines and AI assistants can read and quote.`,
   });
 
   const authority = finding("Authority", band(scores.auth, 10), {
-    critical: `Almost no reputable sites link to ${B}, so Google has little reason to trust it over competitors.`,
+    critical: `Almost no reputable sites link to ${B}, so search engines have little reason to trust it over competitors.`,
     weak: `Your link profile is thin compared to the sites currently outranking ${B}.`,
     ok: `${B} has a reasonable authority foundation but trails the top competitors in your space.`,
-    strong: `${B} has earned links from credible sources, giving Google solid reason to trust and rank it.`,
+    strong: `${B} has earned links from credible sources, giving search engines solid reason to trust and rank it.`,
   });
 
   const base = seoGrade.charAt(0);
@@ -566,7 +572,7 @@ function buildRulesReport(brand, scores, seoGrade, agent, page) {
     B: "Solid, with a few specific gaps holding back better rankings.",
     C: "Average. The basics are partly there but real visibility is being left on the table.",
     D: "Weak. Several core signals Google looks for are missing or broken.",
-    F: `Critical. Google is struggling to understand and rank ${B} at all.`,
+    F: `Critical. Search engines and AI assistants are struggling to understand and rank ${B} at all.`,
   };
 
   // Shape matches the front end render() contract in sa-ai-audit.html exactly.
@@ -617,7 +623,7 @@ async function polishWithClaude(report, page, brand, env) {
 /* ----------------------------------------------------------------------------
    THE FORWARD SIGNAL — single Claude call for highest-leverage opportunity.
 ---------------------------------------------------------------------------- */
-async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, env) {
+async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, env, admiredHtml, admiredUrl) {
   const plainText = (pageHtml || "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -626,7 +632,7 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     .trim()
     .slice(0, 3000);
 
-  const systemPrompt =
+  let systemPrompt =
     "You are a senior marketing and GTM advisor reviewing a private company website. " +
     "Based on the positioning verdict, SEO grade, and agent readiness provided, generate exactly one observation " +
     "identifying the single highest leverage opportunity this business is leaving on the table right now. " +
@@ -637,13 +643,34 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     "The response must be exactly two sentences. Hard limit: two sentences, no more. If you cannot say it in two sentences, cut — do not add a third. " +
     "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
 
-  const userContent =
+  if (admiredHtml) {
+    systemPrompt +=
+      " The user has also provided a site they admire for comparison. " +
+      "Read what that site does well in terms of positioning, structure, and content. " +
+      "Connect that observation to the prospect's opportunity, specifically referencing what the admired site does and how the prospect can apply a similar principle.";
+  }
+
+  const admiredPlain = admiredHtml
+    ? admiredHtml
+        .replace(/<style[\s\S]*?<\/style>/gi, "")
+        .replace(/<script[\s\S]*?<\/script>/gi, "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 1500)
+    : "";
+
+  let userContent =
     `Page content: ${plainText}\n\n` +
     `Positioning verdict: ${positioning.verdict}\n` +
     `Hook: ${positioning.hook}, Fit: ${positioning.fit}, Relevance: ${positioning.relevance}\n` +
     `SEO grade: ${seoGrade}\n` +
     `Finding statuses: ${findings.map(f => `${f.category}: ${f.status}`).join(", ")}\n` +
     `Agent readiness: ${agentLevel}`;
+
+  if (admiredPlain && admiredUrl) {
+    userContent += `\n\nAdmired site (${admiredUrl}): ${admiredPlain}`;
+  }
 
   try {
     const apiKey = (env.ANTHROPIC_API_KEY || "").trim();
