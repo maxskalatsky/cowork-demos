@@ -401,8 +401,9 @@ function scoreAgentReadiness(extra, scores, seoGrade) {
   const robots = extra.robots || "";
   let score = 40;
 
+  const crawlersBlocked = aiCrawlersBlocked(robots);
   if (extra.llms) score += 20;
-  if (!aiCrawlersBlocked(robots)) score += 15;
+  if (!crawlersBlocked) score += 15;
   if (/application\/ld\+json/i.test(html)) score += 10;
   const hasH1 = /<h1[\s>]/i.test(html);
   const hasH2 = /<h2[\s>]/i.test(html);
@@ -434,7 +435,7 @@ function scoreAgentReadiness(extra, scores, seoGrade) {
   // CAPABLE requires at least ok content AND at least weak (non-critical) authority
   if (level === "CAPABLE" && !((contentBand === "strong" || contentBand === "ok") && authBand !== "critical")) level = "EMERGING";
 
-  return { score, level };
+  return { score, level, crawlersBlocked };
 }
 
 function aiCrawlersBlocked(robotsTxt) {
@@ -494,12 +495,47 @@ function buildRulesReport(brand, scores, seoGrade, agent, page) {
     strong: `${B} has earned links from credible sources, giving Google solid reason to trust and rank it.`,
   });
 
-  const agentLines = {
-    BASIC: `AI assistants like ChatGPT and Google's AI answers can barely read ${B}. When someone asks AI for a business like yours, you are effectively invisible.`,
-    EMERGING: `AI assistants can find ${B} but struggle to understand what you offer, so you rarely get recommended when buyers ask AI for help.`,
-    CAPABLE: `${B} is readable to AI assistants and can appear in their answers, though competitors with cleaner structure are usually cited first.`,
-    ADVANCED: `AI assistants can clearly read and summarize ${B}, so you're positioned to be recommended when buyers ask AI tools for a business like yours.`,
-  };
+  const base = seoGrade.charAt(0);
+  const authBand = band(scores.auth, 10);
+  const hasSchema = !!(c.has_micromarkup);
+
+  let agentLine;
+  switch (agent.level) {
+    case "BASIC":
+      if (agent.crawlersBlocked)
+        agentLine = "Your site is actively blocking AI assistants from reading it. Until that changes you will not appear in any AI generated recommendations.";
+      else if (base === "F")
+        agentLine = "Your site is effectively invisible to AI assistants. There is not enough structure or content for them to understand what you do or who you serve.";
+      else
+        agentLine = "AI assistants can barely read your site. When someone asks for a business like yours, you are not in the conversation.";
+      break;
+    case "EMERGING":
+      if (base === "D" || base === "F")
+        agentLine = "AI assistants can find you but there is not enough content for them to explain what you do, so you rarely appear when buyers ask for help.";
+      else if (scores.content < 18)
+        agentLine = "AI assistants can read your pages but have no structured signals to work from, so competitors with cleaner markup get cited ahead of you.";
+      else
+        agentLine = "AI assistants can find you but struggle to understand what you offer, so you rarely get recommended when buyers ask for help.";
+      break;
+    case "CAPABLE":
+      if (authBand === "weak" || authBand === "critical")
+        agentLine = "Your site is readable to AI assistants and can appear in their answers, but thin authority means better known competitors get cited first.";
+      else if (base === "C")
+        agentLine = "AI assistants can read you but competitors with cleaner structure and more content are usually cited ahead of you.";
+      else
+        agentLine = "Your site is readable to AI assistants and can appear in their answers, though competitors with cleaner structure are usually cited first.";
+      break;
+    case "ADVANCED":
+      if (hasSchema)
+        agentLine = "AI assistants can clearly read and summarize your site, and your structured data helps them cite you accurately when buyers ask for a business like yours.";
+      else if (base === "A")
+        agentLine = "Your site is fully optimized for AI discovery. You are positioned to be the first recommendation when buyers ask AI tools for a business like yours.";
+      else
+        agentLine = "AI assistants can clearly read and summarize your site, so you are positioned to be recommended when buyers ask for a business like yours.";
+      break;
+    default:
+      agentLine = "AI assistants can find you but struggle to understand what you offer, so you rarely get recommended when buyers ask for help.";
+  }
 
   const titleBand = {
     A: "Strong fundamentals",
@@ -526,7 +562,7 @@ function buildRulesReport(brand, scores, seoGrade, agent, page) {
     findings: [visibility, firstImp, structure, authority],
     agentLevel: agent.level,
     agentScore: agent.score,                       // 0-100
-    agentLine: agentLines[agent.level],
+    agentLine,
   };
 }
 
