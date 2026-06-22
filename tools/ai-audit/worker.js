@@ -52,9 +52,20 @@ export default {
     let body;
     try { body = await request.json(); } catch { return json({ error: "bad json" }, 400, cors); }
 
+    // Compare action — separate from the main audit flow, no email/KV required
+    if (body.action === "compare") {
+      if (!env.ANTHROPIC_API_KEY) return json({ error: "api not configured" }, 503, cors);
+      const admiredUrl = normalizeUrl(body.admiredUrl);
+      if (!admiredUrl) return json({ error: "invalid admired url" }, 400, cors);
+      let admiredHtml = "";
+      try { admiredHtml = await (await fetch(admiredUrl)).text(); } catch {}
+      const admiredPositioning = scorePositioning(admiredHtml);
+      const enrichedSignal = await getCompareSignal(body, admiredHtml, admiredPositioning, admiredUrl, env);
+      return json({ enrichedSignal, admiredPositioning, admiredUrl }, 200, cors);
+    }
+
     const target = normalizeUrl(body.url);
     if (!target) return json({ error: "invalid url" }, 400, cors);
-    const admiredUrl = normalizeUrl(body.admiredUrl || "");
 
     // Known brand check — returns early, no email required
     const hostname = new URL(target).hostname.replace(/^www\./, "");
@@ -82,8 +93,6 @@ export default {
       // 1. crawl --------------------------------------------------------------
       const rawPage = await dataForSeoOnPage(target, env);  // raw on-page signals
       const extra = await fetchAgentSignals(target);        // robots.txt / llms.txt / raw HTML
-      let admiredHtml = "";
-      if (admiredUrl) { try { admiredHtml = await (await fetch(admiredUrl)).text(); } catch {} }
 
       // If DataForSEO meta is empty (title + word_count both null), it could not
       // fully parse the page — common with JS-heavy frameworks. Detect the
@@ -132,11 +141,8 @@ export default {
 
       // Forward Signal — Claude-generated opportunity observation
       if (env.ANTHROPIC_API_KEY) {
-        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, env, admiredHtml, admiredUrl);
-        if (fwd) {
-          report.forwardSignal = fwd;
-          if (admiredUrl) report.forwardSignalAdmired = admiredUrl;
-        }
+        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, env);
+        if (fwd) report.forwardSignal = fwd;
       } else {
         console.warn("ANTHROPIC_API_KEY not bound — Forward Signal skipped");
       }
@@ -623,7 +629,7 @@ async function polishWithClaude(report, page, brand, env) {
 /* ----------------------------------------------------------------------------
    THE FORWARD SIGNAL — single Claude call for highest-leverage opportunity.
 ---------------------------------------------------------------------------- */
-async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, env, admiredHtml, admiredUrl) {
+async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, env) {
   const plainText = (pageHtml || "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -632,7 +638,7 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     .trim()
     .slice(0, 3000);
 
-  let systemPrompt =
+  const systemPrompt =
     "You are a senior marketing and GTM advisor reviewing a private company website. " +
     "Based on the positioning verdict, SEO grade, and agent readiness provided, generate exactly one observation " +
     "identifying the single highest leverage opportunity this business is leaving on the table right now. " +
@@ -643,34 +649,13 @@ async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agent
     "The response must be exactly two sentences. Hard limit: two sentences, no more. If you cannot say it in two sentences, cut — do not add a third. " +
     "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
 
-  if (admiredHtml) {
-    systemPrompt +=
-      " The user has also provided a site they admire for comparison. " +
-      "Read what that site does well in terms of positioning, structure, and content. " +
-      "Connect that observation to the prospect's opportunity, specifically referencing what the admired site does and how the prospect can apply a similar principle.";
-  }
-
-  const admiredPlain = admiredHtml
-    ? admiredHtml
-        .replace(/<style[\s\S]*?<\/style>/gi, "")
-        .replace(/<script[\s\S]*?<\/script>/gi, "")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 1500)
-    : "";
-
-  let userContent =
+  const userContent =
     `Page content: ${plainText}\n\n` +
     `Positioning verdict: ${positioning.verdict}\n` +
     `Hook: ${positioning.hook}, Fit: ${positioning.fit}, Relevance: ${positioning.relevance}\n` +
     `SEO grade: ${seoGrade}\n` +
     `Finding statuses: ${findings.map(f => `${f.category}: ${f.status}`).join(", ")}\n` +
     `Agent readiness: ${agentLevel}`;
-
-  if (admiredPlain && admiredUrl) {
-    userContent += `\n\nAdmired site (${admiredUrl}): ${admiredPlain}`;
-  }
 
   try {
     const apiKey = (env.ANTHROPIC_API_KEY || "").trim();
@@ -763,6 +748,64 @@ function sanitizeForwardSignal(text) {
   // Truncate at the nearest sentence boundary before 400 chars, never mid-sentence.
   const boundary = s.slice(0, 400).lastIndexOf(". ");
   return boundary > 0 ? s.slice(0, boundary + 1).trim() : s.slice(0, 400).trim();
+}
+
+/* ----------------------------------------------------------------------------
+   COMPARE SIGNAL — enriched forward signal that references an admired site.
+---------------------------------------------------------------------------- */
+async function getCompareSignal(originalData, admiredHtml, admiredPositioning, admiredUrl, env) {
+  const admiredPlain = admiredHtml
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 1500);
+
+  if (!admiredPlain) return null;
+
+  const systemPrompt =
+    "You are a senior marketing and GTM advisor. " +
+    "Given a website's audit results and a site the owner admires, generate exactly two sentences " +
+    "identifying the single highest-leverage opportunity for the prospect, " +
+    "specifically referencing what the admired site does well and how that specific move applies to the prospect's situation. " +
+    "Be concrete: name the specific thing the admired site does and connect it directly to what the prospect can do. " +
+    "Frame it as an opportunity, not a critique. Sound like a knowledgeable advisor, not a generic tool. " +
+    "Exactly two sentences. Hard limit — do not add a third. " +
+    "Never use em dashes, hyphens used as dashes, or asterisks for emphasis.";
+
+  const userContent =
+    `Prospect SEO grade: ${originalData.seoGrade || "unknown"}\n` +
+    `Prospect agent readiness: ${originalData.agentLevel || "unknown"}\n` +
+    `Prospect positioning: Hook ${originalData.positioningHook || "?"}, Fit ${originalData.positioningFit || "?"}, Relevance ${originalData.positioningRelevance || "?"}\n` +
+    `Prospect positioning verdict: ${originalData.positioningVerdict || ""}\n` +
+    `Prospect finding statuses: ${(originalData.findings || []).map(f => `${f.category}: ${f.status}`).join(", ")}\n` +
+    `Original forward signal: ${originalData.originalSignal || ""}\n\n` +
+    `Admired site (${admiredUrl}) content excerpt: ${admiredPlain}\n` +
+    `Admired site positioning: Hook ${admiredPositioning.hook}, Fit ${admiredPositioning.fit}, Relevance ${admiredPositioning.relevance}\n` +
+    `Admired site positioning verdict: ${admiredPositioning.verdict}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": (env.ANTHROPIC_API_KEY || "").trim(),
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 250,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data?.error) return null;
+    const raw = (data?.content?.[0]?.text || "").trim();
+    return raw ? sanitizeForwardSignal(raw) : null;
+  } catch { return null; }
 }
 
 function finding(category, status, byBand) { return { category, status, text: byBand[status] }; }
