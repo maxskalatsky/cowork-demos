@@ -199,14 +199,35 @@ async function dataForSeoBacklinks(target, env) {
 
 /* ----------------------------------------------------------------------------
    Agent-readiness signals — fetched directly from the origin (cheap, no API).
-   Falls back to Browser Rendering when the raw fetch returns thin HTML.
+   Cascade: raw fetch → ScrapingBee (if blocked) → Puppeteer (if thin + not blocked).
 ---------------------------------------------------------------------------- */
 async function fetchAgentSignals(url, env) {
   const origin = new URL(url).origin;
   const out = { robots: "", llms: false, html: "", rendering_mode: "fetch" };
   try { out.html = await (await fetch(url)).text(); } catch {}
 
-  if (isThinHtml(out.html) && env && env.BROWSER) {
+  // Tier 2 — ScrapingBee: fires only when raw fetch hit a bot-protection wall.
+  // Stealth proxy + JS rendering bypasses Cloudflare and similar challenges.
+  if (isBlockPage(out.html) && env && env.SCRAPINGBEE_API_KEY) {
+    console.warn(`Block page detected for ${url} — trying ScrapingBee`);
+    try {
+      const sbHtml = await fetchWithScrapingBee(url, env.SCRAPINGBEE_API_KEY);
+      if (sbHtml && !isBlockPage(sbHtml)) {
+        out.html = sbHtml;
+        out.rendering_mode = "scrapingbee";
+      } else {
+        console.warn("ScrapingBee also returned a block page for:", url);
+      }
+    } catch (e) {
+      console.warn("ScrapingBee failed:", String(e));
+    }
+  }
+
+  // Tier 3 — Puppeteer: fires only when HTML is thin but NOT a block page
+  // (JS-rendered sites without bot protection). ScrapingBee already handles
+  // the blocked case above; running Puppeteer against a blocked site wastes a
+  // browser session since it also gets turned away.
+  if (isThinHtml(out.html) && !isBlockPage(out.html) && env && env.BROWSER) {
     console.warn(`Thin HTML detected for ${url} — triggering Browser Rendering fallback`);
     let browser;
     try {
@@ -225,6 +246,26 @@ async function fetchAgentSignals(url, env) {
   try { out.robots = await (await fetch(origin + "/robots.txt")).text(); } catch {}
   try { out.llms = (await fetch(origin + "/llms.txt")).ok; } catch {}
   return out;
+}
+
+async function fetchWithScrapingBee(url, apiKey) {
+  const endpoint =
+    "https://app.scrapingbee.com/api/v1/" +
+    "?api_key=" + encodeURIComponent(apiKey) +
+    "&url=" + encodeURIComponent(url) +
+    "&render_js=true&stealth_proxy=true";
+  const res = await fetch(endpoint, { signal: AbortSignal.timeout(90000) });
+  if (!res.ok) throw new Error(`ScrapingBee HTTP ${res.status}`);
+  return await res.text();
+}
+
+function isBlockPage(html) {
+  if (!html) return false;
+  const title = ((html.match(/<title[^>]*>([^<]*)<\/title>/i) || [])[1] || "").toLowerCase().trim();
+  if (/^(access denied|just a moment|attention required|please verify|checking your browser|403 forbidden|429 too many|blocked)/.test(title)) return true;
+  // Cloudflare challenge pages always contain a Ray ID in the body
+  if (/ray id:/i.test(html) && /cloudflare/i.test(html.slice(0, 5000))) return true;
+  return false;
 }
 
 function isThinHtml(html) {
