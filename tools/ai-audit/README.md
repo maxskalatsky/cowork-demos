@@ -28,6 +28,12 @@ npx wrangler deploy
 
 ---
 
+## BEFORE PRODUCTION
+
+Re-enable the email gate in worker.js before promoting to production. Set DEV_MODE to false or remove the flag entirely. The KV rate limiting check must be active on production to enforce one free Signal per email.
+
+---
+
 ## What Needs To Happen Before Production
 
 1. **Wire up Cloudflare KV namespace `AUDITS` in production.** The namespace is already bound in dev. Create a production namespace and add the real ID to the production wrangler config:

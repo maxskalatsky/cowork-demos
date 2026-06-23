@@ -25,6 +25,8 @@ import puppeteer from "@cloudflare/puppeteer";
  * uncomment the KV block at the bottom and bind a KV namespace named AUDITS in wrangler.toml.
  */
 
+const DEV_MODE = true; // disable KV email gate in dev; set false before promoting to production
+
 const KNOWN_BRANDS = new Set([
   "espn.com","nike.com","apple.com","google.com","amazon.com",
   "microsoft.com","facebook.com","instagram.com","twitter.com","x.com",
@@ -84,7 +86,7 @@ export default {
     }
 
     // One free Signal per email — check KV before running anything expensive
-    if (env.AUDITS) {
+    if (!DEV_MODE && env.AUDITS) {
       const prior = await env.AUDITS.get(email);
       if (prior) {
         return json({ error: "You have already run a free Signal. Email signal@skalatsky.com to discuss your results." }, 429, cors);
