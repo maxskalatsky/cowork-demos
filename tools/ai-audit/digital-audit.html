@@ -75,7 +75,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-brand-txt{font-size:15px;color:#4b5563;margin:0 0 22px;line-height:1.65;}
 #sa-audit .sa-optional-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);background:#f0f4f8;border-radius:4px;padding:2px 7px;margin-left:7px;vertical-align:middle;}
 #sa-audit .sa-field-hint{font-size:12px;color:var(--muted2);margin:6px 0 0;}
-#sa-audit .sa-fwd-comp{font-size:11.5px;color:#185FA5;margin:8px 0 0;opacity:0.8;}
 #sa-audit .sa-report{display:none;margin-top:10px;padding-bottom:20px;}
 #sa-audit .sa-compare-box{margin-top:14px;padding:16px 20px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;}
 #sa-audit .sa-compare-lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 8px;letter-spacing:.02em;}
@@ -163,7 +162,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         <p class="sa-section-label">The forward signal</p>
         <div class="sa-fwd-card">
           <p class="sa-fwd-txt" id="sa-fwd-txt"></p>
-          <p class="sa-fwd-comp" id="sa-fwd-comp" style="display:none"></p>
         </div>
         <div id="sa-compare-box" class="sa-compare-box">
           <label class="sa-compare-lbl" for="sa-admired-inp">A site you admire</label>
@@ -182,10 +180,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
             </table>
             <div class="sa-comp-verdict-wrap">
               <p class="sa-comp-verdict-p" id="sa-comp-verdict-txt"></p>
-              <a class="sa-btn" id="sa-comp-cta" href="mailto:signal@skalatsky.com" style="display:inline-block;margin-top:12px"></a>
+              <a class="sa-btn" id="sa-comp-cta" href="mailto:signal@skalatsky.com" style="display:block;width:fit-content;margin:12px auto 0"></a>
             </div>
           </div>
         </div>
+      </div>
+      <div id="sa-close-cta" style="display:none;text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);">
+        <a class="sa-btn" id="sa-cta-mailto" href="mailto:signal@skalatsky.com" style="display:inline-block">Talk to S&amp;A</a>
+        <button class="sa-redo" id="sa-redo" type="button">Run another website</button>
       </div>
     </div>
   </div>
@@ -250,7 +252,16 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-intake').style.display='block';
   });
 
+  $('sa-redo').addEventListener('click', function(){
+    currentReport=null; compareUsed=false;
+    $('sa-report').style.display='none';
+    $('sa-close-cta').style.display='none';
+    $('sa-intake').style.display='block';
+    $('sa-url').value=''; $('sa-url').focus();
+  });
+
   var compareUsed=false, currentReport=null;
+  var compareBoxEl=$('sa-compare-box');
 
   $('sa-compare-btn').addEventListener('click',function(){
     if(compareUsed) return;
@@ -278,15 +289,8 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     .then(function(data){
       if(data.enrichedSignal){
         $('sa-fwd-txt').textContent=data.enrichedSignal;
-        var fc=$('sa-fwd-comp');
-        fc.textContent='Informed by '+(data.admiredUrl||admNorm.href).replace(/^https?:\/\//,'').replace(/\/$/,'');
-        fc.style.display='block';
       }
-      cinp.disabled=true; cinp.style.opacity='0.45';
-      cbtn.disabled=true; cbtn.style.opacity='0.45';
-      var ok=$('sa-compare-ok');
-      ok.textContent='✓ Signal updated with your comparison.';
-      ok.style.display='block';
+      if(compareBoxEl && compareBoxEl.parentNode) compareBoxEl.parentNode.removeChild(compareBoxEl);
       compareUsed=true;
       if(data.admiredPositioning) renderCompareResult(data.admiredUrl||admNorm.href,data.admiredPositioning,data.admiredSeoGrade||'',data.admiredAgentLevel||'');
     })
@@ -322,7 +326,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           span.className='sa-pos-tag'; span.textContent=tagLabel[val]||val||'';
           var c=tagColor(val); span.style.borderColor=c; span.style.color=c;
         } else if(row.type==='grade'){
-          span.className='sa-comp-grade'; span.textContent=val||'F'; span.style.background=gradeColor(val);
+          span.className='sa-comp-grade'; span.textContent=(val||'F').charAt(0); span.style.background=gradeColor((val||'F').charAt(0));
         } else {
           span.className='sa-comp-level'; span.textContent=val||'BASIC'; span.style.background=AC[val]||'#cf3b3b';
         }
@@ -352,6 +356,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       outcomeText='You are already ahead on positioning, SEO, and AI visibility';
     }
     cta.href=buildMailtoHref(admiredUrl, outcomeText);
+    $('sa-cta-mailto').href=buildMailtoHref(admiredUrl, outcomeText);
     $('sa-compare-result').style.display='block';
   }
 
@@ -426,12 +431,17 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var fwdSection=$('sa-fwd-section');
     if(r.forwardSignal){$('sa-fwd-txt').textContent=r.forwardSignal;fwdSection.style.display='block';}
     else{fwdSection.style.display='none';}
-    $('sa-fwd-comp').style.display='none';
     compareUsed=false;
-    var cai=$('sa-admired-inp'); cai.disabled=false; cai.value=''; cai.style.opacity='1';
-    var cbtn2=$('sa-compare-btn'); cbtn2.disabled=false; cbtn2.textContent='Compare'; cbtn2.style.opacity='1';
-    $('sa-compare-ok').style.display='none';
-    $('sa-compare-result').style.display='none';
+    var compareResult=$('sa-compare-result');
+    if(compareBoxEl && !$('sa-compare-box') && compareResult && compareResult.parentNode){
+      compareResult.parentNode.insertBefore(compareBoxEl,compareResult);
+    }
+    var cai=$('sa-admired-inp'); if(cai){cai.disabled=false; cai.value=''; cai.style.opacity='1';}
+    var cbtn2=$('sa-compare-btn'); if(cbtn2){cbtn2.disabled=false; cbtn2.textContent='Compare'; cbtn2.style.opacity='1';}
+    var cok=$('sa-compare-ok'); if(cok) cok.style.display='none';
+    if(compareResult) compareResult.style.display='none';
+    $('sa-cta-mailto').href=buildMailtoHref(null,null);
+    $('sa-close-cta').style.display='block';
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:'#00C99C',yellow:'#d8a200',red:'#cf3b3b'};
     posCard.style.borderLeftColor=posColors[pos.color]||'#e2eaf0';
