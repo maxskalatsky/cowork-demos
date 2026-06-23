@@ -174,7 +174,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <p id="sa-compare-ok" class="sa-compare-ok"></p>
         </div>
         <div id="sa-compare-result" style="display:none">
-          <p class="sa-section-label">Signal comparison</p>
+          <p class="sa-section-label" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:700;color:var(--ink)">Ensure your digital signal is the strongest in the marketplace.</p>
           <div class="sa-comp-result-card">
             <table class="sa-comp-tbl">
               <thead><tr><th class="sa-comp-th-dim"></th><th class="sa-comp-th-site" id="sa-comp-th-yours">Your site</th><th class="sa-comp-th-site" id="sa-comp-th-theirs">Their site</th></tr></thead>
@@ -336,18 +336,51 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var aTotal=ps(admiredPos)+gs(admiredSeoGrade)+ls(admiredAgentLevel);
     var uTotal=ps(userPos)+gs(userSeoGrade)+ls(userAgentLevel);
     var vtxt=$('sa-comp-verdict-txt'); var cta=$('sa-comp-cta');
+    var outcomeText;
     if(aTotal>uTotal){
       var dims=[];
       if(ps(admiredPos)>ps(userPos)) dims.push('positioning');
       if(gs(admiredSeoGrade)>gs(userSeoGrade)) dims.push('SEO');
       if(ls(admiredAgentLevel)>ls(userAgentLevel)) dims.push('AI visibility');
-      vtxt.textContent='The site you admire is outperforming yours on '+(dims.length?dims.join(', '):'key areas')+'. Those gaps are closable and closing them is exactly what we do.';
+      var dimStr=dims.length?dims.join(', '):'key areas';
+      vtxt.textContent='The site you admire is outperforming yours on '+dimStr+'. Those gaps are closable and closing them is exactly what we do.';
       cta.textContent='Beat them. Talk to S&A.';
+      outcomeText='The admired site is outperforming on '+dimStr;
     } else {
       vtxt.textContent='You are already ahead on positioning, SEO, and AI visibility. The question is whether you stay there as they close the gap.';
       cta.textContent='Stay ahead. Talk to S&A.';
+      outcomeText='You are already ahead on positioning, SEO, and AI visibility';
     }
+    cta.href=buildMailtoHref(admiredUrl, outcomeText);
     $('sa-compare-result').style.display='block';
+  }
+
+  function buildMailtoHref(admiredUrl, outcome) {
+    var r=currentReport||{};
+    var pos=r.positioning||{};
+    var lines=[];
+    lines.push('POSITION THE BRAND');
+    lines.push('Hook: '+(pos.hook||'')+'  |  Fit: '+(pos.fit||'')+'  |  Relevance: '+(pos.relevance||''));
+    if(pos.disqualifier) lines.push('TRUST KILLER detected');
+    lines.push(pos.verdict||'');
+    lines.push('');
+    lines.push('SEO READINESS');
+    lines.push('Grade: '+(r.seoGrade||'')+'  -  '+(r.seoGradeTitle||''));
+    (r.findings||[]).forEach(function(f){ lines.push('  '+f.category+': '+f.status); });
+    lines.push('');
+    lines.push('AGENT READINESS');
+    lines.push((r.agentLevel||'')+'  -  '+(r.agentLine||''));
+    if(r.forwardSignal){ lines.push(''); lines.push('FORWARD SIGNAL'); lines.push(r.forwardSignal); }
+    if(admiredUrl){
+      lines.push('');
+      lines.push('COMPARISON');
+      lines.push('Admired site: '+admiredUrl.replace(/^https?:\/\//,'').replace(/\/$/,''));
+      lines.push(outcome||'');
+    }
+    lines.push('');
+    lines.push('I would like to discuss what comes next.');
+    var subject='My Digital Signal: '+(r.displayUrl||(r.url||'').replace(/^https?:\/\//,'').replace(/\/$/,''));
+    return 'mailto:signal@skalatsky.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\n'));
   }
 
   var msgs=['Reading your front door.','Checking what Google thinks.','Looking for what others miss.','Finding your biggest opportunity.','Pulling it all together.'];

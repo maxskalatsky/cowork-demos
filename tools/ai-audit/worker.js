@@ -63,7 +63,8 @@ export default {
       if (!admiredUrl) return json({ error: "invalid admired url" }, 400, cors);
       const admiredExtra = await fetchAgentSignals(admiredUrl, env);
       const admiredHtml = admiredExtra.html || "";
-      const admiredPositioning = scorePositioning(admiredHtml);
+      const admiredCtx = await inferBusinessType(admiredHtml, admiredUrl, env);
+      const admiredPositioning = scorePositioning(admiredHtml, admiredCtx);
       const admiredMeta = extractHtmlMeta(admiredHtml, admiredUrl);
       const admiredPage = patchPageFromHtml({ checks: {}, meta: {} }, admiredMeta);
       const admiredScores = scoreSeo(admiredPage);
@@ -133,8 +134,13 @@ export default {
         report.seoGradeDesc += ` Scored from initial HTML — this site uses ${jsFramework} rendering so some signals may differ from the fully rendered page.`;
       }
 
-      // Check 1 — Positioning
-      const positioning = scorePositioning(extra.html || "");
+      // Business type inference — silent, informs positioning scorer and Trust Killer logic
+      const businessCtx = env.ANTHROPIC_API_KEY
+        ? await inferBusinessType(extra.html || "", target, env)
+        : null;
+
+      // Check 1 — Positioning (with business context)
+      const positioning = scorePositioning(extra.html || "", businessCtx);
 
       // Log audit to KV
       if (env.AUDITS) {
@@ -211,12 +217,14 @@ async function dataForSeoBacklinks(target, env) {
 async function fetchAgentSignals(url, env) {
   const origin = new URL(url).origin;
   const out = { robots: "", llms: false, html: "", rendering_mode: "fetch" };
-  try { out.html = await (await fetch(url)).text(); } catch {}
+  let rawStatus = 200;
+  try { const resp = await fetch(url); rawStatus = resp.status; out.html = await resp.text(); } catch {}
 
-  // Tier 2 — ScrapingBee: fires only when raw fetch hit a bot-protection wall.
-  // Stealth proxy + JS rendering bypasses Cloudflare and similar challenges.
-  if (isBlockPage(out.html) && env && env.SCRAPINGBEE_API_KEY) {
-    console.warn(`Block page detected for ${url} — trying ScrapingBee`);
+  // Tier 2 — ScrapingBee: fires on HTTP 403/429/503 OR content-level block detection.
+  // Covers Cloudflare, Akamai, AWS WAF, and similar bot-protection layers.
+  const isBlocked = rawStatus === 403 || rawStatus === 429 || rawStatus === 503 || isBlockPage(out.html);
+  if (isBlocked && env && env.SCRAPINGBEE_API_KEY) {
+    console.warn(`Block detected for ${url} (HTTP ${rawStatus}) — trying ScrapingBee`);
     try {
       const sbHtml = await fetchWithScrapingBee(url, env.SCRAPINGBEE_API_KEY);
       if (sbHtml && !isBlockPage(sbHtml)) {
@@ -269,9 +277,11 @@ async function fetchWithScrapingBee(url, apiKey) {
 function isBlockPage(html) {
   if (!html) return false;
   const title = ((html.match(/<title[^>]*>([^<]*)<\/title>/i) || [])[1] || "").toLowerCase().trim();
-  if (/^(access denied|just a moment|attention required|please verify|checking your browser|403 forbidden|429 too many|blocked)/.test(title)) return true;
+  if (/^(access denied|just a moment|attention required|please verify|checking your browser|403 forbidden|429 too many|blocked|error 403|service unavailable)/.test(title)) return true;
   // Cloudflare challenge pages always contain a Ray ID in the body
   if (/ray id:/i.test(html) && /cloudflare/i.test(html.slice(0, 5000))) return true;
+  // Akamai, generic CDN, and WAF blocks — short body with access denial language
+  if (html.length < 30000 && /access denied|you don.t have permission|you do not have permission|request blocked by/i.test(html)) return true;
   return false;
 }
 
@@ -348,7 +358,7 @@ function letterFromScore(s) {
    POSITIONING — three tests + one trust-killer disqualifier.
    Returns { hook, fit, relevance, disqualifier, color, verdict }.
 ---------------------------------------------------------------------------- */
-function scorePositioning(html) {
+function scorePositioning(html, ctx) {
   const clean = html
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "");
@@ -369,7 +379,9 @@ function scorePositioning(html) {
   const disqualifierBuzz   = buzzCount >= 3;
   const disqualifierCta    = ctaCount > 4;
   const disqualifierWall   = wordCount > 700 && !hasSubheadings;
-  const disqualifier = disqualifierFiller || disqualifierBuzz || disqualifierCta || disqualifierWall;
+  // Platforms (hosting, website builders, registrars, SaaS tools) use broad CTAs and buzz by design — suppress Trust Killer
+  const isPlatform = ctx?.isPlatform === true;
+  const disqualifier = isPlatform ? false : (disqualifierFiller || disqualifierBuzz || disqualifierCta || disqualifierWall);
 
   // ── THE HOOK ──────────────────────────────────────────────────────────────
   const hasH1 = /<h1[\s>]/i.test(html);
@@ -890,6 +902,39 @@ async function getCompareSignal(originalData, admiredHtml, admiredPositioning, a
     if (data?.error) return null;
     const raw = (data?.content?.[0]?.text || "").trim();
     return raw ? sanitizeForwardSignal(raw) : null;
+  } catch { return null; }
+}
+
+async function inferBusinessType(html, url, env) {
+  if (!env.ANTHROPIC_API_KEY || !html) return null;
+  const plainText = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 2000);
+  if (plainText.length < 100) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 150,
+        messages: [{ role: "user", content:
+          `Classify this website. URL: ${url}\n\nContent: ${plainText}\n\n` +
+          `Return only valid JSON with these fields:\n` +
+          `- type: one of "platform","saas","agency","consultancy","ecommerce","local_service","professional_services","media","other"\n` +
+          `- isPlatform: true if this is a marketplace, hosting provider, domain registrar, website builder, payment processor, CRM, or similar tool that serves many other businesses\n` +
+          `No other text, only the JSON object.`
+        }],
+      }),
+    });
+    const data = await res.json();
+    const raw = (data?.content?.[0]?.text || "").trim();
+    const parsed = JSON.parse(raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1));
+    return { type: parsed.type || "other", isPlatform: !!parsed.isPlatform };
   } catch { return null; }
 }
 
