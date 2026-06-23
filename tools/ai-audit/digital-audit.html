@@ -76,22 +76,25 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-optional-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);background:#f0f4f8;border-radius:4px;padding:2px 7px;margin-left:7px;vertical-align:middle;}
 #sa-audit .sa-field-hint{font-size:12px;color:var(--muted2);margin:6px 0 0;}
 #sa-audit .sa-fwd-comp{font-size:11.5px;color:#185FA5;margin:8px 0 0;opacity:0.8;}
-#sa-audit .sa-report{display:none;margin-top:10px;padding-bottom:80px;}
-#sa-audit .sa-sticky-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:0.5px solid var(--line);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 -2px 12px rgba(0,31,64,.06);}
-#sa-audit .sa-sticky-text{font-size:14px;font-weight:600;color:var(--ink);margin:0;}
-#sa-audit .sa-sticky-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+#sa-audit .sa-report{display:none;margin-top:10px;padding-bottom:20px;}
 #sa-audit .sa-compare-box{margin-top:14px;padding:16px 20px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;}
 #sa-audit .sa-compare-lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 8px;letter-spacing:.02em;}
 #sa-audit .sa-compare-row{display:flex;gap:10px;align-items:center;}
 #sa-audit .sa-compare-inp{flex:1;}
 #sa-audit .sa-compare-btn{padding:11px 22px;font-size:14px;}
 #sa-audit .sa-compare-ok{font-size:12px;color:#00a583;margin:10px 0 0;display:none;}
-#sa-audit .sa-comp-card{margin-top:14px;padding:18px 20px;background:#f9fafb;border:1px solid #e5e7eb;border-left:3px solid #d1d5db;border-radius:10px;}
-#sa-audit .sa-comp-card-hdr{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin:0 0 10px;}
-#sa-audit .sa-comp-site{font-size:12px;color:var(--muted);margin:0 0 12px;}
-#sa-audit .sa-comp-tags{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-#sa-audit .sa-comp-verdict{font-size:13px;color:#4b5563;margin:0;line-height:1.55;}
-@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}#sa-audit .sa-sticky-bar{flex-direction:column;align-items:flex-start;gap:10px;}#sa-audit .sa-sticky-right{align-items:flex-start;}}
+#sa-audit .sa-comp-result-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 26px;margin-top:4px;}
+#sa-audit .sa-comp-tbl{width:100%;border-collapse:collapse;}
+#sa-audit .sa-comp-th-dim{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);padding:0 0 12px;text-align:left;width:38%;}
+#sa-audit .sa-comp-th-site{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);padding:0 0 12px;text-align:center;}
+#sa-audit .sa-comp-tbl td{padding:8px 0;border-top:1px solid var(--line);vertical-align:middle;}
+#sa-audit .sa-comp-tbl td:not(:first-child){text-align:center;}
+#sa-audit .sa-comp-dim{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;}
+#sa-audit .sa-comp-grade{display:inline-block;font-size:15px;font-weight:700;padding:3px 10px;border-radius:6px;color:#fff;}
+#sa-audit .sa-comp-level{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 9px;border-radius:6px;color:#fff;}
+#sa-audit .sa-comp-verdict-wrap{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+#sa-audit .sa-comp-verdict-p{font-size:14px;color:#4b5563;margin:0 0 4px;line-height:1.6;}
+@media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}#sa-audit .sa-comp-tbl th,#sa-audit .sa-comp-tbl td{font-size:9px;}}
 </style>
 </head>
 <body>
@@ -162,7 +165,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <p class="sa-fwd-txt" id="sa-fwd-txt"></p>
           <p class="sa-fwd-comp" id="sa-fwd-comp" style="display:none"></p>
         </div>
-        <div id="sa-compare-box" class="sa-compare-box" style="display:none">
+        <div id="sa-compare-box" class="sa-compare-box">
           <label class="sa-compare-lbl" for="sa-admired-inp">A site you admire</label>
           <div class="sa-compare-row">
             <input type="url" id="sa-admired-inp" class="sa-input sa-compare-inp" placeholder="inspiration.com" inputmode="url" autocomplete="off">
@@ -170,19 +173,19 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           </div>
           <p id="sa-compare-ok" class="sa-compare-ok"></p>
         </div>
-        <div id="sa-comp-card" class="sa-comp-card" style="display:none">
-          <p class="sa-comp-card-hdr">Ensure your digital signal is the strongest in the marketplace</p>
-          <p id="sa-comp-site" class="sa-comp-site"></p>
-          <div id="sa-comp-tags" class="sa-comp-tags"></div>
-          <p id="sa-comp-verdict" class="sa-comp-verdict"></p>
+        <div id="sa-compare-result" style="display:none">
+          <p class="sa-section-label">Signal comparison</p>
+          <div class="sa-comp-result-card">
+            <table class="sa-comp-tbl">
+              <thead><tr><th class="sa-comp-th-dim"></th><th class="sa-comp-th-site" id="sa-comp-th-yours">Your site</th><th class="sa-comp-th-site" id="sa-comp-th-theirs">Their site</th></tr></thead>
+              <tbody id="sa-comp-tbody"></tbody>
+            </table>
+            <div class="sa-comp-verdict-wrap">
+              <p class="sa-comp-verdict-p" id="sa-comp-verdict-txt"></p>
+              <a class="sa-btn" id="sa-comp-cta" href="mailto:signal@skalatsky.com" style="display:inline-block;margin-top:12px"></a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div id="sa-sticky" class="sa-sticky-bar" style="display:none">
-      <p class="sa-sticky-text">If any of this resonates, let's talk.</p>
-      <div class="sa-sticky-right">
-        <a class="sa-btn" id="sa-mail-cta" href="mailto:signal@skalatsky.com">signal@skalatsky.com</a>
-        <button class="sa-redo" id="sa-redo" type="button">Run another website</button>
       </div>
     </div>
   </div>
@@ -241,12 +244,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       });
   });
 
-  $('sa-redo').addEventListener('click', function(){
-    $('sa-report').style.display='none';
-    $('sa-sticky').style.display='none';
-    $('sa-intake').style.display='block';
-    compareUsed=false;
-  });
 
   $('sa-redo-brand').addEventListener('click', function(){
     $('sa-brand-wrap').style.display='none';
@@ -282,39 +279,75 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       if(data.enrichedSignal){
         $('sa-fwd-txt').textContent=data.enrichedSignal;
         var fc=$('sa-fwd-comp');
-        fc.textContent='Informed by your comparison with '+(data.admiredUrl||admNorm.href).replace(/\/$/,'');
+        fc.textContent='Informed by '+(data.admiredUrl||admNorm.href).replace(/^https?:\/\//,'').replace(/\/$/,'');
         fc.style.display='block';
       }
       cinp.disabled=true; cinp.style.opacity='0.45';
-      cbtn.disabled=true; cbtn.textContent='Compare'; cbtn.style.opacity='0.45';
+      cbtn.disabled=true; cbtn.style.opacity='0.45';
       var ok=$('sa-compare-ok');
       ok.textContent='✓ Signal updated with your comparison.';
       ok.style.display='block';
       compareUsed=true;
-      if(data.admiredPositioning) renderCompareCard(data.admiredUrl||admNorm.href,data.admiredPositioning);
+      if(data.admiredPositioning) renderCompareResult(data.admiredUrl||admNorm.href,data.admiredPositioning,data.admiredSeoGrade||'',data.admiredAgentLevel||'');
     })
     .catch(function(){ cbtn.disabled=false; cbtn.textContent='Compare'; });
   });
 
-  function renderCompareCard(url,pos){
-    $('sa-comp-site').textContent=url.replace(/^https?:\/\//,'').replace(/\/$/,'');
-    var tags=$('sa-comp-tags'); tags.innerHTML='';
-    if(pos.disqualifier){
-      var tk=document.createElement('span'); tk.className='sa-pos-tag';
-      tk.textContent='TRUST KILLER'; tk.style.borderColor='#cf3b3b'; tk.style.color='#cf3b3b';
-      tags.appendChild(tk);
-    } else {
-      var tagC=function(v){return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b';};
-      var tagDisp={lands:'strong',partial:'partial',missing:'missing',clear:'clear',unclear:'unclear',connects:'strong'};
-      [{n:'hook',v:pos.hook},{n:'fit',v:pos.fit},{n:'relevance',v:pos.relevance}].forEach(function(t){
-        var el=document.createElement('span'); el.className='sa-pos-tag';
-        el.textContent='The '+t.n+' is '+(tagDisp[t.v]||t.v||'');
-        var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
-        tags.appendChild(el);
+  function renderCompareResult(admiredUrl,admiredPos,admiredSeoGrade,admiredAgentLevel){
+    var userPos=currentReport?(currentReport.positioning||{}):{};
+    var userSeoGrade=currentReport?(currentReport.seoGrade||'F'):'F';
+    var userAgentLevel=currentReport?(currentReport.agentLevel||'BASIC'):'BASIC';
+    var userDomain=(currentReport&&(currentReport.displayUrl||currentReport.url)||'').replace(/^https?:\/\//,'').replace(/\/$/,'');
+    var admiredDomain=(admiredUrl||'').replace(/^https?:\/\//,'').replace(/\/$/,'');
+    $('sa-comp-th-yours').textContent=userDomain||'Your site';
+    $('sa-comp-th-theirs').textContent=admiredDomain;
+    var tagColor=function(v){ return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b'; };
+    var tagLabel={lands:'strong',partial:'partial',missing:'missing',clear:'clear',unclear:'unclear',connects:'strong'};
+    var gradeColor=function(g){ return GC[(g||'F').charAt(0)]||'#cf3b3b'; };
+    var rows=[
+      {label:'THE HOOK',uv:userPos.hook,av:admiredPos.hook,type:'pos'},
+      {label:'THE FIT',uv:userPos.fit,av:admiredPos.fit,type:'pos'},
+      {label:'THE RELEVANCE',uv:userPos.relevance,av:admiredPos.relevance,type:'pos'},
+      {label:'SEO GRADE',uv:userSeoGrade,av:admiredSeoGrade,type:'grade'},
+      {label:'AGENT READINESS',uv:userAgentLevel,av:admiredAgentLevel,type:'level'},
+    ];
+    var tbody=$('sa-comp-tbody'); tbody.innerHTML='';
+    rows.forEach(function(row){
+      var tr=document.createElement('tr');
+      var tdL=document.createElement('td'); tdL.className='sa-comp-dim'; tdL.textContent=row.label; tr.appendChild(tdL);
+      [row.uv,row.av].forEach(function(val){
+        var td=document.createElement('td');
+        var span=document.createElement('span');
+        if(row.type==='pos'){
+          span.className='sa-pos-tag'; span.textContent=tagLabel[val]||val||'';
+          var c=tagColor(val); span.style.borderColor=c; span.style.color=c;
+        } else if(row.type==='grade'){
+          span.className='sa-comp-grade'; span.textContent=val||'F'; span.style.background=gradeColor(val);
+        } else {
+          span.className='sa-comp-level'; span.textContent=val||'BASIC'; span.style.background=AC[val]||'#cf3b3b';
+        }
+        td.appendChild(span); tr.appendChild(td);
       });
+      tbody.appendChild(tr);
+    });
+    var ps=function(p){ return (p.hook==='lands'?2:p.hook==='partial'?1:0)+(p.fit==='clear'?2:p.fit==='partial'?1:0)+(p.relevance==='connects'?2:p.relevance==='partial'?1:0); };
+    var gs=function(g){ return {A:5,B:4,C:3,D:2,F:1}[(g||'F').charAt(0)]||1; };
+    var ls=function(l){ return {ADVANCED:4,CAPABLE:3,EMERGING:2,BASIC:1}[l]||1; };
+    var aTotal=ps(admiredPos)+gs(admiredSeoGrade)+ls(admiredAgentLevel);
+    var uTotal=ps(userPos)+gs(userSeoGrade)+ls(userAgentLevel);
+    var vtxt=$('sa-comp-verdict-txt'); var cta=$('sa-comp-cta');
+    if(aTotal>uTotal){
+      var dims=[];
+      if(ps(admiredPos)>ps(userPos)) dims.push('positioning');
+      if(gs(admiredSeoGrade)>gs(userSeoGrade)) dims.push('SEO');
+      if(ls(admiredAgentLevel)>ls(userAgentLevel)) dims.push('AI visibility');
+      vtxt.textContent='The site you admire is outperforming yours on '+(dims.length?dims.join(', '):'key areas')+'. Those gaps are closable and closing them is exactly what we do.';
+      cta.textContent='Beat them. Talk to S&A.';
+    } else {
+      vtxt.textContent='You are already ahead on positioning, SEO, and AI visibility. The question is whether you stay there as they close the gap.';
+      cta.textContent='Stay ahead. Talk to S&A.';
     }
-    $('sa-comp-verdict').textContent=pos.verdict||'';
-    $('sa-comp-card').style.display='block';
+    $('sa-compare-result').style.display='block';
   }
 
   var msgs=['Reading your front door.','Checking what Google thinks.','Looking for what others miss.','Finding your biggest opportunity.','Pulling it all together.'];
@@ -365,30 +398,25 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var cai=$('sa-admired-inp'); cai.disabled=false; cai.value=''; cai.style.opacity='1';
     var cbtn2=$('sa-compare-btn'); cbtn2.disabled=false; cbtn2.textContent='Compare'; cbtn2.style.opacity='1';
     $('sa-compare-ok').style.display='none';
-    $('sa-comp-card').style.display='none';
-    $('sa-compare-box').style.display=r.forwardSignal?'block':'none';
+    $('sa-compare-result').style.display='none';
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:'#00C99C',yellow:'#d8a200',red:'#cf3b3b'};
     posCard.style.borderLeftColor=posColors[pos.color]||'#e2eaf0';
     $('sa-pos-verdict').textContent=pos.verdict||'';
     var posTests=$('sa-pos-tests'); posTests.innerHTML='';
+    var tagC=function(v){ return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b'; };
+    var tagDisp={lands:'strong',partial:'partial',missing:'missing',clear:'clear',unclear:'unclear',connects:'strong'};
+    [{n:'hook',v:pos.hook},{n:'fit',v:pos.fit},{n:'relevance',v:pos.relevance}].forEach(function(t){
+      var el=document.createElement('span'); el.className='sa-pos-tag';
+      el.textContent='The '+t.n+' is '+(tagDisp[t.v]||t.v||''); var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
+      posTests.appendChild(el);
+    });
     if(pos.disqualifier){
       var tk=document.createElement('span'); tk.className='sa-pos-tag';
-      tk.textContent='TRUST KILLER'; tk.style.borderColor='#cf3b3b'; tk.style.color='#cf3b3b';
+      tk.textContent='TRUST KILLER'; tk.style.borderColor='#cf3b3b'; tk.style.color='#cf3b3b'; tk.style.fontWeight='800';
       posTests.appendChild(tk);
-    } else {
-      var tagC=function(v){ return v==='lands'||v==='clear'||v==='connects'?'#00C99C':v==='partial'?'#d8a200':'#cf3b3b'; };
-      var tagDisp={lands:'strong',partial:'partial',missing:'missing',clear:'clear',unclear:'unclear',connects:'strong'};
-      [{n:'hook',v:pos.hook},{n:'fit',v:pos.fit},{n:'relevance',v:pos.relevance}].forEach(function(t){
-        var el=document.createElement('span'); el.className='sa-pos-tag';
-        el.textContent='The '+t.n+' is '+(tagDisp[t.v]||t.v||''); var c=tagC(t.v); el.style.borderColor=c; el.style.color=c;
-        posTests.appendChild(el);
-      });
     }
-    var bizName=r.businessName||(r.displayUrl||r.url);
-    $('sa-mail-cta').href='mailto:signal@skalatsky.com?subject='+encodeURIComponent('Signal results for '+bizName);
     $('sa-report').style.display='block';
-    $('sa-sticky').style.display='flex';
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
       prog.style.strokeDashoffset=C*(1-r.seoScore/100);
       countUp(sc,r.seoScore,1300);

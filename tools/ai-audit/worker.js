@@ -61,11 +61,16 @@ export default {
       if (!env.ANTHROPIC_API_KEY) return json({ error: "api not configured" }, 503, cors);
       const admiredUrl = normalizeUrl(body.admiredUrl);
       if (!admiredUrl) return json({ error: "invalid admired url" }, 400, cors);
-      let admiredHtml = "";
-      try { admiredHtml = await (await fetch(admiredUrl)).text(); } catch {}
+      const admiredExtra = await fetchAgentSignals(admiredUrl, env);
+      const admiredHtml = admiredExtra.html || "";
       const admiredPositioning = scorePositioning(admiredHtml);
-      const enrichedSignal = await getCompareSignal(body, admiredHtml, admiredPositioning, admiredUrl, env);
-      return json({ enrichedSignal, admiredPositioning, admiredUrl }, 200, cors);
+      const admiredMeta = extractHtmlMeta(admiredHtml, admiredUrl);
+      const admiredPage = patchPageFromHtml({ checks: {}, meta: {} }, admiredMeta);
+      const admiredScores = scoreSeo(admiredPage);
+      const admiredSeoGrade = letterFromScore(admiredScores.total);
+      const admiredAgent = scoreAgentReadiness(admiredExtra, admiredScores, admiredSeoGrade);
+      const enrichedSignal = await getCompareSignal(body, admiredHtml, admiredPositioning, admiredSeoGrade, admiredAgent.level, admiredUrl, env);
+      return json({ enrichedSignal, admiredPositioning, admiredSeoGrade, admiredAgentLevel: admiredAgent.level, admiredUrl }, 200, cors);
     }
 
     const target = normalizeUrl(body.url);
@@ -831,7 +836,7 @@ function sanitizeForwardSignal(text) {
 /* ----------------------------------------------------------------------------
    COMPARE SIGNAL — enriched forward signal that references an admired site.
 ---------------------------------------------------------------------------- */
-async function getCompareSignal(originalData, admiredHtml, admiredPositioning, admiredUrl, env) {
+async function getCompareSignal(originalData, admiredHtml, admiredPositioning, admiredSeoGrade, admiredAgentLevel, admiredUrl, env) {
   const admiredPlain = admiredHtml
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -861,7 +866,9 @@ async function getCompareSignal(originalData, admiredHtml, admiredPositioning, a
     `Original forward signal: ${originalData.originalSignal || ""}\n\n` +
     `Admired site (${admiredUrl}) content excerpt: ${admiredPlain}\n` +
     `Admired site positioning: Hook ${admiredPositioning.hook}, Fit ${admiredPositioning.fit}, Relevance ${admiredPositioning.relevance}\n` +
-    `Admired site positioning verdict: ${admiredPositioning.verdict}`;
+    `Admired site positioning verdict: ${admiredPositioning.verdict}\n` +
+    `Admired site SEO grade: ${admiredSeoGrade}\n` +
+    `Admired site agent readiness: ${admiredAgentLevel}`;
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -889,13 +896,17 @@ async function getCompareSignal(originalData, admiredHtml, admiredPositioning, a
 function finding(category, status, byBand) { return { category, status, text: byBand[status] }; }
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function decodeHtmlEntities(str) {
+  if (!str) return str;
+  return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'");
+}
 function extractBrand(url, html, metaTitle) {
   const strip = t => (t || "").trim().replace(/\s*[-|–—·]\s.*$/, "").trim();
-  const fromTitle = strip(metaTitle) || strip(((html || "").match(/<title[^>]*>([^<]+)<\/title>/i) || [])[1]);
+  const fromTitle = decodeHtmlEntities(strip(metaTitle) || strip(((html || "").match(/<title[^>]*>([^<]+)<\/title>/i) || [])[1]));
   if (fromTitle && fromTitle.length > 2 && fromTitle.length < 80) return fromTitle;
   const ogM = (html || "").match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
            || (html || "").match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
-  const fromOg = strip((ogM || [])[1]);
+  const fromOg = decodeHtmlEntities(strip((ogM || [])[1]));
   if (fromOg && fromOg.length > 2 && fromOg.length < 80) return fromOg;
   try { return new URL(url).hostname.replace(/^www\./, "").split(".")[0]; } catch { return "your site"; }
 }
