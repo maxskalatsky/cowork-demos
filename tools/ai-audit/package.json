@@ -1,0 +1,16 @@
+{
+  "name": "ai-audit",
+  "version": "1.0.0",
+  "description": "Free website benchmark tool. One audit per business. Results appear instantly.",
+  "main": "worker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/playwright": "^1.3.0",
+    "@cloudflare/puppeteer": "^1.1.0"
+  }
+}

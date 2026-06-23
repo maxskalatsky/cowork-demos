@@ -1,6 +1,7 @@
 name = "sa-ai-audit-dev"
 main = "worker.js"
 compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ALLOW_ORIGIN = "*"
@@ -9,3 +10,6 @@ FINDINGS_MODE = "rules"
 [[kv_namespaces]]
 binding = "AUDITS"
 id = "af67756957b3402d9e81d1c1ad3d4179"
+
+[browser]
+binding = "BROWSER"

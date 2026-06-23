@@ -1,3 +1,5 @@
+import puppeteer from "@cloudflare/puppeteer";
+
 /**
  * S&A AI Audit — backend engine (Cloudflare Worker reference)
  * ===========================================================
@@ -92,7 +94,7 @@ export default {
     try {
       // 1. crawl --------------------------------------------------------------
       const rawPage = await dataForSeoOnPage(target, env);  // raw on-page signals
-      const extra = await fetchAgentSignals(target);        // robots.txt / llms.txt / raw HTML
+      const extra = await fetchAgentSignals(target, env);    // robots.txt / llms.txt / raw HTML
 
       // If DataForSEO meta is empty (title + word_count both null), it could not
       // fully parse the page — common with JS-heavy frameworks. Detect the
@@ -149,6 +151,7 @@ export default {
 
       report.businessName = brand;
       report.positioning = positioning;
+      report.rendering_mode = extra.rendering_mode || "fetch";
       return json(report, 200, cors);
     } catch (e) {
       return json({ error: "audit failed", detail: String(e) }, 502, cors);
@@ -196,14 +199,46 @@ async function dataForSeoBacklinks(target, env) {
 
 /* ----------------------------------------------------------------------------
    Agent-readiness signals — fetched directly from the origin (cheap, no API).
+   Falls back to Browser Rendering when the raw fetch returns thin HTML.
 ---------------------------------------------------------------------------- */
-async function fetchAgentSignals(url) {
+async function fetchAgentSignals(url, env) {
   const origin = new URL(url).origin;
-  const out = { robots: "", llms: false, html: "" };
+  const out = { robots: "", llms: false, html: "", rendering_mode: "fetch" };
   try { out.html = await (await fetch(url)).text(); } catch {}
+
+  if (isThinHtml(out.html) && env && env.BROWSER) {
+    console.warn(`Thin HTML detected for ${url} — triggering Browser Rendering fallback`);
+    let browser;
+    try {
+      browser = await puppeteer.launch(env.BROWSER);
+      const page = await browser.newPage();
+      await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 });
+      out.html = await page.content();
+      out.rendering_mode = "browser";
+    } catch (e) {
+      console.warn("Browser Rendering fallback failed:", String(e));
+    } finally {
+      if (browser) { try { await browser.close(); } catch {} }
+    }
+  }
+
   try { out.robots = await (await fetch(origin + "/robots.txt")).text(); } catch {}
   try { out.llms = (await fetch(origin + "/llms.txt")).ok; } catch {}
   return out;
+}
+
+function isThinHtml(html) {
+  if (!html) return true;
+  const stripped = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (stripped.length < 1500) return true;
+  const elemCount = (html.match(/<(p|h[1-6])[\s>]/gi) || []).length;
+  if (elemCount < 3) return true;
+  return false;
 }
 
 /* ----------------------------------------------------------------------------
