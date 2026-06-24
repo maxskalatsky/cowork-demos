@@ -201,6 +201,61 @@ export async function polishWithClaude(report, page, brand, env) {
   return report;
 }
 
+/* ----------------------------------------------------------------------------
+   ENTERPRISE BENCHMARK SIGNAL — two-sentence observation for a private
+   operator studying a known brand's digital presence.
+---------------------------------------------------------------------------- */
+export async function getEnterpriseBenchmarkSignal(html, brandName, dimensions, url, env) {
+  if (!env.ANTHROPIC_API_KEY) return null;
+  const plainText = (html || "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 2000);
+  if (plainText.length < 50) return null;
+
+  const systemPrompt =
+    "You are a senior marketing strategist. " +
+    "A private company operator is studying " + brandName + " as a benchmark. " +
+    "Based on the enterprise scoring data provided, generate exactly two sentences " +
+    "identifying the single most actionable takeaway a private business operator can apply from studying this brand's digital presence. " +
+    "Reference the specific dimension where the brand is strongest or weakest. " +
+    "Frame it as an insight the operator can act on, not a critique of the brand. " +
+    "Exactly two sentences. Hard limit. " +
+    "Never use em dashes, hyphens used as dashes, or asterisks.";
+
+  const userContent =
+    `Brand: ${brandName} (${url})\n` +
+    `Brand Authority: ${dimensions.brandAuthority.label} (tier ${dimensions.brandAuthority.tier}) — ${dimensions.brandAuthority.text}\n` +
+    `Audience Clarity: ${dimensions.audienceClarity.label} (tier ${dimensions.audienceClarity.tier}) — ${dimensions.audienceClarity.text}\n` +
+    `AI Visibility: ${dimensions.aiVisibility.label} (tier ${dimensions.aiVisibility.tier}) — ${dimensions.aiVisibility.text}\n` +
+    `Content Depth: ${dimensions.contentDepth.label} (tier ${dimensions.contentDepth.tier}) — ${dimensions.contentDepth.text}\n\n` +
+    `Page excerpt: ${plainText}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": (env.ANTHROPIC_API_KEY || "").trim(),
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 250,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const raw = (data?.content?.[0]?.text || "").trim();
+    return raw ? sanitizeForwardSignal(raw) : null;
+  } catch { return null; }
+}
+
 function sanitizeForwardSignal(text) {
   let s = text
     .replace(/\s*—\s*/g, ", ")

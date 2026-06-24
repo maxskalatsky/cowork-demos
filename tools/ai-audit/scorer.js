@@ -253,6 +253,123 @@ export function buildRulesReport(brand, scores, seoGrade, agent, page) {
   };
 }
 
+/* ----------------------------------------------------------------------------
+   ENTERPRISE SCORING — four dimensions, each returns tier 1–5.
+   Tier 1 = strongest (--signal-tier-1 dark green), Tier 5 = weakest (--signal-tier-5 grey).
+---------------------------------------------------------------------------- */
+export function scoreEnterprise(extra, page) {
+  const html    = extra.html || "";
+  const robots  = extra.robots || "";
+  const c       = page.checks || {};
+  const meta    = page.meta || {};
+
+  const hasJsonLd    = /application\/ld\+json/i.test(html);
+  const hasOrgSchema = /["']@type["']\s*:\s*["'](Organization|WebSite|Corporation|Brand)["']/i.test(html);
+  const hasSameAs    = /["']sameAs["']/i.test(html);
+  const hasAiSchema  = /["']@type["']\s*:\s*["'](FAQPage|HowTo|Article|NewsArticle|QAPage)["']/i.test(html);
+  const hasH1  = /<h1[\s>]/i.test(html);
+  const hasH2  = /<h2[\s>]/i.test(html);
+  const hasH3  = /<h3[\s>]/i.test(html);
+  const h2Count = (html.match(/<h2[\s>]/gi) || []).length;
+
+  const stripped = html
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const wordCount = (meta.content?.plain_text_word_count) ||
+    stripped.split(/\s+/).filter(Boolean).length;
+
+  // ── BRAND AUTHORITY ───────────────────────────────────────────────────────
+  let ba = 0;
+  if (hasJsonLd)             ba += 2;
+  if (hasOrgSchema)          ba += 1;
+  if (hasSameAs)             ba += 2;
+  if (c.is_https !== false)  ba += 1;
+  if (c.canonical !== false) ba += 1;
+  if (!c.no_description)     ba += 1;
+  const baTier = ba >= 7 ? 1 : ba >= 5 ? 2 : ba >= 3 ? 3 : ba >= 1 ? 4 : 5;
+
+  // ── AUDIENCE CLARITY ──────────────────────────────────────────────────────
+  let ac = 0;
+  if (hasH1 && hasH2 && hasH3) ac += 2; else if (hasH1 && hasH2) ac += 1;
+  if (h2Count >= 5) ac += 2; else if (h2Count >= 3) ac += 1;
+  const audPats = (html.match(/\bfor (enterprise|business(?:es)?|teams?|individuals?|developers?|consumers?|marketers?|agencies?|startups?|students?|professionals?)\b/gi) || []).length;
+  ac += Math.min(audPats, 2);
+  const navHtml = (html.match(/<nav[\s\S]*?<\/nav>/i) || [""])[0];
+  if (navHtml && (navHtml.match(/<a /gi) || []).length >= 5) ac += 1;
+  const acTier = ac >= 6 ? 1 : ac >= 4 ? 2 : ac >= 3 ? 3 : ac >= 1 ? 4 : 5;
+
+  // ── AI VISIBILITY ─────────────────────────────────────────────────────────
+  let av = 0;
+  if (extra.llms)               av += 3;
+  if (!aiCrawlersBlocked(robots)) av += 2;
+  if (hasJsonLd)                av += 2;
+  if (hasAiSchema)              av += 1;
+  if (hasH1 && hasH2)          av += 1;
+  if (wordCount >= 300)         av += 1;
+  const avTier = av >= 8 ? 1 : av >= 6 ? 2 : av >= 4 ? 3 : av >= 2 ? 4 : 5;
+
+  // ── CONTENT DEPTH ─────────────────────────────────────────────────────────
+  let cd = 0;
+  if (wordCount >= 2000) cd += 3; else if (wordCount >= 1000) cd += 2; else if (wordCount >= 500) cd += 1;
+  if (/\/(blog|news|insights|resources?|articles?|learn|knowledge)\b/i.test(html)) cd += 2;
+  if (h2Count >= 8) cd += 2; else if (h2Count >= 4) cd += 1;
+  if (hasAiSchema) cd += 1;
+  const cdTier = cd >= 7 ? 1 : cd >= 5 ? 2 : cd >= 3 ? 3 : cd >= 1 ? 4 : 5;
+
+  const label = t => ["Dominant","Strong","Moderate","Limited","Minimal"][t - 1] || "Minimal";
+
+  return {
+    brandAuthority:  { tier: baTier, label: label(baTier), text: brandAuthorityText(baTier) },
+    audienceClarity: { tier: acTier, label: label(acTier), text: audienceClarityText(acTier) },
+    aiVisibility:    { tier: avTier, label: label(avTier), text: aiVisibilityText(avTier, !!extra.llms) },
+    contentDepth:    { tier: cdTier, label: label(cdTier), text: contentDepthText(cdTier) },
+  };
+}
+
+function brandAuthorityText(tier) {
+  return [
+    "Domain authority signals are dominant — structured schema, cross-platform citations, and technical trust signals are fully in place.",
+    "Strong authority foundation with solid technical signals; adding sameAs cross-platform schema references would push this to the top tier.",
+    "Moderate authority signals present. Implementing Organization schema with sameAs references would strengthen web citation presence significantly.",
+    "Authority signals are limited. Structured data and canonical gaps make it harder for search engines and AI agents to attribute content correctly.",
+    "Minimal domain authority signals detected. Schema markup, canonical configuration, and HTTPS verification all need immediate attention.",
+  ][tier - 1];
+}
+
+function audienceClarityText(tier) {
+  return [
+    "Content is sharply segmented for distinct audience types with dedicated pathways — a benchmark example of audience architecture for private operators to study.",
+    "Multiple audience segments are addressed with clear pathways; tightening segment-specific content at the section level would sharpen this further.",
+    "Some audience differentiation exists but pathways blur at mid-funnel. A private operator could outperform here with cleaner segment-specific entry points.",
+    "Audience targeting is broad and undifferentiated — visitors from different segments land in the same content without clear direction.",
+    "No meaningful audience segmentation detected. Content addresses everyone simultaneously, which practically means it connects with no one specifically.",
+  ][tier - 1];
+}
+
+function aiVisibilityText(tier, hasLlms) {
+  const llmsNote = hasLlms ? "llms.txt is in place" : "adding llms.txt would complete the picture";
+  return [
+    "AI visibility is dominant — structured data, open crawler access, and content signals combine to make this a highly citable source for AI agents.",
+    `Strong AI visibility with good structured data presence; ${llmsNote} to reach the top tier.`,
+    "Moderate AI visibility. Structured data is present but AI-specific signals like FAQ schema and llms.txt could significantly raise citation frequency.",
+    "Limited AI visibility. Content structure and schema gaps make it difficult for AI agents to extract and confidently cite claims from this domain.",
+    "Minimal AI visibility. Without structured data or open crawler access, AI assistants have very little to parse or cite from this site.",
+  ][tier - 1];
+}
+
+function contentDepthText(tier) {
+  return [
+    "Content depth is dominant — rich topical coverage, publishing infrastructure, and structured content signal strong authority well beyond brand-name searches.",
+    "Strong content depth with meaningful topical coverage; adding structured FAQ or how-to content would improve AI citation frequency further.",
+    "Moderate content depth. Core topics are covered but the breadth needed to compete for non-branded category queries is underdeveloped.",
+    "Limited content depth. Most search visibility is brand-name driven; topical authority for category-level queries has not been built.",
+    "Minimal content depth detected. Thin pages and low word count restrict visibility almost entirely to direct brand searches.",
+  ][tier - 1];
+}
+
 function finding(category, status, byBand) { return { category, status, text: byBand[status] }; }
 function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }

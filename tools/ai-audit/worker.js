@@ -1,8 +1,36 @@
 import { dataForSeoOnPage, fetchAgentSignals, detectJsFramework, extractHtmlMeta, patchPageFromHtml } from "./fetch.js";
-import { scoreSeo, letterFromScore, scorePositioning, scoreAgentReadiness, buildRulesReport } from "./scorer.js";
-import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude } from "./signals.js";
+import { scoreSeo, letterFromScore, scorePositioning, scoreAgentReadiness, buildRulesReport, scoreEnterprise } from "./scorer.js";
+import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude, getEnterpriseBenchmarkSignal } from "./signals.js";
 
 const DEV_MODE = true; // disable KV email gate in dev; set false before promoting to production
+
+async function classifyEntity(url, env) {
+  if (!env.ANTHROPIC_API_KEY) return "private_company";
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 10,
+        messages: [{ role: "user", content:
+          `Classify this URL. Reply with exactly one of these two strings and nothing else:\nprivate_company\nknown_brand\n\n` +
+          `URL: ${url}\n\n` +
+          `known_brand = publicly traded company, Fortune 1000, major media or sports property, government entity, utility, or globally recognized consumer brand.\n` +
+          `private_company = everything else including small businesses, local services, startups, and agencies.`
+        }],
+      }),
+    });
+    if (!res.ok) return "private_company";
+    const data = await res.json();
+    const text = (data?.content?.[0]?.text || "").trim().toLowerCase();
+    return text.includes("known_brand") ? "known_brand" : "private_company";
+  } catch { return "private_company"; }
+}
 
 
 export default {
@@ -54,7 +82,40 @@ export default {
       }
     }
 
+    // Classify entity before any scoring — determines which pipeline runs
+    const entityType = await classifyEntity(target, env);
+
     try {
+      // ── ENTERPRISE PATH (known_brand) ──────────────────────────────────────
+      if (entityType === "known_brand") {
+        const extra = await fetchAgentSignals(target, env);
+        let rawPage = { checks: {}, meta: {} };
+        try { rawPage = await dataForSeoOnPage(target, env); } catch {}
+
+        const brand = extractBrand(target, extra.html || "", rawPage.meta?.title);
+        const enterpriseScores = scoreEnterprise(extra, rawPage);
+
+        if (env.AUDITS) {
+          await env.AUDITS.put(email, JSON.stringify({
+            email, url: target, timestamp: new Date().toISOString(), entityType: "known_brand",
+          }));
+        }
+
+        const fwd = env.ANTHROPIC_API_KEY
+          ? await getEnterpriseBenchmarkSignal(extra.html || "", brand, enterpriseScores, target, env)
+          : null;
+
+        return json({
+          entityType: "known_brand",
+          url: target,
+          businessName: brand,
+          rendering_mode: extra.rendering_mode || "fetch",
+          ...enterpriseScores,
+          ...(fwd ? { forwardSignal: fwd } : {}),
+        }, 200, cors);
+      }
+
+      // ── PRIVATE COMPANY PATH (unchanged) ───────────────────────────────────
       // 1. crawl --------------------------------------------------------------
       const rawPage = await dataForSeoOnPage(target, env);
       const extra = await fetchAgentSignals(target, env);

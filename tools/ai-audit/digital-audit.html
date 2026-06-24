@@ -126,13 +126,13 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     <div id="sa-report" class="sa-report">
       <p class="sa-rtitle" id="sa-rurl"></p>
       <p class="sa-rtagline">Your website is the front door to your business. Find out what signal it is sending.</p>
-      <p class="sa-section-label">Position the brand</p>
+      <p class="sa-section-label" id="sa-lbl-pos">Position the brand</p>
       <div class="sa-pos-card" id="sa-pos-card">
         <div class="sa-pos-tests" id="sa-pos-tests"></div>
         <hr class="sa-pos-divider">
         <p class="sa-pos-verdict" id="sa-pos-verdict"></p>
       </div>
-      <p class="sa-section-label">SEO readiness</p>
+      <p class="sa-section-label" id="sa-lbl-seo">SEO readiness</p>
       <div class="sa-hero" id="sa-seo-card">
         <div class="sa-seo-top">
           <div class="sa-gauge">
@@ -145,9 +145,15 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
         </div>
         <div class="sa-find-wrap" id="sa-finds"></div>
       </div>
-      <p class="sa-section-label">Agent readiness</p>
+      <p class="sa-section-label" id="sa-lbl-agent">Agent readiness</p>
       <div class="sa-agent" id="sa-agent-card">
         <div class="sa-agent-row"><div class="sa-agent-level" id="sa-alevel"></div><p class="sa-agent-line" id="sa-aline"></p></div>
+      </div>
+      <div id="sa-audience-wrap" style="display:none">
+        <p class="sa-section-label">Audience clarity</p>
+        <div class="sa-agent" id="sa-audience-card">
+          <div class="sa-agent-row"><div class="sa-agent-level" id="sa-aud-level"></div><p class="sa-agent-line" id="sa-aud-line"></p></div>
+        </div>
       </div>
       <div id="sa-fwd-section" style="display:none">
         <p class="sa-section-label">The forward signal</p>
@@ -385,10 +391,76 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   var STATUS={strong:{l:'Strong',c:T1,bg:'rgba(31,107,78,0.07)'},ok:{l:'Fair',c:T3,bg:'rgba(74,158,143,0.07)'},weak:{l:'Needs work',c:T4,bg:'rgba(122,171,184,0.07)'},critical:{l:'Critical',c:T5,bg:'rgba(155,174,187,0.07)'}};
   var AC={ADVANCED:T1,OPTIMIZED:T1,CAPABLE:T2,EMERGING:T4,LIMITED:T4,BASIC:T5,'NOT READY':T5};
 
+  function tierColor(t){ return t===1?T1:t===2?T2:t===3?T3:t===4?T4:T5; }
+
+  function renderEnterprise(r){
+    $('sa-lbl-pos').textContent='Brand Authority';
+    $('sa-lbl-seo').textContent='Content Depth';
+    $('sa-lbl-agent').textContent='AI Visibility';
+
+    // Brand Authority → positioning card slot
+    var ba=r.brandAuthority, baC=tierColor(ba.tier), posCard=$('sa-pos-card');
+    posCard.style.borderLeftColor=baC;
+    var posTests=$('sa-pos-tests'); posTests.innerHTML='';
+    var baB=document.createElement('span'); baB.className='sa-pos-tag';
+    baB.style.cssText='background:'+baC+';color:#fff;border:none;font-weight:700;';
+    baB.textContent=ba.label.toUpperCase(); posTests.appendChild(baB);
+    $('sa-pos-verdict').textContent=ba.text;
+
+    // Content Depth → SEO card slot (gauge maps tier to percentage)
+    var cd=r.contentDepth, cdC=tierColor(cd.tier);
+    var cdLetters=['A','B','C','D','F'], cdPcts=[1.0,0.8,0.6,0.4,0.2];
+    $('sa-gletter').innerHTML=cdLetters[cd.tier-1]||'F'; $('sa-gletter').style.color=cdC;
+    $('sa-gdesc').textContent=cd.text;
+    $('sa-seo-card').style.borderLeftColor=cdC;
+    var C=2*Math.PI*64, prog=$('sa-prog');
+    prog.style.stroke=cdC; prog.style.strokeDasharray=C; prog.style.strokeDashoffset=C;
+    var sc=$('sa-gscore'); sc.textContent='';
+    $('sa-finds').innerHTML='';
+
+    // AI Visibility → agent card slot
+    var av=r.aiVisibility, avC=tierColor(av.tier);
+    var avLvl=$('sa-alevel'); avLvl.textContent=av.label.toUpperCase(); avLvl.style.background=avC; avLvl.style.color='#fff';
+    $('sa-aline').textContent=av.text; $('sa-agent-card').style.borderLeftColor=avC;
+
+    // Audience Clarity → fourth card
+    var ac=r.audienceClarity, acC=tierColor(ac.tier);
+    var audLvl=$('sa-aud-level'); audLvl.textContent=ac.label.toUpperCase(); audLvl.style.background=acC; audLvl.style.color='#fff';
+    $('sa-aud-line').textContent=ac.text; $('sa-audience-card').style.borderLeftColor=acC;
+    $('sa-audience-wrap').style.display='block';
+
+    // Forward Signal (no compare box in enterprise mode)
+    var fwdSection=$('sa-fwd-section');
+    if(r.forwardSignal){ $('sa-fwd-txt').textContent=r.forwardSignal; fwdSection.style.display='block'; if(compareBoxEl) compareBoxEl.style.display='none'; }
+    else { fwdSection.style.display='none'; }
+
+    $('sa-cta-mailto').href='mailto:signal@skalatsky.com?subject=My%20Digital%20Signal%20'+encodeURIComponent(r.displayUrl||r.url);
+    $('sa-close-cta').style.display='block';
+    $('sa-compare-result').style.display='none';
+    $('sa-report').style.display='block';
+
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      prog.style.strokeDashoffset=C*(1-(cdPcts[cd.tier-1]||0.2));
+      setTimeout(function(){ posCard.classList.add('sa-in'); },150);
+      setTimeout(function(){ avLvl.classList.add('sa-in'); },300);
+      setTimeout(function(){ audLvl.classList.add('sa-in'); },450);
+    }); });
+  }
+
   function render(r){
     clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='none'; btn.disabled=false;
     currentReport=r;
     $('sa-rurl').textContent='The Digital Signal: '+(r.displayUrl||r.url);
+
+    // Reset enterprise UI so private_company renders start clean
+    $('sa-audience-wrap').style.display='none';
+    $('sa-lbl-pos').textContent='Position the brand';
+    $('sa-lbl-seo').textContent='SEO readiness';
+    $('sa-lbl-agent').textContent='Agent readiness';
+    if(compareBoxEl) compareBoxEl.style.display='';
+
+    if(r.entityType==='known_brand'){ renderEnterprise(r); return; }
+
     var base=r.seoGrade.charAt(0);
     var col=GC[base]||T3;
     $('sa-gletter').innerHTML=base;
