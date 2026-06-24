@@ -4,20 +4,6 @@ import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude
 
 const DEV_MODE = true; // disable KV email gate in dev; set false before promoting to production
 
-const KNOWN_BRANDS = new Set([
-  "espn.com","nike.com","apple.com","google.com","amazon.com",
-  "microsoft.com","facebook.com","instagram.com","twitter.com","x.com",
-  "linkedin.com","netflix.com","disney.com","coca-cola.com","pepsi.com",
-  "ford.com","gm.com","bmw.com","mercedes.com","adidas.com",
-  "nordstrom.com","walmart.com","target.com","homedepot.com","lowes.com",
-  "mcdonalds.com","starbucks.com","salesforce.com","oracle.com","sap.com",
-  "ibm.com","intel.com","cisco.com","adobe.com","nfl.com",
-  "nba.com","mlb.com","nhl.com","cnn.com","foxnews.com",
-  "nytimes.com","wsj.com","bloomberg.com","forbes.com","huffpost.com",
-  "reddit.com","youtube.com","tiktok.com","snapchat.com","uber.com",
-  "lyft.com","airbnb.com","doordash.com","stripe.com","shopify.com",
-  "squarespace.com","wix.com",
-]);
 
 export default {
   async fetch(request, env) {
@@ -54,14 +40,6 @@ export default {
     const target = normalizeUrl(body.url);
     if (!target) return json({ error: "invalid url" }, 400, cors);
 
-    // Known brand check — returns early, no email required
-    const hostname = new URL(target).hostname.replace(/^www\./, "");
-    if (KNOWN_BRANDS.has(hostname)) {
-      return json({
-        known_brand: true,
-        message: "This tool is designed for private and growth stage businesses. Enterprise and globally recognized brands signal differently. Email signal@skalatsky.com for an enterprise conversation.",
-      }, 200, cors);
-    }
 
     const email = (body.email || "").trim().toLowerCase();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
