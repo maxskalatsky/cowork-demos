@@ -70,7 +70,8 @@ export async function getForwardSignal(pageHtml, positioning, seoGrade, findings
     "Sound like a knowledgeable advisor pointing at something the owner has not seen yet, not a tool generating generic advice. " +
     "Be encouraging but direct. Never be harsh. Never use the word audit. Never be generic. " +
     "If you cannot generate a specific confident observation based on what you read, return nothing. " +
-    "The response must be exactly two sentences. Hard limit: two sentences, no more. If you cannot say it in two sentences, cut — do not add a third. " +
+    "The response must be exactly two sentences. Hard limit: two sentences, no more, 280 characters total maximum. " +
+    "If your draft exceeds 280 characters, rewrite it shorter until it fits — do not exceed this limit under any circumstances. " +
     "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
 
   const userContent =
@@ -223,7 +224,8 @@ export async function getEnterpriseBenchmarkSignal(html, brandName, dimensions, 
     "identifying the single most actionable takeaway a private business operator can apply from studying this brand's digital presence. " +
     "Reference the specific dimension where the brand is strongest or weakest. " +
     "Frame it as an insight the operator can act on, not a critique of the brand. " +
-    "Exactly two sentences. Hard limit. " +
+    "Exactly two sentences. Hard limit. 280 characters total maximum. " +
+    "If your draft exceeds 280 characters, rewrite it shorter until it fits. " +
     "Never use em dashes, hyphens used as dashes, or asterisks.";
 
   const userContent =
@@ -269,7 +271,7 @@ function sanitizeForwardSignal(text) {
   let m;
   while ((m = rx.exec(s)) !== null) { count++; if (count === 2) { cutAt = m.index + 1; break; } }
   s = s.slice(0, cutAt).trim();
-  if (s.length <= 400) return s;
-  const boundary = s.slice(0, 400).lastIndexOf(". ");
-  return boundary > 0 ? s.slice(0, boundary + 1).trim() : s.slice(0, 400).trim();
+  if (s.length <= 280) return s;
+  const boundary = s.slice(0, 280).lastIndexOf(". ");
+  return boundary > 0 ? s.slice(0, boundary + 1).trim() : s.slice(0, 280).trim();
 }
