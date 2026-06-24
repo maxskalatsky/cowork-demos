@@ -1,4 +1,4 @@
-S&A SESSION SUMMARY — THE DIGITAL SIGNAL, PART 3
+S&A SESSION SUMMARY — THE DIGITAL SIGNAL, PART 3 (COMPLETE)
 Date: June 24, 2026
 Project: tools/ai-audit (The Digital Signal)
 Working directory: C:\Users\max\cowork-demos\tools\ai-audit\
@@ -6,7 +6,7 @@ Dev worker: https://sa-ai-audit-dev.saaudit.workers.dev
 Production constraint: sa-ai-audit.saaudit.workers.dev is off-limits — never deploy there.
 
 ─────────────────────────────────────────────────────────────
-PART 3 COMMITS (all to branch main)
+ALL COMMITS IN PART 3 SERIES (chronological)
 ─────────────────────────────────────────────────────────────
 
 3623cc4  feat: implement five-tier signal color progression system
@@ -16,12 +16,22 @@ bf01a43  feat: implement dual-mode scoring with known brand enterprise path
 e0d3ed9  feat: visual polish pass, five-tier colors, heading weight, forward signal constraint, compare table contrast
 b25d471  fix: enterprise mode visual consistency and scoring calibration
 f82730e  fix: forward signal always completes sentences, removes hard truncation
+[session boundary]
+feat    three question intake UI with userContext payload, phase 1
+feat    custom radio and checkbox indicators with dual color system in intake form
+fix     full five field validation on submit button
+feat    profiles.js routing library, twelve scoring profiles, phase 2 foundation
+fix     userContext serialization and graceful fallback in worker
+0f85b65  feat: profile-weighted scoring, clean letter grades, userContext fallback
+[this session]
+docs    forward signal three sentence constraint, update README CLAUDE and session summary Part 3
 
 ─────────────────────────────────────────────────────────────
-TASK A — FIVE-TIER COLOR SYSTEM (3623cc4)
+SECTION A — FIVE-TIER COLOR SYSTEM (3623cc4)
 ─────────────────────────────────────────────────────────────
 
-Replaced all legacy mustard/gold scoring colors with a five-tier CSS variable system declared on #sa-audit:
+Replaced all legacy mustard/gold scoring colors with a five-tier CSS variable system
+declared on #sa-audit:
 
   --signal-tier-1: #1F6B4E  (Dominant / A / ADVANCED / OPTIMIZED)
   --signal-tier-2: #3A9E72  (Strong   / B / CAPABLE)
@@ -29,48 +39,62 @@ Replaced all legacy mustard/gold scoring colors with a five-tier CSS variable sy
   --signal-tier-4: #7AABB8  (Limited  / D / LIMITED)
   --signal-tier-5: #9BAEBB  (Minimal  / F / BASIC / NOT READY)
 
-JavaScript constants T1–T5 mirror these hex values. Maps GC (grade letters), AC (agent levels), and STATUS (findings status) in digital-audit.html map every scoring value to the correct tier constant.
+JavaScript constants T1–T5 mirror these hex values. Maps GC (grade letters), AC (agent
+levels), and STATUS (findings status) in digital-audit.html map every scoring value to
+the correct tier constant. Grade ring SVG fills, badge backgrounds, left border colors,
+and pill backgrounds all pull from these constants.
 
-Grade ring SVG fills, badge backgrounds, left border colors, and pill backgrounds all pull from these constants. No hard-coded color strings remain in the scoring render path.
+EMERGING was initially miscategorized as T4 and corrected to T3 in commit e0d3ed9.
 
 ─────────────────────────────────────────────────────────────
-TASK B — KNOWN BRAND INTERCEPT REMOVED (b0f7ab2, 84f4741)
+SECTION B — KNOWN BRAND INTERCEPT REMOVED (b0f7ab2, 84f4741)
 ─────────────────────────────────────────────────────────────
 
-The original tool had a hardcoded list of known brands (ESPN, Nike, etc.) that triggered an early exit in worker.js with a "we only audit private companies" message, and a matching block in digital-audit.html that redirected before the form submitted.
+The original tool had a hardcoded list of known brands (ESPN, Nike, etc.) that triggered
+an early exit in worker.js with a message refusing to audit them. A matching redirect
+block in digital-audit.html prevented submission entirely.
 
 Both were removed completely:
 - worker.js: the known_brand early-exit return statement and brand list removed.
 - digital-audit.html: the front-end redirect block removed.
 
-Every URL now reaches the full audit pipeline. Classification is now done by classifyEntity() (see Task C).
+Every URL now reaches the full audit pipeline. Classification is handled by
+classifyEntity() (see Section C). Known brands receive scored results, not a message.
+
+WHY: The intercept was predicated on the assumption that the tool was for private
+companies only. Dual-mode scoring removed that constraint. Known brands now receive
+enterprise dimension scoring, which is more useful than a rejection message.
 
 ─────────────────────────────────────────────────────────────
-TASK C — DUAL-MODE SCORING (bf01a43)
+SECTION C — DUAL-MODE SCORING (bf01a43)
 ─────────────────────────────────────────────────────────────
 
 ARCHITECTURE:
 
-Every submitted URL routes through classifyEntity() before any scoring runs. This is a Claude Haiku call (max_tokens=10) that returns exactly "private_company" or "known_brand". On any API failure or missing key it defaults to "private_company" — the existing pipeline is never broken by a classification error.
+Every submitted URL routes through classifyEntity() before any scoring runs. This is a
+Claude Haiku call (max_tokens=10) that returns exactly "private_company" or "known_brand".
+On any API failure or missing key it defaults to "private_company" — the existing pipeline
+is never broken by a classification error.
 
-classifyEntity() is called after the KV email gate (repeat emails are blocked before the expensive classification call runs) and before the main try block.
+classifyEntity() is called after the KV email gate (repeat emails are blocked before the
+expensive classification call runs) and before the main try block.
 
 Known brand definition passed to Claude:
   publicly traded company, Fortune 1000, major media or sports property,
   government entity, utility, or globally recognized consumer brand.
   Everything else = private_company.
 
-PRIVATE COMPANY PATH: Completely unchanged from Part 2.
+PRIVATE COMPANY PATH: Standard pipeline — DataForSEO + agent signals fetch, SEO scoring,
+positioning, agent readiness, four findings, Forward Signal, Compare mechanic.
 
 ENTERPRISE PATH (known_brand):
 1. fetchAgentSignals() — crawl with Scrapfly/Puppeteer fallback
-2. dataForSeoOnPage() — wrapped in try/catch, falls back to empty {checks:{},meta:{}} so scoreEnterprise() can run from HTML alone
+2. dataForSeoOnPage() — wrapped in try/catch, falls back to empty {checks:{},meta:{}}
 3. scoreEnterprise() — four dimensions, each tier 1–5
 4. KV log — records entityType:"known_brand" instead of SEO score
-5. getEnterpriseBenchmarkSignal() — Sonnet 4.6, two sentences, benchmark framing for private operator studying the brand
-6. Response: {entityType:"known_brand", brandAuthority, audienceClarity, aiVisibility, contentDepth, forwardSignal}
-
-Front end detects r.entityType === 'known_brand' and calls renderEnterprise(r) instead of the private company render path. Section labels update dynamically. No compare box in enterprise mode.
+5. getEnterpriseBenchmarkSignal() — Sonnet 4.6, three sentences, benchmark framing
+6. Response: {entityType:"known_brand", brandAuthority, audienceClarity, aiVisibility,
+   contentDepth, forwardSignal}
 
 ENTERPRISE DIMENSION SCORING (scorer.js, scoreEnterprise()):
 
@@ -107,154 +131,377 @@ Content Depth: additive from 0.
   Word count >=1000: +1
   Tier: >=7→1, >=4→2, >=2→3, >=1→4, else→5
 
-ENTERPRISE CARD LAYOUT (digital-audit.html, renderEnterprise()):
+SCORING CALIBRATION RATIONALE:
 
-Brand Authority → sa-pos-card slot. Large .sa-agent-level badge (22px) injected into sa-pos-tests. Verdict text in sa-pos-verdict. No tags.
-Content Depth → sa-seo-card slot. .sa-gauge hidden. div#sa-ent-cd-badge.sa-agent-level injected into .sa-seo-top before .sa-hero-meta. Text in sa-gdesc. Findings cleared.
-AI Visibility → sa-agent-card slot. sa-alevel badge with tier color + white text. Text in sa-aline.
-Audience Clarity → sa-audience-wrap block (hidden by default, shown for enterprise). sa-aud-level badge + sa-aud-line text.
+Brand Authority starts from 8 because additive scoring from zero requires the auditor to
+observe rare signals (sameAs, structured data with specific properties) that many Fortune
+500 brands would not reliably trigger. A functioning known brand should be Dominant by
+default — deducting for hard failures is more honest than rewarding for rare signals.
 
-─────────────────────────────────────────────────────────────
-TASK D — VISUAL POLISH PASS (e0d3ed9)
-─────────────────────────────────────────────────────────────
+Audience Clarity uses content-type diversity (news, video, live, sports, etc.) instead of
+B2B-only audience pattern matching ("for enterprise|teams|individuals|developers"). ESPN
+and similar consumer media brands have none of that B2B vocabulary. Link count + h2 breadth
++ content-type diversity measures segmentation directly without category bias.
 
-Five changes bundled:
-
-1. EMERGING tier correction. AC map had EMERGING:T4. Five-tier spec maps EMERGING to T3. Fixed.
-
-2. Section label weight/size/color. .sa-section-label changed from font-weight:700, 11px, color:var(--muted2) to font-weight:800, 12px, color:var(--ink).
-
-3. .sa-pos-tag default color hardened to #fff. Previously the tag color was inherited and could render unreadable against a dark tier background.
-
-4. Compare table company name color. .sa-comp-th-site got color:#1a1a1a (was muted gray, was hard to read).
-
-5. Forward Signal prompt constraint added. System prompt updated to include: "Write exactly two complete sentences. If your output is more than two sentences, return only the first two complete sentences. Do not truncate output under any circumstances." max_tokens raised 250→400. (Full truncation fix came in Task F.)
+Content Depth uses section path detection in HTML links (/news, /video, /scores) instead
+of home-page word count. ESPN's home page shell is thin, but its section paths reveal deep
+content. Section paths present in href links are a reliable signal regardless of what the
+home page renders.
 
 ─────────────────────────────────────────────────────────────
-TASK E — ENTERPRISE VISUAL CONSISTENCY + SCORING CALIBRATION (b25d471)
+SECTION D — VISUAL POLISH (e0d3ed9, b25d471)
 ─────────────────────────────────────────────────────────────
 
-Two problems discovered in the enterprise render path after testing with ESPN:
-
-PROBLEM 1 — VISUAL INCONSISTENCY:
-Brand Authority was rendering as a small .sa-pos-tag pill (10.5px) while Content Depth was rendering a grade ring animation (the private company SEO gauge). Both were wrong per the spec (all four enterprise dimensions should use large .sa-agent-level badges, no grade rings).
-
-Fixed:
-- Brand Authority: replaced .sa-pos-tag injection with a .sa-agent-level div injected into sa-pos-tests.
-- Content Depth: added JS to hide .sa-gauge and inject div#sa-ent-cd-badge.sa-agent-level into .sa-seo-top before .sa-hero-meta.
-
-PROBLEM 2 — SCORING CALIBRATION:
-Three dimensions were scoring incorrectly for ESPN.com:
-
-Brand Authority was T3 because the original rubric added points from zero for signals like sameAs, which ESPN happened to have but most Fortune 500 brands would not reliably trigger. Fixed by inverting to start-from-8 penalize-for-failures approach. A functioning known brand should be Dominant by default.
-
-Audience Clarity was T4 because the original rubric used B2B pattern matching only ("for enterprise|teams|individuals|developers"). ESPN has none of that vocabulary. Fixed by replacing with link count + h2 breadth + content-type keyword diversity that includes consumer media terms (news, video, live, fantasy, scores, standings, highlights, sports, podcast).
-
-Content Depth was T3 because the original rubric measured home-page word count from scraped HTML. ESPN's home page shell is thin. Fixed by replacing with section path detection in HTML links (/news, /video, /scores, etc.) and total link count breadth, which correctly identifies ESPN as having deep content (T1).
+Visual fixes applied:
+1. EMERGING tier corrected from T4 to T3.
+2. Section labels: font-weight:800, 12px, color:var(--ink) — was 700, 11px, muted color.
+3. .sa-pos-tag default color hardened to #fff.
+4. Compare table company name: color:#1a1a1a.
+5. Brand Authority card: replaced small .sa-pos-tag injection with .sa-agent-level badge.
+6. Content Depth: .sa-gauge hidden, div#sa-ent-cd-badge.sa-agent-level injected.
 
 ─────────────────────────────────────────────────────────────
-TASK F — FORWARD SIGNAL TRUNCATION FIX (f82730e)
+SECTION E — FORWARD SIGNAL TRUNCATION FIX (f82730e)
 ─────────────────────────────────────────────────────────────
 
 PROBLEM:
-sanitizeForwardSignal() had a 280-character hard truncation at the end. For maherlawpllc.com, the first sentence alone was 332 characters, so the signal was cut mid-word at char 280. This produced broken output.
+sanitizeForwardSignal() had a 280-character hard truncation. For maherlawpllc.com, the
+first sentence alone was 332 characters, so the signal was cut mid-word at char 280.
 
 FIX:
-Removed the 280-char hard truncation entirely from sanitizeForwardSignal(). The function now:
+Removed the 280-char hard truncation from sanitizeForwardSignal(). The function now:
 1. Strips em dashes, asterisks, backticks, pound signs.
-2. Finds the second sentence-terminal punctuation mark ([.!?] followed by whitespace or end-of-string).
+2. Finds the sentence-terminal punctuation mark ([.!?] followed by whitespace or end).
 3. Returns everything up to and including that punctuation — complete, no mid-sentence cuts.
 
-Both getForwardSignal (private company) and getEnterpriseBenchmarkSignal received the same system prompt update:
-  "Write exactly two complete sentences.
-   If your output is more than two sentences, return only the first two complete sentences.
-   Do not truncate output under any circumstances — every sentence must be complete."
+Both getForwardSignal and getEnterpriseBenchmarkSignal received the same system prompt
+update and max_tokens raised 250→400.
 
-max_tokens raised 250→400 for both calls to ensure two complete sentences are never cut by the token ceiling.
+─────────────────────────────────────────────────────────────
+SECTION F — THREE-QUESTION INTAKE FORM
+─────────────────────────────────────────────────────────────
+
+Added a three-question intake section between the URL input and Submit button in
+digital-audit.html. Questions are placed inside a horizontal rule divider and styled
+with pill-card labels.
+
+QUESTION 1 — What best describes this company? (radio, required)
+  Small or growing business          → entityType: "small_growing"
+  Established or mid-market company  → entityType: "midmarket_regional"
+  Large national or global brand     → entityType: "large_national_global"
+  Nonprofit or mission-driven org    → entityType: "nonprofit_gov_media"
+
+QUESTION 2 — Who visits this site? (checkbox, at least one required)
+  Cold prospects / new visitors      → primaryVisitor: "cold_prospects"
+  Existing clients or customers      → primaryVisitor: "existing_clients"
+  Investors or board members         → primaryVisitor: "investors"
+  Potential hires                    → primaryVisitor: "talent"
+
+QUESTION 3 — What does this site need to do? (checkbox, at least one required)
+  Generate leads or inquiries        → siteGoal: "generate_leads"
+  Build authority and credibility    → siteGoal: "build_authority"
+  Serve existing relationships       → siteGoal: "serve_relationships"
+  Inform or educate                  → siteGoal: "inform_educate"
+
+Values are serialized as entityType (string), primaryVisitor (array), siteGoal (array)
+in the request body JSON.
+
+CUSTOM INDICATORS:
+Radio buttons use ::before pseudo-element with radial-gradient for the selected state:
+  unselected: white circle with light border (#c8d4de)
+  selected: green circle (#1F6B4E) with white center dot via radial-gradient(circle, #fff 28%, #1F6B4E 28%)
+
+Checkboxes use ::before pseudo-element with SVG data URI for the checkmark:
+  unselected: white square with light border, 3px radius
+  selected: teal square (#4A9E8F) with white SVG checkmark via data URI background
+
+Both use :has() pseudo-class to detect checked state without sibling combinators.
+Both are visible at all times — no display:none on the native input elements (just
+opacity:0 so the native input is hidden behind the custom indicator).
+
+VALIDATION:
+The Submit button is disabled by default. intakeValid() checks all five conditions.
+updateBtn() is called on change events for all three intake groups and on input events
+for the email and URL fields. stopLoading() calls updateBtn() instead of unconditionally
+re-enabling the button, so the button correctly reflects intake state after an error recovery.
+
+─────────────────────────────────────────────────────────────
+SECTION G — PROFILES.JS ROUTING LIBRARY
+─────────────────────────────────────────────────────────────
+
+Created tools/ai-audit/profiles.js as the single source of truth for all scoring
+profiles. Imported by scorer.js, which re-exports resolveProfile and resolveCompareProfile.
+
+TWELVE PROFILES:
+
+  smb_lead_gen         — weights: 50/30/20, seoBaseline: C, authorityReduced: yes, hookCritical: yes
+  smb_authority        — weights: 30/40/30, seoBaseline: C, authorityReduced: yes, hookCritical: no
+  smb_mixed            — weights: 40/35/25, seoBaseline: C, authorityReduced: yes, hookCritical: no
+  mid_lead_gen         — weights: 40/40/20, seoBaseline: B, authorityReduced: no,  hookCritical: yes
+  mid_authority        — weights: 25/45/30, seoBaseline: B, authorityReduced: no,  hookCritical: no
+  mid_client_service   — weights: 20/40/40, seoBaseline: B, authorityReduced: no,  hookCritical: no
+  mid_mixed            — weights: 25/45/30, seoBaseline: B, authorityReduced: yes, hookCritical: no
+  enterprise_benchmark — weights: 20/40/40, seoBaseline: A, authorityReduced: no,  hookCritical: no
+  nonprofit_inform     — weights: 20/35/45, seoBaseline: C, authorityReduced: yes, hookCritical: no
+  nonprofit_leads      — weights: 35/40/25, seoBaseline: C, authorityReduced: yes, hookCritical: no
+  competitor_smb       — weights: 40/35/25, seoBaseline: C, authorityReduced: yes, hookCritical: no
+  competitor_enterprise — weights: 20/40/40, seoBaseline: A, authorityReduced: no, hookCritical: no
+
+ROUTING LOGIC (resolveProfile):
+  large_national_global         → enterprise_benchmark
+  nonprofit_gov_media + inform_educate → nonprofit_inform
+  nonprofit_gov_media (other)   → nonprofit_leads
+  small_growing + cold_prospects only + generate_leads only → smb_lead_gen
+  small_growing + build_authority only → smb_authority
+  small_growing (other)         → smb_mixed
+  midmarket_regional + cold_prospects only + generate_leads only → mid_lead_gen
+  midmarket_regional + build_authority + investors → mid_authority
+  midmarket_regional + existing_clients + serve_relationships → mid_client_service
+  midmarket_regional (other)    → mid_mixed
+  default fallback              → smb_mixed
+
+COMPARE ROUTING (resolveCompareProfile):
+  profiles with "enterprise" in name → competitor_enterprise
+  all others → competitor_smb
+
+Routing logic was verified against 9 test cases via Node.js --input-type=module before
+deploying.
+
+─────────────────────────────────────────────────────────────
+SECTION H — USERCONTEXT FALLBACK
+─────────────────────────────────────────────────────────────
+
+The userContext extraction block in worker.js was originally not wrapped in any
+try-catch. If any field was missing or malformed, the error could propagate uncaught
+and cause the entire audit to fail.
+
+Fix: wrapped in try-catch. On any parse failure, falls back to:
+  { entityType: 'small_growing', primaryVisitor: ['cold_prospects'], siteGoal: ['generate_leads'] }
+
+This maps to smb_lead_gen, which is the most conservative SMB profile.
+
+Front-end error display updated to show both rep.error and rep.detail (the actual
+exception message) so audit failures surface their root cause instead of showing only
+"audit failed."
+
+─────────────────────────────────────────────────────────────
+SECTION I — PROFILE-WEIGHTED SCORING AND CLEAN GRADES (0f85b65)
+─────────────────────────────────────────────────────────────
+
+CHANGE 1 — CLEAN LETTER GRADES:
+letterFromScore() previously returned grades with +/− modifiers (B+, C−, etc.).
+Changed to return only A / B / C / D / F. The compare table already used .charAt(0)
+throughout, so no front-end changes were needed for the compare path.
+
+CHANGE 2 — CALIBRATION APPLIED IN SCORING:
+
+seoBaselineGrade override (buildRulesReport):
+  If raw SEO grade < profile baseline AND hard failure count < 2:
+    grade is lifted to the profile baseline.
+  Hard failures: missing canonical, not HTTPS, broken page, dom_complete > 5000ms.
+  Applied before the grade is returned from buildRulesReport — report.seoGrade reflects
+  the calibrated grade, not the raw score-derived grade.
+
+authorityPenaltyReduced (buildRulesReport):
+  If profile.calibration.authorityPenaltyReduced is true AND raw authority band is "critical":
+    authority band is treated as "weak" instead.
+  Affects: findings tile label, text, and border color for the Authority tile.
+  Rationale: SMBs and nonprofits are not expected to have competitive backlink profiles.
+  A "critical" authority label for a local law firm is misleading and demoralizing.
+
+hookFailureIsCritical (worker.js):
+  If profile.calibration.hookFailureIsCritical is false AND positioning.hook === "missing"
+  AND positioning.color === "red":
+    positioning.color is overridden to "yellow".
+  The hook value and verdict text are not modified — the hook is still "missing" in the
+  data, just not treated as a card-level critical failure.
+  Rationale: A missing or generic headline is not a conversion crisis for an established
+  firm serving existing relationships or building authority. It matters most for SMBs
+  doing cold outreach.
+
+Dimension weights in Forward Signal (signals.js + worker.js):
+  The resolved profile's weights object is passed to getForwardSignal() as a new `profile`
+  parameter. getForwardSignal() computes the highest-weight dimension and includes it in
+  the system prompt: "For this site, [dimension] is the highest-priority dimension
+  ([weight]% of overall signal weight). Lead your observation with what most impacts
+  [dimension]."
+
+ACCEPTANCE CRITERIA RESULTS:
+  eisneramper.com + midmarket + mixed → mid_mixed, SEO grade B, authority "weak"  ✓
+  maherlawpllc.com + smb + cold_prospects + generate_leads → smb_lead_gen, grade C, authority "weak"  ✓
+  skalatsky.com + smb + cold_prospects + generate_leads → smb_lead_gen, grade B  ✓
+  espn.com → enterprise_benchmark, entityType known_brand, brandAuthority Dominant  ✓
+  All grades are single letters (no +/−)  ✓
+
+─────────────────────────────────────────────────────────────
+SECTION J — FORWARD SIGNAL THREE-SENTENCE CONSTRAINT
+─────────────────────────────────────────────────────────────
+
+Increased from two sentences to three sentences with explicit structure.
+
+STRUCTURE:
+  Sentence 1: The single most important observation about this site.
+  Sentence 2: Why it matters for this specific business context.
+  Sentence 3: The concrete implication or opportunity the owner can act on.
+
+CHANGES:
+  - getForwardSignal system prompt updated with three-sentence structure instruction.
+  - getEnterpriseBenchmarkSignal system prompt updated with same three-sentence structure.
+  - sanitizeForwardSignal() now cuts at the third sentence-terminal punctuation mark
+    instead of the second.
+  - "two" replaced with "three" throughout both system prompts.
+  - max_tokens remains 400 — sufficient for three complete sentences.
+
+RATIONALE:
+  Two sentences left the observation feeling incomplete. Sentence two explaining why it
+  matters gives the reader the full context they need to decide whether to act. Sentence
+  three stating the implication turns an observation into a call to action.
+
+─────────────────────────────────────────────────────────────
+PRODUCTION CHECKLIST STATUS (as of end of Part 3)
+─────────────────────────────────────────────────────────────
+
+COMPLETED (dev):
+[x] Three-question intake form with pill-card styling and custom indicators
+[x] Five-field submit button validation (email, URL, Q1 radio, Q2 checkbox, Q3 checkbox)
+[x] profiles.js with twelve named profiles, weights, and calibration blocks
+[x] resolveProfile(userContext) routes intake answers to correct profile
+[x] resolveCompareProfile(primaryProfile) routes compare requests to correct profile
+[x] userContext try-catch with graceful fallback in worker.js
+[x] seoBaselineGrade calibration applied — grade lifted to profile baseline when hard failure count < 2
+[x] authorityPenaltyReduced calibration applied — critical authority demoted to weak
+[x] hookFailureIsCritical calibration applied — card color softened from red to yellow when false
+[x] Dimension weights passed to Forward Signal system prompt
+[x] SEO grades clean single letters only — no + or − modifiers
+[x] Forward Signal constrained to exactly three complete sentences with explicit structure
+[x] Five-tier color progression system (--signal-tier-1 through --signal-tier-5)
+[x] Known brand intercept and redirect fully removed
+[x] Dual-mode scoring: classifyEntity() → private company or enterprise path
+[x] scoreEnterprise() with four dimensions calibrated to Fortune 500 baselines
+[x] Enterprise card layout visually consistent across all four dimensions
+[x] All badge and pill text white (#fff)
+[x] Section headings at font-weight:800, color:var(--ink)
+[x] Compare table company name row at #1a1a1a
+[x] EMERGING correctly mapped to tier 3
+[x] Business type inference via Claude Haiku
+[x] ScrapingBee removed, Scrapfly fully wired
+[x] Compare mechanic with enriched Forward Signal and five-dimension side-by-side table
+[x] Forward Signal renders complete sentences, never truncated mid-sentence
+
+OUTSTANDING BEFORE PRODUCTION:
+[ ] Set DEV_MODE = false in worker.js
+[ ] Create production KV namespace AUDITS and add ID to wrangler.toml
+[ ] Add all secrets to production worker (ANTHROPIC_API_KEY, DATAFORSEO_LOGIN,
+    DATAFORSEO_PASSWORD, SCRAPFLY_API_KEY)
+[ ] Lock down CORS: ALLOW_ORIGIN = "https://skalatsky.com"
+[ ] Replace audit section in skalatsky.com/index.html with markup from digital-audit.html
+[ ] Update SA_WORKER_URL to https://sa-ai-audit.saaudit.workers.dev
+[ ] Validate enterprise classification accuracy for edge cases (micro-caps, gov contractors)
+[ ] Validate business type inference for platforms and SaaS
+[ ] End-to-end QA on both paths before go-live
 
 ─────────────────────────────────────────────────────────────
 ARCHITECTURAL DECISIONS AND RATIONALE
 ─────────────────────────────────────────────────────────────
 
+WHY profiles.js as a separate module:
+One place to change routing logic and calibration values. scorer.js and worker.js import
+from profiles.js through the scorer.js re-export chain. No consumer of profiles.js needs
+to know which file it lives in — they just import resolveProfile from scorer.js.
+
+WHY seoBaselineGrade overrides the computed grade rather than adjusting the score:
+The underlying score is the authoritative measurement. The baseline is a contextual
+adjustment — a mid-market firm should not fail their own audit for having a 76 instead
+of an 80 when their site is functionally competitive. The override is transparent: the
+raw score is still in the response as seoScore.
+
+WHY authorityPenaltyReduced applies at the finding band level, not the score:
+The authority score (max 10) feeds into the SEO total. Adjusting it at the band level
+leaves the raw score intact for comparison purposes while changing the display severity
+that the business owner actually reads.
+
+WHY hookFailureIsCritical adjusts color, not the hook value:
+The positioning hook IS missing — that is the observable truth. Changing the card color
+from red to yellow acknowledges that the business does not use its homepage as a cold
+conversion tool, without misrepresenting what is actually there.
+
 WHY classifyEntity() before the main try block:
-The private company path requires DataForSEO and will throw if it fails. The enterprise path wraps DataForSEO in its own try-catch. Calling classifyEntity() before the shared try block lets the two paths fail independently without one masking the other.
+The private company path requires DataForSEO and will throw if it fails. The enterprise
+path wraps DataForSEO in its own try-catch. Calling classifyEntity() before the shared
+try block lets the two paths fail independently without one masking the other.
 
-WHY default to private_company on classification failure:
-The existing pipeline is the known-good path. An API failure should never break an audit for a site that would have worked fine before dual-mode was introduced.
-
-WHY brand authority starts from 8 not 0:
-Additive scoring from zero requires the auditor to observe rare signals (sameAs, structured data with specific properties) to reach Dominant. A Fortune 500 brand that simply passes HTTPS and has JSON-LD should read Dominant — that is the observable truth. Deducting for hard failures is more honest than rewarding for rare signals.
-
-WHY content-type diversity for audience clarity:
-The previous B2B-only rubric would always score consumer media brands low. ESPN, NYT, ESPN-type properties have massive, clearly-segmented audiences — they just don't use enterprise vocabulary. Link count and h2 breadth measure segmentation directly without being category-biased.
-
-WHY section path detection for content depth:
-Home-page HTML word count is a proxy for content depth that breaks on shell-rendered sites and large properties that put everything below the fold. Section paths (/news, /video, /scores) present in href links are a reliable indicator that deep content exists, regardless of what the home page renders.
-
-─────────────────────────────────────────────────────────────
-PRODUCTION CHECKLIST STATUS
-─────────────────────────────────────────────────────────────
-
-COMPLETED (dev):
-[x] Five-tier color system (--signal-tier-1 through --signal-tier-5)
-[x] Known brand intercept + redirect fully removed
-[x] Dual-mode scoring: classifyEntity() routes to private or enterprise path
-[x] scoreEnterprise() with four dimensions
-[x] Enterprise scoring calibrated to Fortune 500 baselines
-[x] Enterprise card layout visually consistent (large badge, no grade rings)
-[x] Forward Signal renders complete sentences, never truncated mid-sentence
-[x] All badge/pill text white (#fff)
-[x] Section headings font-weight:800, 12px, var(--ink)
-[x] Compare table company name #1a1a1a
-[x] EMERGING correctly mapped to tier 3
-[x] Business type inference via Claude Haiku
-[x] ScrapingBee removed, Scrapfly fully wired
-[x] Compare mechanic with enriched signal and five-dimension table
-
-OUTSTANDING BEFORE PRODUCTION:
-[ ] Set DEV_MODE = false in worker.js
-[ ] Create production KV namespace AUDITS and add ID to wrangler.toml
-[ ] Add all secrets to production worker (ANTHROPIC_API_KEY, DATAFORSEO_LOGIN, DATAFORSEO_PASSWORD, SCRAPFLY_API_KEY)
-[ ] Lock down CORS: ALLOW_ORIGIN = "https://skalatsky.com"
-[ ] Replace audit section in skalatsky.com/index.html with markup from digital-audit.html
-[ ] Update SA_WORKER_URL to https://sa-ai-audit.saaudit.workers.dev
-[ ] Validate enterprise classification accuracy across wider URL set (edge cases: regional utilities, government contractors, publicly traded micro-caps)
-[ ] Validate business type inference for platforms and SaaS
-[ ] Full end-to-end QA on both paths before go-live
+WHY three sentences for Forward Signal instead of two:
+Two sentences left the observation incomplete. The middle sentence (why it matters)
+provides the context a business owner needs to evaluate whether to act. The third sentence
+turns the observation into a directive. The structure (observe → explain → act) maps to
+how an advisor actually delivers a recommendation.
 
 ─────────────────────────────────────────────────────────────
 OPEN QUESTIONS
 ─────────────────────────────────────────────────────────────
 
-1. Classification edge cases: publicly traded micro-cap companies with no consumer presence — do they belong in the enterprise path or private company path? Current prompt says "publicly traded" which could over-classify.
+1. Classification edge cases: publicly traded micro-cap companies with no consumer
+   presence — do they belong in the enterprise path or private company path? Current
+   prompt says "publicly traded" which could over-classify.
 
-2. Audience Clarity keyword diversity: the list covers sports/media and B2B terms but not healthcare, legal, or education sector vocabulary. Sector-specific terms may need to be added if enterprise clients from those verticals are tested.
+2. Audience Clarity keyword diversity: the list covers sports/media and B2B terms but
+   not healthcare, legal, or education sector vocabulary. Sector-specific terms may be
+   needed for enterprise clients from those verticals.
 
-3. Content Depth section path matching: currently matches /news, /video, /scores, /insights, /resources, /learn, /knowledge, /research. Professional services and legal firms may have different deep-content path patterns (/practice-areas, /case-studies, /attorneys) that would score them low unfairly.
+3. Content Depth section path matching: currently matches /news, /blog, /video, /scores,
+   /insights, /resources, /learn, /knowledge, /research. Professional services and legal
+   firms may have different deep-content path patterns (/practice-areas, /case-studies,
+   /attorneys) that would score them low unfairly.
 
-4. Enterprise Forward Signal framing: the current prompt frames the signal as advice for "a private company operator studying this brand." If the brand itself ever requests a Signal, the framing would need to change.
+4. Enterprise Forward Signal framing: the current prompt frames the signal as advice for
+   "a private company operator studying this brand." If the brand itself ever requests a
+   Signal, the framing would need to change.
 
-5. Compare mechanic availability: currently blocked for enterprise path by hiding the compare box. If a use case emerges for comparing two known brands, the mechanic would need a separate enterprise-vs-enterprise branch.
+5. Compare mechanic for enterprise: currently blocked for enterprise path by hiding the
+   compare box. If a use case emerges for comparing two known brands, the mechanic would
+   need a separate enterprise-vs-enterprise branch.
+
+6. Profile routing for edge cases: a midmarket company with no investors, no existing
+   client base, and mixed goals falls to mid_mixed. This is a reasonable default but the
+   weights (25 positioning / 45 SEO / 30 agent) skew heavily to SEO, which may not fit
+   every midmarket company. Future: add a fourth option in Q2 for "general audience" to
+   give these firms a cleaner routing path.
 
 ─────────────────────────────────────────────────────────────
-KEY FILES MODIFIED IN PART 3
+KEY FILES MODIFIED IN PART 3 (complete list)
 ─────────────────────────────────────────────────────────────
 
 worker.js
   - Added classifyEntity() function
   - Added enterprise branch in main handler
-  - Imports: scoreEnterprise from scorer.js, getEnterpriseBenchmarkSignal from signals.js
+  - Added resolveProfile import from scorer.js
+  - Added profile resolution and hookFailureIsCritical override
+  - Added userContext try-catch with graceful fallback
+  - Passes report.seoGrade (calibrated) to Forward Signal instead of raw seoGrade
+  - Passes profile and profile weights to getForwardSignal()
 
 scorer.js
-  - Added scoreEnterprise(extra, page) function
-  - Added four helper text functions: brandAuthorityText(), audienceClarityText(), aiVisibilityText(), contentDepthText()
+  - Added scoreEnterprise(extra, page, userContext) function
+  - Added four helper text functions (brandAuthorityText, audienceClarityText, etc.)
+  - Added import of resolveProfile and resolveCompareProfile from profiles.js; re-exports both
+  - letterFromScore() simplified to return A/B/C/D/F only (no +/− modifiers)
+  - buildRulesReport() applies seoBaselineGrade, authorityPenaltyReduced calibration
+  - buildRulesReport() returns calibrated effectiveSeoGrade
 
 signals.js
   - Added getEnterpriseBenchmarkSignal() function
-  - Updated getForwardSignal() system prompt (two complete sentences, no truncation)
-  - Updated getEnterpriseBenchmarkSignal() system prompt (same)
-  - Removed 280-char hard truncation from sanitizeForwardSignal()
-  - Raised max_tokens 250→400 for both forward signal calls
+  - getForwardSignal() updated to accept profile parameter; adds weightContext to prompt
+  - Both Forward Signal calls updated from two-sentence to three-sentence structure
+  - sanitizeForwardSignal() updated to cut at third sentence (not second)
+  - max_tokens 250→400 for both signal calls
+
+profiles.js (NEW FILE)
+  - Defines PROFILES object with twelve named profiles
+  - Each profile: name, description, weights (positioning/seo/agent summing to 100),
+    calibration (hookFailureIsCritical, seoBaselineGrade, agentBaselineLevel,
+    authorityPenaltyReduced)
+  - Exports resolveProfile(userContext) — always returns a profile, never null
+  - Exports resolveCompareProfile(primaryProfile)
 
 digital-audit.html
   - Five-tier CSS vars declared on #sa-audit
@@ -264,10 +511,15 @@ digital-audit.html
   - .sa-pos-tag color hardened to #fff
   - Compare table .sa-comp-th-site color:#1a1a1a
   - renderEnterprise() function added
-  - render() reset block added (cleanup between runs)
+  - render() reset block added
   - sa-audience-wrap block added to HTML
   - Section label IDs added (sa-lbl-pos, sa-lbl-seo, sa-lbl-agent)
   - tierColor() helper added
+  - Three-question intake form added between URL and Submit
+  - Custom radio/checkbox indicators via ::before + :has() + radial-gradient/SVG data URI
+  - Five-field validation: intakeValid(), updateBtn(), event listeners on all five fields
+  - stopLoading() calls updateBtn() instead of unconditionally re-enabling button
+  - Error display shows both rep.error and rep.detail
 
 ─────────────────────────────────────────────────────────────
 END OF SUMMARY

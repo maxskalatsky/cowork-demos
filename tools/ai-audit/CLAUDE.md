@@ -56,7 +56,9 @@ Every URL submitted routes through `classifyEntity()` **before any scoring runs*
 
 **The product is called The Digital Signal.**
 
-**Form.** Two fields and one button: work email, website URL, and Show Me My Signal. No other intake fields.
+**Three-question intake.** The intake form must contain three questions between the URL field and the Submit button. Question 1 is a radio group (company type), Question 2 is a checkbox group (who visits the site), Question 3 is a checkbox group (what the site needs to do). The Submit button must remain disabled until all five conditions pass: valid email format, non-empty URL, Q1 has exactly one radio selected, Q2 has at least one checkbox selected, Q3 has at least one checkbox selected. Custom pill-card indicators must be visible at all times and styled per the dual color system (green/teal for selected, light border for unselected).
+
+**Profile routing.** Every private company audit submission must resolve to a named profile via `resolveProfile(userContext)`. The resolved profile name must appear in the worker console log on every request. The profile calibration must be applied to scoring output: SEO grade baseline, authority penalty reduction, hook failure severity, and dimension weights in the Forward Signal prompt.
 
 **Email gate.** Every audit request must include a valid email address. Requests without one must return an error. Never run the audit without an email.
 
@@ -72,15 +74,17 @@ Every URL submitted routes through `classifyEntity()` **before any scoring runs*
 
 **Position the Brand section** must return three tags — THE HOOK (lands / partial / missing), THE FIT (clear / partial / unclear), THE RELEVANCE (connects / partial / missing) — plus a one-sentence verdict from the verdict library. Left border color green / yellow / red per the color field. If disqualifier is true, show a single TRUST KILLER tag instead of the three.
 
-**SEO Readiness section** must return a letter grade (A / B / C / D / F, with +/− modifier) with a title and description, and four findings cards in a two-by-two grid. Layout: grade circle top left, descriptive sentence to the right of the circle, four tiles below in a two-by-two grid. All contained within one card with one left border color matching the grade.
+**SEO Readiness section** must return a letter grade (A / B / C / D / F — single letter only, no `+` or `−` modifiers) with a title and description, and four findings cards in a two-by-two grid. Layout: grade circle top left, descriptive sentence to the right of the circle, four tiles below in a two-by-two grid. All contained within one card with one left border color matching the grade. The grade may be lifted to the profile baseline when fewer than two hard failures are present — this override is applied inside `buildRulesReport()` before the grade is returned.
 
 **Agent Readiness section** must return a level (ADVANCED / CAPABLE / EMERGING / BASIC) and a verdict line. The verdict is selected from three variants per level based on SEO grade and page signals — see the variant library in `verdicts.js`. No business name in any agent readiness verdict string. All verdicts are written in second person.
 
 **The Forward Signal** is a Claude-generated observation identifying the single highest-leverage opportunity the site is leaving on the table. Rules:
-- Exactly two complete sentences. Cut at the second sentence-terminal punctuation mark. Never truncate mid-sentence.
+- Exactly three complete sentences. Cut at the third sentence-terminal punctuation mark. Never truncate mid-sentence.
+- Structure: sentence one names the single most important observation, sentence two explains why it matters for this business context, sentence three states the concrete implication or opportunity the owner can act on.
 - Sanitization runs on every response: replace em dashes surrounded by spaces with a comma and space, remove bare em dashes, remove asterisks, remove pound signs and backticks, collapse double spaces.
 - Never use em dashes, hyphens as dashes, or asterisks in the response.
-- System prompt instructs Claude: "Write exactly two complete sentences. If your output is more than two sentences, return only the first two complete sentences. Do not truncate output under any circumstances."
+- System prompt instructs Claude: "Write exactly three complete sentences following this structure: sentence one names the single most important observation, sentence two explains why it matters for this specific business context, sentence three states the concrete implication or opportunity. If your output is more than three sentences, return only the first three complete sentences. Do not truncate output under any circumstances."
+- Profile dimension weights must be included in the system prompt for the private company path so Claude leads with the highest-priority dimension.
 - `max_tokens: 400` for the Forward Signal call.
 - Rendered in a blue card below the Agent Readiness section.
 - If the API call fails or returns nothing, the card does not render.
@@ -100,6 +104,10 @@ Every URL submitted routes through `classifyEntity()` **before any scoring runs*
 ---
 
 ### Enterprise / Known Brand Path
+
+**Known brand intercept must not exist anywhere in `worker.js` or `digital-audit.html`.** There is no early-exit, no redirect, and no hardcoded brand list. Every URL reaches the full pipeline; routing is determined by `classifyEntity()` alone.
+
+**Enterprise path must activate when Question 1 = "Large national or global brand."** This selection maps to `entityType: large_national_global`, which `resolveProfile()` maps to `enterprise_benchmark`. The worker's `classifyEntity()` call provides a second layer of routing for any URL submitted as a known brand regardless of Q1 selection.
 
 **Known brands receive four dimension scores, not the private company pipeline.** The response must include `entityType: "known_brand"` and all four scored dimensions. No SEO grade, no findings, no positioning tags, no compare mechanic.
 

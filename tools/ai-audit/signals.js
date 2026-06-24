@@ -79,8 +79,11 @@ export async function getForwardSignal(pageHtml, positioning, seoGrade, findings
     "Sound like a knowledgeable advisor pointing at something the owner has not seen yet, not a tool generating generic advice. " +
     "Be encouraging but direct. Never be harsh. Never use the word audit. Never be generic. " +
     "If you cannot generate a specific confident observation based on what you read, return nothing. " +
-    "Write exactly two complete sentences. " +
-    "If your output is more than two sentences, return only the first two complete sentences. " +
+    "Write exactly three complete sentences following this structure: " +
+    "sentence one names the single most important observation about this site, " +
+    "sentence two explains why it matters for this specific business context, " +
+    "sentence three states the concrete implication or opportunity the owner can act on. " +
+    "If your output is more than three sentences, return only the first three complete sentences. " +
     "Do not truncate output under any circumstances — every sentence must be complete. " +
     "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
 
@@ -230,12 +233,14 @@ export async function getEnterpriseBenchmarkSignal(html, brandName, dimensions, 
   const systemPrompt =
     "You are a senior marketing strategist. " +
     "A private company operator is studying " + brandName + " as a benchmark. " +
-    "Based on the enterprise scoring data provided, generate exactly two sentences " +
-    "identifying the single most actionable takeaway a private business operator can apply from studying this brand's digital presence. " +
+    "Based on the enterprise scoring data provided, generate exactly three sentences following this structure: " +
+    "sentence one names the single most important observation about this brand's digital presence, " +
+    "sentence two explains why it matters for a private operator studying this benchmark, " +
+    "sentence three states the concrete implication or move the operator can apply to their own site. " +
     "Reference the specific dimension where the brand is strongest or weakest. " +
     "Frame it as an insight the operator can act on, not a critique of the brand. " +
-    "Write exactly two complete sentences. " +
-    "If your output is more than two sentences, return only the first two complete sentences. " +
+    "Write exactly three complete sentences. " +
+    "If your output is more than three sentences, return only the first three complete sentences. " +
     "Do not truncate output under any circumstances — every sentence must be complete. " +
     "Never use em dashes, hyphens used as dashes, or asterisks.";
 
@@ -277,10 +282,10 @@ function sanitizeForwardSignal(text) {
     .replace(/[#`]/g, "")
     .replace(/  +/g, " ")
     .trim();
-  // Return the first two complete sentences. Never truncate mid-sentence.
+  // Return the first three complete sentences. Never truncate mid-sentence.
   let count = 0, cutAt = s.length;
   const rx = /[.!?](?=\s|$)/g;
   let m;
-  while ((m = rx.exec(s)) !== null) { count++; if (count === 2) { cutAt = m.index + 1; break; } }
+  while ((m = rx.exec(s)) !== null) { count++; if (count === 3) { cutAt = m.index + 1; break; } }
   return s.slice(0, cutAt).trim();
 }
