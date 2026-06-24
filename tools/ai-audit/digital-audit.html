@@ -71,8 +71,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-close-lead{font-size:14px;color:var(--muted);max-width:540px;margin:0 auto 16px;}
 #sa-audit .sa-close-q{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 16px;}
 #sa-audit .sa-redo{display:block;margin:16px auto 0;background:none;border:none;color:var(--muted2);font-size:12.5px;font-family:inherit;text-decoration:underline;cursor:pointer;}
-#sa-audit .sa-brand-msg{background:#fff;border:1px solid var(--line);border-left:4px solid var(--p);border-radius:10px;padding:28px 30px;margin-top:10px;}
-#sa-audit .sa-brand-txt{font-size:15px;color:#4b5563;margin:0 0 22px;line-height:1.65;}
 #sa-audit .sa-optional-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2);background:#f0f4f8;border-radius:4px;padding:2px 7px;margin-left:7px;vertical-align:middle;}
 #sa-audit .sa-field-hint{font-size:12px;color:var(--muted2);margin:6px 0 0;}
 #sa-audit .sa-report{display:none;margin-top:10px;padding-bottom:20px;}
@@ -124,13 +122,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       <p class="sa-loading-txt" id="sa-loading-txt">Reading your front door.</p>
     </div>
 
-    <div id="sa-brand-wrap" style="display:none">
-      <div class="sa-brand-msg">
-        <p class="sa-brand-txt">This tool is designed for private and growth stage businesses. Enterprise and globally recognized brands signal differently.</p>
-        <a class="sa-btn" href="mailto:signal@skalatsky.com" style="display:inline-block;margin-bottom:16px">signal@skalatsky.com</a>
-        <button class="sa-redo" id="sa-redo-brand" type="button">Run another website</button>
-      </div>
-    </div>
 
     <div id="sa-report" class="sa-report">
       <p class="sa-rtitle" id="sa-rurl"></p>
@@ -231,11 +222,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           err.style.display='block'; return;
         }
         if(rep.error){ stopLoading(); err.textContent=rep.error; err.style.display='block'; return; }
-        if(rep.known_brand){
-          clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='none'; btn.disabled=false;
-          $('sa-brand-wrap').style.display='block';
-          return;
-        }
         rep.displayUrl=u.hostname.replace(/^www\./,'');
         done[cacheKey]=rep; saveLimit(done);
         render(rep);
@@ -247,10 +233,6 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   });
 
 
-  $('sa-redo-brand').addEventListener('click', function(){
-    $('sa-brand-wrap').style.display='none';
-    $('sa-intake').style.display='block';
-  });
 
   $('sa-redo').addEventListener('click', function(){
     currentReport=null; compareUsed=false;
