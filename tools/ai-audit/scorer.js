@@ -263,14 +263,13 @@ export function scoreEnterprise(extra, page) {
   const c       = page.checks || {};
   const meta    = page.meta || {};
 
-  const hasJsonLd    = /application\/ld\+json/i.test(html);
-  const hasOrgSchema = /["']@type["']\s*:\s*["'](Organization|WebSite|Corporation|Brand)["']/i.test(html);
-  const hasSameAs    = /["']sameAs["']/i.test(html);
-  const hasAiSchema  = /["']@type["']\s*:\s*["'](FAQPage|HowTo|Article|NewsArticle|QAPage)["']/i.test(html);
+  const hasJsonLd   = /application\/ld\+json/i.test(html);
+  const hasAiSchema = /["']@type["']\s*:\s*["'](FAQPage|HowTo|Article|NewsArticle|QAPage)["']/i.test(html);
   const hasH1  = /<h1[\s>]/i.test(html);
   const hasH2  = /<h2[\s>]/i.test(html);
   const hasH3  = /<h3[\s>]/i.test(html);
-  const h2Count = (html.match(/<h2[\s>]/gi) || []).length;
+  const h2Count   = (html.match(/<h2[\s>]/gi) || []).length;
+  const linkCount = (html.match(/<a [^>]*href/gi) || []).length;
 
   const stripped = html
     .replace(/<style[\s\S]*?<\/style>/gi, "")
@@ -282,42 +281,51 @@ export function scoreEnterprise(extra, page) {
     stripped.split(/\s+/).filter(Boolean).length;
 
   // ── BRAND AUTHORITY ───────────────────────────────────────────────────────
-  let ba = 0;
-  if (hasJsonLd)             ba += 2;
-  if (hasOrgSchema)          ba += 1;
-  if (hasSameAs)             ba += 2;
-  if (c.is_https !== false)  ba += 1;
-  if (c.canonical !== false) ba += 1;
-  if (!c.no_description)     ba += 1;
+  // Dominant is the expected baseline for a known brand at scale.
+  // Score starts high and deducts only for observable technical failures.
+  let ba = 8;
+  if (!hasJsonLd)            ba -= 2; // no structured data at all
+  if (c.is_https === false)  ba -= 4; // hard failure
+  if (c.canonical === false) ba -= 1;
+  if (c.no_description)      ba -= 1;
+  ba = Math.max(0, ba);
   const baTier = ba >= 7 ? 1 : ba >= 5 ? 2 : ba >= 3 ? 3 : ba >= 1 ? 4 : 5;
 
   // ── AUDIENCE CLARITY ──────────────────────────────────────────────────────
+  // Whether distinct audience segments have clearly labeled dedicated pathways.
+  // Works for consumer media (sport/content-type segmentation) and B2B (role/industry).
   let ac = 0;
-  if (hasH1 && hasH2 && hasH3) ac += 2; else if (hasH1 && hasH2) ac += 1;
-  if (h2Count >= 5) ac += 2; else if (h2Count >= 3) ac += 1;
-  const audPats = (html.match(/\bfor (enterprise|business(?:es)?|teams?|individuals?|developers?|consumers?|marketers?|agencies?|startups?|students?|professionals?)\b/gi) || []).length;
-  ac += Math.min(audPats, 2);
-  const navHtml = (html.match(/<nav[\s\S]*?<\/nav>/i) || [""])[0];
-  if (navHtml && (navHtml.match(/<a /gi) || []).length >= 5) ac += 1;
-  const acTier = ac >= 6 ? 1 : ac >= 4 ? 2 : ac >= 3 ? 3 : ac >= 1 ? 4 : 5;
+  if (linkCount >= 30) ac += 3; else if (linkCount >= 15) ac += 2; else if (linkCount >= 7) ac += 1;
+  if (h2Count >= 8) ac += 3; else if (h2Count >= 4) ac += 2; else if (h2Count >= 2) ac += 1;
+  const ctypes = (html.match(/\b(news|video|live|fantasy|betting|watch|stream|sports?|podcast|scores?|standings?|highlights?|enterprise|teams?|individuals?|developers?|professionals?|industries?)\b/gi) || []);
+  const uniqueCtypes = new Set(ctypes.map(s => s.toLowerCase())).size;
+  ac += Math.min(uniqueCtypes, 3);
+  if (hasH1 && hasH2 && hasH3) ac += 1;
+  const acTier = ac >= 10 ? 1 : ac >= 6 ? 2 : ac >= 3 ? 3 : ac >= 1 ? 4 : 5;
 
   // ── AI VISIBILITY ─────────────────────────────────────────────────────────
+  // Whether the site uses structured schema, FAQ formatting, and citation-friendly structure.
   let av = 0;
-  if (extra.llms)               av += 3;
+  if (extra.llms)                av += 3;
   if (!aiCrawlersBlocked(robots)) av += 2;
-  if (hasJsonLd)                av += 2;
-  if (hasAiSchema)              av += 1;
-  if (hasH1 && hasH2)          av += 1;
-  if (wordCount >= 300)         av += 1;
+  if (hasJsonLd)                 av += 2;
+  if (hasAiSchema)               av += 1;
+  if (hasH1 && hasH2)           av += 1;
+  if (wordCount >= 300)          av += 1;
   const avTier = av >= 8 ? 1 : av >= 6 ? 2 : av >= 4 ? 3 : av >= 2 ? 4 : 5;
 
   // ── CONTENT DEPTH ─────────────────────────────────────────────────────────
+  // Topical coverage breadth and indexable content volume.
+  // Uses content section path presence and link breadth, not just word count.
   let cd = 0;
-  if (wordCount >= 2000) cd += 3; else if (wordCount >= 1000) cd += 2; else if (wordCount >= 500) cd += 1;
-  if (/\/(blog|news|insights|resources?|articles?|learn|knowledge)\b/i.test(html)) cd += 2;
-  if (h2Count >= 8) cd += 2; else if (h2Count >= 4) cd += 1;
-  if (hasAiSchema) cd += 1;
-  const cdTier = cd >= 7 ? 1 : cd >= 5 ? 2 : cd >= 3 ? 3 : cd >= 1 ? 4 : 5;
+  if (/\/(news|blog|stories?|articles?)\b/i.test(html)) cd += 2;
+  if (/\/(video|videos?|watch)\b/i.test(html))           cd += 1;
+  if (/\/(scores?|standings?|results?)\b/i.test(html))   cd += 1;
+  if (/\/(insights?|resources?|learn|knowledge|research)\b/i.test(html)) cd += 1;
+  if (linkCount >= 50) cd += 2; else if (linkCount >= 20) cd += 1;
+  if (h2Count >= 6) cd += 2; else if (h2Count >= 3) cd += 1;
+  if (wordCount >= 1000) cd += 1;
+  const cdTier = cd >= 7 ? 1 : cd >= 4 ? 2 : cd >= 2 ? 3 : cd >= 1 ? 4 : 5;
 
   const label = t => ["Dominant","Strong","Moderate","Limited","Minimal"][t - 1] || "Minimal";
 

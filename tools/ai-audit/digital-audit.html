@@ -398,38 +398,44 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-lbl-seo').textContent='Content Depth';
     $('sa-lbl-agent').textContent='AI Visibility';
 
-    // Brand Authority → positioning card slot
+    // ── BRAND AUTHORITY → sa-pos-card (like Position the Brand) ──────────────
+    // Large .sa-agent-level badge in sa-pos-tests; descriptive text in sa-pos-verdict.
     var ba=r.brandAuthority, baC=tierColor(ba.tier), posCard=$('sa-pos-card');
     posCard.style.borderLeftColor=baC;
     var posTests=$('sa-pos-tests'); posTests.innerHTML='';
-    var baB=document.createElement('span'); baB.className='sa-pos-tag';
-    baB.style.cssText='background:'+baC+';color:#fff;border:none;font-weight:700;';
-    baB.textContent=ba.label.toUpperCase(); posTests.appendChild(baB);
+    var baB=document.createElement('div'); baB.className='sa-agent-level';
+    baB.style.background=baC;
+    baB.textContent=ba.label.toUpperCase();
+    posTests.appendChild(baB);
     $('sa-pos-verdict').textContent=ba.text;
 
-    // Content Depth → SEO card slot (gauge maps tier to percentage)
+    // ── CONTENT DEPTH → sa-seo-card (like SEO Readiness, no grade ring) ──────
+    // Gauge is hidden; large .sa-agent-level badge is injected in its place.
     var cd=r.contentDepth, cdC=tierColor(cd.tier);
-    var cdLetters=['A','B','C','D','F'], cdPcts=[1.0,0.8,0.6,0.4,0.2];
-    $('sa-gletter').innerHTML=cdLetters[cd.tier-1]||'F'; $('sa-gletter').style.color=cdC;
-    $('sa-gdesc').textContent=cd.text;
     $('sa-seo-card').style.borderLeftColor=cdC;
-    var C=2*Math.PI*64, prog=$('sa-prog');
-    prog.style.stroke=cdC; prog.style.strokeDasharray=C; prog.style.strokeDashoffset=C;
-    var sc=$('sa-gscore'); sc.textContent='';
+    var gauge=$('sa-seo-card').querySelector('.sa-gauge');
+    if(gauge) gauge.style.display='none';
+    var seoTop=$('sa-seo-card').querySelector('.sa-seo-top');
+    var cdBadge=document.createElement('div'); cdBadge.id='sa-ent-cd-badge'; cdBadge.className='sa-agent-level';
+    cdBadge.style.background=cdC;
+    cdBadge.textContent=cd.label.toUpperCase();
+    var heroMeta=seoTop?seoTop.querySelector('.sa-hero-meta'):null;
+    if(seoTop&&heroMeta) seoTop.insertBefore(cdBadge, heroMeta);
+    $('sa-gdesc').textContent=cd.text;
     $('sa-finds').innerHTML='';
 
-    // AI Visibility → agent card slot
+    // ── AI VISIBILITY → sa-agent-card (like Agent Readiness) ─────────────────
     var av=r.aiVisibility, avC=tierColor(av.tier);
     var avLvl=$('sa-alevel'); avLvl.textContent=av.label.toUpperCase(); avLvl.style.background=avC; avLvl.style.color='#fff';
     $('sa-aline').textContent=av.text; $('sa-agent-card').style.borderLeftColor=avC;
 
-    // Audience Clarity → fourth card
+    // ── AUDIENCE CLARITY → sa-audience-card (like Agent Readiness) ───────────
     var ac=r.audienceClarity, acC=tierColor(ac.tier);
     var audLvl=$('sa-aud-level'); audLvl.textContent=ac.label.toUpperCase(); audLvl.style.background=acC; audLvl.style.color='#fff';
     $('sa-aud-line').textContent=ac.text; $('sa-audience-card').style.borderLeftColor=acC;
     $('sa-audience-wrap').style.display='block';
 
-    // Forward Signal (no compare box in enterprise mode)
+    // ── FORWARD SIGNAL (no compare box in enterprise mode) ───────────────────
     var fwdSection=$('sa-fwd-section');
     if(r.forwardSignal){ $('sa-fwd-txt').textContent=r.forwardSignal; fwdSection.style.display='block'; if(compareBoxEl) compareBoxEl.style.display='none'; }
     else { fwdSection.style.display='none'; }
@@ -439,10 +445,11 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-compare-result').style.display='none';
     $('sa-report').style.display='block';
 
+    // ── ANIMATIONS: all four dimension badges fade/scale in staggered ─────────
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
-      prog.style.strokeDashoffset=C*(1-(cdPcts[cd.tier-1]||0.2));
-      setTimeout(function(){ posCard.classList.add('sa-in'); },150);
-      setTimeout(function(){ avLvl.classList.add('sa-in'); },300);
+      setTimeout(function(){ posCard.classList.add('sa-in'); baB.classList.add('sa-in'); },150);
+      setTimeout(function(){ cdBadge.classList.add('sa-in'); },250);
+      setTimeout(function(){ avLvl.classList.add('sa-in'); },350);
       setTimeout(function(){ audLvl.classList.add('sa-in'); },450);
     }); });
   }
@@ -458,6 +465,11 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-lbl-seo').textContent='SEO readiness';
     $('sa-lbl-agent').textContent='Agent readiness';
     if(compareBoxEl) compareBoxEl.style.display='';
+    // Remove enterprise-injected Content Depth badge and restore gauge
+    var oldCdBadge=$('sa-ent-cd-badge');
+    if(oldCdBadge&&oldCdBadge.parentNode) oldCdBadge.parentNode.removeChild(oldCdBadge);
+    var seoGauge=$('sa-seo-card').querySelector('.sa-gauge');
+    if(seoGauge) seoGauge.style.display='';
 
     if(r.entityType==='known_brand'){ renderEnterprise(r); return; }
 
