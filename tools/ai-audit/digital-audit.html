@@ -221,13 +221,12 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
             </table>
             <div class="sa-comp-verdict-wrap">
               <p class="sa-comp-verdict-p" id="sa-comp-verdict-txt"></p>
-              <a class="sa-btn" id="sa-comp-cta" href="mailto:signal@skalatsky.com" style="display:block;width:fit-content;margin:12px auto 0"></a>
             </div>
           </div>
         </div>
       </div>
       <div id="sa-close-cta" style="display:none;text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);">
-        <a class="sa-btn" id="sa-cta-mailto" href="mailto:signal@skalatsky.com" style="display:inline-block">Talk to S&amp;A</a>
+        <a class="sa-btn" id="sa-cta-mailto" href="mailto:signal@skalatsky.com" style="display:inline-block">Start the conversation.</a>
         <button class="sa-redo" id="sa-redo" type="button">Run another website</button>
       </div>
     </div>
@@ -389,8 +388,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var ls=function(l){ return {ADVANCED:4,CAPABLE:3,EMERGING:2,BASIC:1}[l]||1; };
     var aTotal=ps(admiredPos)+gs(admiredSeoGrade)+ls(admiredAgentLevel);
     var uTotal=ps(userPos)+gs(userSeoGrade)+ls(userAgentLevel);
-    var vtxt=$('sa-comp-verdict-txt'); var cta=$('sa-comp-cta');
-    var outcomeText;
+    var vtxt=$('sa-comp-verdict-txt');
     if(aTotal>uTotal){
       var dims=[];
       if(ps(admiredPos)>ps(userPos)) dims.push('positioning');
@@ -398,16 +396,34 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
       if(ls(admiredAgentLevel)>ls(userAgentLevel)) dims.push('AI visibility');
       var dimStr=dims.length?dims.join(', '):'key areas';
       vtxt.textContent='The site you admire is outperforming yours on '+dimStr+'. Those gaps are closable and closing them is exactly what we do.';
-      cta.textContent='Beat them. Talk to S&A.';
-      outcomeText='The admired site is outperforming on '+dimStr;
     } else {
       vtxt.textContent='You are already ahead on positioning, SEO, and AI visibility. The question is whether you stay there as they close the gap.';
-      cta.textContent='Stay ahead. Talk to S&A.';
-      outcomeText='You are already ahead on positioning, SEO, and AI visibility';
     }
-    cta.href=buildMailtoHref(admiredUrl, outcomeText);
-    $('sa-cta-mailto').href=buildMailtoHref(admiredUrl, outcomeText);
     $('sa-compare-result').style.display='block';
+  }
+
+  function buildAuditMailto(r) {
+    var domain=(r.displayUrl||(r.url||'').replace(/^https?:\/\//,'').replace(/\/$/,''));
+    var lines=[];
+    lines.push('Hi, I just ran The Digital Signal on '+domain+'. Here is what it found.');
+    lines.push('');
+    if(r.entityType==='known_brand'){
+      var ba=r.brandAuthority?r.brandAuthority.label:'';
+      var cd=r.contentDepth?r.contentDepth.label:'';
+      var av=r.aiVisibility?r.aiVisibility.label:'';
+      var ac=r.audienceClarity?r.audienceClarity.label:'';
+      lines.push('Brand Authority: '+ba+', Content Depth: '+cd+', AI Visibility: '+av+', Audience Clarity: '+ac);
+    } else {
+      var pos=r.positioning||{};
+      lines.push('Position the Brand: '+(pos.hook||'')+', '+(pos.fit||'')+', '+(pos.relevance||''));
+      lines.push('');
+      lines.push('SEO Readiness: '+(r.seoGrade||''));
+      lines.push('');
+      lines.push('Agent Readiness: '+(r.agentLevel||''));
+    }
+    lines.push('I would like to talk about what this means for my business.');
+    var subject='My Digital Signal: '+domain;
+    return 'mailto:signal@skalatsky.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\n'));
   }
 
   function buildMailtoHref(admiredUrl, outcome) {
@@ -502,7 +518,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     if(r.forwardSignal){ $('sa-fwd-txt').textContent=r.forwardSignal; fwdSection.style.display='block'; if(compareBoxEl) compareBoxEl.style.display='none'; }
     else { fwdSection.style.display='none'; }
 
-    $('sa-cta-mailto').href='mailto:signal@skalatsky.com?subject=My%20Digital%20Signal%20'+encodeURIComponent(r.displayUrl||r.url);
+    $('sa-cta-mailto').href=buildAuditMailto(r);
     $('sa-close-cta').style.display='block';
     $('sa-compare-result').style.display='none';
     $('sa-report').style.display='block';
@@ -569,7 +585,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var cbtn2=$('sa-compare-btn'); if(cbtn2){cbtn2.disabled=false; cbtn2.textContent='Compare'; cbtn2.style.opacity='1';}
     var cok=$('sa-compare-ok'); if(cok) cok.style.display='none';
     if(compareResult) compareResult.style.display='none';
-    $('sa-cta-mailto').href=buildMailtoHref(null,null);
+    $('sa-cta-mailto').href=buildAuditMailto(r);
     $('sa-close-cta').style.display='block';
     var pos=r.positioning||{}; var posCard=$('sa-pos-card');
     var posColors={green:T1,yellow:T3,red:T5};
