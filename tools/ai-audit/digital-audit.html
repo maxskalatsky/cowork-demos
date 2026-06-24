@@ -132,9 +132,9 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <p class="sa-intake-qlabel">What best describes this company?</p>
           <div class="sa-intake-grid">
             <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="small_growing" class="sa-intake-inp">Small or growing business</label>
-            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="midmarket_regional" class="sa-intake-inp">Mid-market or regional firm</label>
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="midmarket_regional" class="sa-intake-inp">Established or mid-market company</label>
             <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="large_national_global" class="sa-intake-inp">Large national or global brand</label>
-            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="nonprofit_gov_media" class="sa-intake-inp">Nonprofit, government, or media</label>
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="nonprofit_gov_media" class="sa-intake-inp">Nonprofit or mission-driven organization</label>
           </div>
         </div>
         <div class="sa-intake-q">
@@ -252,13 +252,18 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 
   var btn=$('sa-run'), err=$('sa-err');
   function intakeValid(){
+    var emailVal=($('sa-email').value||'').trim();
+    var emailOk=emailVal.length>0&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+    var urlOk=!!normalizeUrl($('sa-url').value);
     var q1=document.querySelector('input[name="sa-q1"]:checked');
     var q2=document.querySelectorAll('input[name="sa-q2"]:checked');
     var q3=document.querySelectorAll('input[name="sa-q3"]:checked');
-    return !!(q1&&q2.length>0&&q3.length>0);
+    return !!(emailOk&&urlOk&&q1&&q2.length>0&&q3.length>0);
   }
   function updateBtn(){ btn.disabled=!intakeValid(); }
   document.querySelectorAll('input[name="sa-q1"],input[name="sa-q2"],input[name="sa-q3"]').forEach(function(el){ el.addEventListener('change',updateBtn); });
+  $('sa-email').addEventListener('input',updateBtn);
+  $('sa-url').addEventListener('input',updateBtn);
   btn.addEventListener('click', function(){
     err.style.display='none';
     var emailVal=($('sa-email').value||'').trim();
