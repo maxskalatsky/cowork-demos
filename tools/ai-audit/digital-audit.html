@@ -98,8 +98,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-intake-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 #sa-audit .sa-intake-inp{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
 #sa-audit .sa-intake-opt-lbl{display:flex;align-items:center;font-size:13px;color:var(--ink);padding:8px 12px;border:0.5px solid var(--line2);border-radius:8px;cursor:pointer;user-select:none;transition:border-color .12s,background .12s;line-height:1.35;}
-#sa-audit .sa-intake-opt-lbl:hover{border-color:#1F6B4E;}
-#sa-audit .sa-intake-opt-lbl:has(.sa-intake-inp:checked){background:#f0f7f4;border-color:#1F6B4E;font-weight:600;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="radio"]):hover{border-color:#1F6B4E;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="radio"]:checked){background:#f0f7f4;border-color:#1F6B4E;font-weight:600;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="checkbox"]):hover{border-color:#4A9E8F;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="checkbox"]:checked){background:#f0f7f6;border-color:#4A9E8F;font-weight:600;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="radio"])::before{content:'';display:block;width:16px;height:16px;min-width:16px;border-radius:50%;border:1.5px solid #c8d4de;background:#fff;margin-right:8px;flex-shrink:0;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="radio"]:checked)::before{border-color:#1F6B4E;background:radial-gradient(circle,#fff 28%,#1F6B4E 28%);}
+#sa-audit .sa-intake-opt-lbl:has(input[type="checkbox"])::before{content:'';display:block;width:16px;height:16px;min-width:16px;border-radius:3px;border:1.5px solid #c8d4de;background:#fff;margin-right:8px;flex-shrink:0;}
+#sa-audit .sa-intake-opt-lbl:has(input[type="checkbox"]:checked)::before{border-color:#4A9E8F;background:#4A9E8F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1.5 5l2.5 2.5 4.5-4.5'/%3E%3C/svg%3E") center/10px no-repeat;}
 #sa-audit .sa-btn:disabled{background:#b0bec5;cursor:not-allowed;}
 #sa-audit .sa-btn:disabled:hover{background:#b0bec5;}
 </style>
