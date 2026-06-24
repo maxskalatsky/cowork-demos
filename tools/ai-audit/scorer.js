@@ -1,4 +1,6 @@
 import { getPositioningVerdict, getAgentLine, SEO_GRADE_TITLE, getSeoGradeDesc } from "./verdicts.js";
+import { resolveProfile, resolveCompareProfile } from "./profiles.js";
+export { resolveProfile, resolveCompareProfile };
 
 /* ----------------------------------------------------------------------------
    SCORING — Anya's rubric. Map DataForSEO checks onto four buckets.
@@ -197,7 +199,9 @@ export function aiCrawlersBlocked(robotsTxt) {
 /* ----------------------------------------------------------------------------
    FINDINGS — rules mode.
 ---------------------------------------------------------------------------- */
-export function buildRulesReport(brand, scores, seoGrade, agent, page) {
+export function buildRulesReport(brand, scores, seoGrade, agent, page, userContext = null) {
+  const profile = resolveProfile(userContext);
+  console.log("resolved profile:", profile.name, "| userContext:", JSON.stringify(userContext));
   const B = cap(brand);
   const band = (s, max) => { const p = s / max; return p >= 0.8 ? "strong" : p >= 0.6 ? "ok" : p >= 0.4 ? "weak" : "critical"; };
   const c = page.checks || {};
@@ -257,7 +261,9 @@ export function buildRulesReport(brand, scores, seoGrade, agent, page) {
    ENTERPRISE SCORING — four dimensions, each returns tier 1–5.
    Tier 1 = strongest (--signal-tier-1 dark green), Tier 5 = weakest (--signal-tier-5 grey).
 ---------------------------------------------------------------------------- */
-export function scoreEnterprise(extra, page) {
+export function scoreEnterprise(extra, page, userContext = null) {
+  const profile = resolveProfile(userContext);
+  console.log("resolved profile:", profile.name, "| userContext:", JSON.stringify(userContext));
   const html    = extra.html || "";
   const robots  = extra.robots || "";
   const c       = page.checks || {};

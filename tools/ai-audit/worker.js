@@ -100,7 +100,7 @@ export default {
         try { rawPage = await dataForSeoOnPage(target, env); } catch {}
 
         const brand = extractBrand(target, extra.html || "", rawPage.meta?.title);
-        const enterpriseScores = scoreEnterprise(extra, rawPage);
+        const enterpriseScores = scoreEnterprise(extra, rawPage, userContext);
 
         if (env.AUDITS) {
           await env.AUDITS.put(email, JSON.stringify({
@@ -146,7 +146,7 @@ export default {
 
       // 4. findings -----------------------------------------------------------
       const brand = extractBrand(target, extra.html || "", page.meta?.title);
-      let report = buildRulesReport(brand, scores, seoGrade, agent, page);
+      let report = buildRulesReport(brand, scores, seoGrade, agent, page, userContext);
       if ((env.FINDINGS_MODE || "rules") === "llm" && env.ANTHROPIC_API_KEY) {
         report = await polishWithClaude(report, page, brand, env);
       }
