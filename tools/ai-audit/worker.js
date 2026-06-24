@@ -47,6 +47,13 @@ export default {
     let body;
     try { body = await request.json(); } catch { return json({ error: "bad json" }, 400, cors); }
 
+    const userContext = {
+      entityType: body.entityType || null,
+      primaryVisitor: Array.isArray(body.primaryVisitor) ? body.primaryVisitor : [],
+      siteGoal: Array.isArray(body.siteGoal) ? body.siteGoal : [],
+    };
+    console.log("userContext:", JSON.stringify(userContext));
+
     // Compare action — separate from the main audit flow, no email/KV required
     if (body.action === "compare") {
       if (!env.ANTHROPIC_API_KEY) return json({ error: "api not configured" }, 503, cors);

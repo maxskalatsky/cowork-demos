@@ -92,6 +92,16 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
 #sa-audit .sa-comp-verdict-wrap{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
 #sa-audit .sa-comp-verdict-p{font-size:14px;color:#4b5563;margin:0 0 4px;line-height:1.6;}
 @media(max-width:640px){#sa-audit .sa-seo-top{flex-direction:column;text-align:center;gap:16px;}#sa-audit .sa-find-wrap{grid-template-columns:1fr;}#sa-audit .sa-agent-row{flex-direction:column;align-items:flex-start;gap:12px;}#sa-audit .sa-comp-tbl th,#sa-audit .sa-comp-tbl td{font-size:9px;}}
+#sa-audit .sa-intake-divider{border:none;border-top:1px solid var(--line);margin:20px 0 16px;}
+#sa-audit .sa-intake-q{margin-bottom:16px;}
+#sa-audit .sa-intake-qlabel{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 9px;}
+#sa-audit .sa-intake-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+#sa-audit .sa-intake-inp{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+#sa-audit .sa-intake-opt-lbl{display:flex;align-items:center;font-size:13px;color:var(--ink);padding:8px 12px;border:0.5px solid var(--line2);border-radius:8px;cursor:pointer;user-select:none;transition:border-color .12s,background .12s;line-height:1.35;}
+#sa-audit .sa-intake-opt-lbl:hover{border-color:#1F6B4E;}
+#sa-audit .sa-intake-opt-lbl:has(.sa-intake-inp:checked){background:#f0f7f4;border-color:#1F6B4E;font-weight:600;}
+#sa-audit .sa-btn:disabled{background:#b0bec5;cursor:not-allowed;}
+#sa-audit .sa-btn:disabled:hover{background:#b0bec5;}
 </style>
 </head>
 <body>
@@ -111,7 +121,35 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           <label for="sa-url">Your website</label>
           <input type="url" id="sa-url" class="sa-input" placeholder="yourbusiness.com" autocomplete="url" inputmode="url">
         </div>
-        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button">Show Me My Signal</button></div>
+        <hr class="sa-intake-divider">
+        <div class="sa-intake-q">
+          <p class="sa-intake-qlabel">What best describes this company?</p>
+          <div class="sa-intake-grid">
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="small_growing" class="sa-intake-inp">Small or growing business</label>
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="midmarket_regional" class="sa-intake-inp">Mid-market or regional firm</label>
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="large_national_global" class="sa-intake-inp">Large national or global brand</label>
+            <label class="sa-intake-opt-lbl"><input type="radio" name="sa-q1" value="nonprofit_gov_media" class="sa-intake-inp">Nonprofit, government, or media</label>
+          </div>
+        </div>
+        <div class="sa-intake-q">
+          <p class="sa-intake-qlabel">Who visits this site?</p>
+          <div class="sa-intake-grid">
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q2" value="cold_prospects" class="sa-intake-inp">Cold prospects</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q2" value="existing_clients" class="sa-intake-inp">Existing clients or members</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q2" value="investors" class="sa-intake-inp">Investors or institutions</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q2" value="talent" class="sa-intake-inp">Talent or recruits</label>
+          </div>
+        </div>
+        <div class="sa-intake-q">
+          <p class="sa-intake-qlabel">What does this site need to do?</p>
+          <div class="sa-intake-grid">
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q3" value="generate_leads" class="sa-intake-inp">Generate leads</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q3" value="build_authority" class="sa-intake-inp">Build authority</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q3" value="serve_relationships" class="sa-intake-inp">Serve existing relationships</label>
+            <label class="sa-intake-opt-lbl"><input type="checkbox" name="sa-q3" value="inform_educate" class="sa-intake-inp">Inform and educate</label>
+          </div>
+        </div>
+        <div class="sa-cta"><button id="sa-run" class="sa-btn" type="button" disabled>Show Me My Signal</button></div>
         <p id="sa-err" class="sa-err"></p>
         <p class="sa-note">Free. One per email. Results appear here instantly.</p>
       </div>
@@ -207,6 +245,14 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
   function saveLimit(m){ try{ localStorage.setItem(LIMIT_KEY,JSON.stringify(m)); }catch(e){} }
 
   var btn=$('sa-run'), err=$('sa-err');
+  function intakeValid(){
+    var q1=document.querySelector('input[name="sa-q1"]:checked');
+    var q2=document.querySelectorAll('input[name="sa-q2"]:checked');
+    var q3=document.querySelectorAll('input[name="sa-q3"]:checked');
+    return !!(q1&&q2.length>0&&q3.length>0);
+  }
+  function updateBtn(){ btn.disabled=!intakeValid(); }
+  document.querySelectorAll('input[name="sa-q1"],input[name="sa-q2"],input[name="sa-q3"]').forEach(function(el){ el.addEventListener('change',updateBtn); });
   btn.addEventListener('click', function(){
     err.style.display='none';
     var emailVal=($('sa-email').value||'').trim();
@@ -217,7 +263,10 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var done=loadLimit();
     if(done[cacheKey]){ render(done[cacheKey]); return; }
     startLoading();
-    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal}) })
+    var q1Sel=document.querySelector('input[name="sa-q1"]:checked');
+    var q2Sels=Array.from(document.querySelectorAll('input[name="sa-q2"]:checked'));
+    var q3Sels=Array.from(document.querySelectorAll('input[name="sa-q3"]:checked'));
+    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal,entityType:q1Sel?q1Sel.value:null,primaryVisitor:q2Sels.map(function(e){return e.value;}),siteGoal:q3Sels.map(function(e){return e.value;})}) })
       .then(function(res){ var s=res.status; return res.json().then(function(d){ d._s=s; return d; }); })
       .then(function(rep){
         if(rep._s===429){
@@ -245,6 +294,8 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     $('sa-report').style.display='none';
     $('sa-close-cta').style.display='none';
     $('sa-intake').style.display='block';
+    document.querySelectorAll('input[name="sa-q1"],input[name="sa-q2"],input[name="sa-q3"]').forEach(function(el){ el.checked=false; });
+    updateBtn();
     $('sa-url').value=''; $('sa-url').focus();
   });
 
@@ -384,7 +435,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var i=0; $('sa-loading-txt').textContent=msgs[0];
     t=setInterval(function(){ i=(i+1)%msgs.length; $('sa-loading-txt').textContent=msgs[i]; },1300);
   }
-  function stopLoading(){ clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='block'; btn.disabled=false; }
+  function stopLoading(){ clearInterval(t); $('sa-loading').style.display='none'; $('sa-intake').style.display='block'; updateBtn(); }
 
   var T1='#1F6B4E',T2='#3A9E72',T3='#4A9E8F',T4='#7AABB8',T5='#9BAEBB';
   var GC={A:T1,B:T2,C:T3,D:T4,F:T5};
