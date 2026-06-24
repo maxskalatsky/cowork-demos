@@ -47,11 +47,17 @@ export default {
     let body;
     try { body = await request.json(); } catch { return json({ error: "bad json" }, 400, cors); }
 
-    const userContext = {
-      entityType: body.entityType || null,
-      primaryVisitor: Array.isArray(body.primaryVisitor) ? body.primaryVisitor : [],
-      siteGoal: Array.isArray(body.siteGoal) ? body.siteGoal : [],
-    };
+    let userContext;
+    try {
+      userContext = {
+        entityType: body.entityType || null,
+        primaryVisitor: Array.isArray(body.primaryVisitor) ? body.primaryVisitor : [],
+        siteGoal: Array.isArray(body.siteGoal) ? body.siteGoal : [],
+      };
+    } catch (e) {
+      console.warn("userContext parse failed, using fallback:", String(e));
+      userContext = { entityType: 'small_growing', primaryVisitor: ['cold_prospects'], siteGoal: ['generate_leads'] };
+    }
     console.log("userContext:", JSON.stringify(userContext));
 
     // Compare action — separate from the main audit flow, no email/KV required

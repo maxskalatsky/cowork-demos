@@ -287,7 +287,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
           err.innerHTML='You have already run a free Signal. <a href="mailto:signal@skalatsky.com?subject='+subj+'&body='+bod+'" style="color:inherit;font-weight:700;text-decoration:underline">Email signal@skalatsky.com</a> to discuss your results.';
           err.style.display='block'; return;
         }
-        if(rep.error){ stopLoading(); err.textContent=rep.error; err.style.display='block'; return; }
+        if(rep.error){ stopLoading(); err.textContent=rep.error+(rep.detail?' — '+rep.detail:''); err.style.display='block'; return; }
         rep.displayUrl=u.hostname.replace(/^www\./,'');
         done[cacheKey]=rep; saveLimit(done);
         render(rep);
