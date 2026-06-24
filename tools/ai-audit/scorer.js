@@ -49,12 +49,8 @@ export function scoreSeo(page) {
   return { onpage, tech, content, auth, total: onpage + tech + content + auth };
 }
 
-/* Within-letter modifier per rubric: +=ends 7-9, none=3-6, −=0-2 (U+2212 minus). */
 export function letterFromScore(s) {
-  const L = s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : s >= 60 ? "D" : "F";
-  if (L === "F") return "F";
-  const ones = s % 10;
-  return L + (ones >= 7 ? "+" : ones <= 2 ? "−" : "");
+  return s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : s >= 60 ? "D" : "F";
 }
 
 /* ----------------------------------------------------------------------------
@@ -206,6 +202,8 @@ export function buildRulesReport(brand, scores, seoGrade, agent, page, userConte
   const band = (s, max) => { const p = s / max; return p >= 0.8 ? "strong" : p >= 0.6 ? "ok" : p >= 0.4 ? "weak" : "critical"; };
   const c = page.checks || {};
   const meta = page.meta || {};
+  const t = page.page_timing || {};
+  const cal = profile.calibration;
 
   const visibility = finding("Visibility", band(scores.onpage, 30), {
     critical: c.no_title
@@ -234,22 +232,36 @@ export function buildRulesReport(brand, scores, seoGrade, agent, page, userConte
     strong: `Content is cleanly structured with clear headings, which both search engines and AI assistants can read and quote.`,
   });
 
-  const authority = finding("Authority", band(scores.auth, 10), {
+  const rawAuthorityBand = band(scores.auth, 10);
+  const authorityBand = (cal.authorityPenaltyReduced && rawAuthorityBand === "critical") ? "weak" : rawAuthorityBand;
+  const authority = finding("Authority", authorityBand, {
     critical: `Almost no reputable sites link to ${B}, so search engines have little reason to trust it over competitors.`,
     weak: `Your link profile is thin compared to the sites currently outranking ${B}.`,
     ok: `${B} has a reasonable authority foundation but trails the top competitors in your space.`,
     strong: `${B} has earned links from credible sources, giving search engines solid reason to trust and rank it.`,
   });
 
-  const base = seoGrade.charAt(0);
+  const gradeOrder = ['F', 'D', 'C', 'B', 'A'];
+  const hardFailureCount = [
+    c.canonical === false,
+    c.is_https === false,
+    c.is_broken === true,
+    (t.dom_complete || 0) > 5000,
+  ].filter(Boolean).length;
+  const currentBase = seoGrade.charAt(0);
+  const baselineIdx = gradeOrder.indexOf(cal.seoBaselineGrade);
+  const currentIdx = gradeOrder.indexOf(currentBase);
+  const effectiveBase = (currentIdx < baselineIdx && hardFailureCount < 2) ? cal.seoBaselineGrade : currentBase;
+  const effectiveSeoGrade = effectiveBase;
+
   const hasSchema = !!(c.has_micromarkup);
-  const agentLine = getAgentLine(agent, base, scores, hasSchema);
+  const agentLine = getAgentLine(agent, effectiveBase, scores, hasSchema);
 
   return {
-    seoGrade,
+    seoGrade: effectiveSeoGrade,
     seoScore: scores.total,
-    seoGradeTitle: SEO_GRADE_TITLE[base],
-    seoGradeDesc: getSeoGradeDesc(base, B),
+    seoGradeTitle: SEO_GRADE_TITLE[effectiveBase],
+    seoGradeDesc: getSeoGradeDesc(effectiveBase, B),
     findings: [visibility, firstImp, structure, authority],
     agentLevel: agent.level,
     agentScore: agent.score,

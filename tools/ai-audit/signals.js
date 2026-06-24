@@ -46,7 +46,7 @@ export async function inferBusinessType(html, url, env) {
 /* ----------------------------------------------------------------------------
    THE FORWARD SIGNAL — single Claude call for highest-leverage opportunity.
 ---------------------------------------------------------------------------- */
-export async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, businessCtx, env) {
+export async function getForwardSignal(pageHtml, positioning, seoGrade, findings, agentLevel, businessCtx, profile, env) {
   const plainText = (pageHtml || "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -61,9 +61,18 @@ export async function getForwardSignal(pageHtml, positioning, seoGrade, findings
         : `This site serves ${businessCtx.audience || "prospective clients"} and aims to ${businessCtx.purpose || "generate leads"}. `)
     : "";
 
+  let weightContext = "";
+  if (profile && profile.weights) {
+    const entries = Object.entries(profile.weights).sort((a, b) => b[1] - a[1]);
+    const [topKey, topVal] = entries[0];
+    const dimLabel = { positioning: "brand positioning and message clarity", seo: "SEO visibility", agent: "AI agent readiness" }[topKey] || topKey;
+    weightContext = `For this site, ${dimLabel} is the highest-priority dimension (${topVal}% of overall signal weight). Lead your observation with what most impacts ${dimLabel}. `;
+  }
+
   const systemPrompt =
     "You are a senior marketing and GTM advisor reviewing a private company website. " +
     siteContext +
+    weightContext +
     "Based on the positioning verdict, SEO grade, and agent readiness provided, generate exactly one observation " +
     "identifying the single highest leverage opportunity this business is leaving on the table right now. " +
     "Frame it as an opportunity not a problem. Be specific to what you read on the page. " +

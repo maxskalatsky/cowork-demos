@@ -1,5 +1,5 @@
 import { dataForSeoOnPage, fetchAgentSignals, detectJsFramework, extractHtmlMeta, patchPageFromHtml } from "./fetch.js";
-import { scoreSeo, letterFromScore, scorePositioning, scoreAgentReadiness, buildRulesReport, scoreEnterprise } from "./scorer.js";
+import { scoreSeo, letterFromScore, scorePositioning, scoreAgentReadiness, buildRulesReport, scoreEnterprise, resolveProfile } from "./scorer.js";
 import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude, getEnterpriseBenchmarkSignal } from "./signals.js";
 
 const DEV_MODE = true; // disable KV email gate in dev; set false before promoting to production
@@ -153,6 +153,7 @@ export default {
       // 4. findings -----------------------------------------------------------
       const brand = extractBrand(target, extra.html || "", page.meta?.title);
       let report = buildRulesReport(brand, scores, seoGrade, agent, page, userContext);
+      const profile = resolveProfile(userContext);
       if ((env.FINDINGS_MODE || "rules") === "llm" && env.ANTHROPIC_API_KEY) {
         report = await polishWithClaude(report, page, brand, env);
       }
@@ -165,7 +166,10 @@ export default {
 
       const businessCtx = await businessCtxPromise;
 
-      const positioning = scorePositioning(extra.html || "", businessCtx);
+      let positioning = scorePositioning(extra.html || "", businessCtx);
+      if (!profile.calibration.hookFailureIsCritical && positioning.hook === "missing" && positioning.color === "red") {
+        positioning = { ...positioning, color: "yellow" };
+      }
 
       // Log audit to KV
       if (env.AUDITS) {
@@ -181,7 +185,7 @@ export default {
 
       // Forward Signal — Claude-generated opportunity observation
       if (env.ANTHROPIC_API_KEY) {
-        const fwd = await getForwardSignal(extra.html, positioning, seoGrade, report.findings, agent.level, businessCtx, env);
+        const fwd = await getForwardSignal(extra.html, positioning, report.seoGrade, report.findings, agent.level, businessCtx, profile, env);
         if (fwd) report.forwardSignal = fwd;
       } else {
         console.warn("ANTHROPIC_API_KEY not bound — Forward Signal skipped");
