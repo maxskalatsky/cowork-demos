@@ -2,381 +2,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>No Tees Tour — SGI Handicap Review</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SGI Calculations — Plain-English Review</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --bunker:#0A0A0A; --ink:#16181d; --paper:#ffffff; --wash:#f4f5f7;
+    --line:#e3e5ea; --mist:#6b7280; --volt:#C1FF00; --volt-deep:#7a9c00;
+    --cobalt:#004FFF; --live:#E63946; --amber:#C77800; --green:#1f9d57;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--wash); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; font-size:17px;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:0 22px 80px;}
 
-  :root {
-    --bg: #f8f7f4;
-    --surface: #ffffff;
-    --surface-2: #f1f0ec;
-    --border: rgba(0,0,0,0.10);
-    --border-strong: rgba(0,0,0,0.18);
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #898781;
-    --radius: 8px;
-    --scratch-bg: #f1f0ec;
-    --scratch-text: #5f5e5a;
-    --stroke-bg: #e1f5ee;
-    --stroke-text: #0f6e56;
-    --warn-text: #A32D2D;
-    --warn-bg: #FCEBEB;
-    --warn-border: #A32D2D;
-    --good-text: #0f6e56;
-    --mono: 'Courier New', monospace;
-  }
+  /* ---- header band ---- */
+  .band{background:var(--bunker); color:#fff; margin-bottom:34px;}
+  .band .wrap{padding-top:30px; padding-bottom:34px;}
+  .kicker{font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--volt); font-weight:700;}
+  .band h1{font-size:34px; line-height:1.15; margin:.5rem 0 .4rem; letter-spacing:-.01em;}
+  .band p.sub{color:#c9cdd6; margin:0; font-size:18px;}
+  .meta{margin-top:20px; display:flex; flex-wrap:wrap; gap:10px 26px; font-size:13px; color:#9aa0ab;}
+  .meta b{color:#fff; font-weight:600;}
+  .draft{display:inline-block; border:1px solid var(--volt); color:var(--volt);
+    border-radius:999px; padding:3px 12px; font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;}
 
-  body {
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    padding: 2rem 1rem 4rem;
-  }
+  /* ---- generic blocks ---- */
+  h2{font-size:24px; letter-spacing:-.01em; margin:46px 0 6px;}
+  h2 .num{color:var(--cobalt); font-variant-numeric:tabular-nums;}
+  .lead{color:var(--mist); margin-top:0;}
+  a{color:var(--cobalt);}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em;
+    background:var(--wash); border:1px solid var(--line); padding:1px 5px; border-radius:5px;}
 
-  .page { max-width: 860px; margin: 0 auto; }
+  .tldr{background:var(--paper); border:1px solid var(--line); border-left:6px solid var(--volt);
+    border-radius:12px; padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .tldr h3{margin:0 0 8px; font-size:15px; letter-spacing:.14em; text-transform:uppercase; color:var(--volt-deep);}
+  .tldr p{margin:.4rem 0;}
 
-  .masthead {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 0.5px solid var(--border-strong);
-  }
-  .masthead-left h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
-  .masthead-left p { font-size: 13px; color: var(--text-secondary); }
-  .masthead-badge {
-    background: #0b0b0b;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-top: 4px;
-  }
+  .primer{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:8px 24px 18px; margin-top:14px;}
+  .flow{display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:14px 0 6px;}
+  .pill{background:var(--wash); border:1px solid var(--line); border-radius:999px; padding:6px 14px; font-size:13px; font-weight:600;}
+  .pill.accent{background:var(--bunker); color:#fff;}
+  .arrow{color:var(--mist); font-weight:700;}
 
-  .formula-box {
-    background: var(--surface);
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    margin-bottom: 1.5rem;
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 2;
-  }
-  .formula-box code {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: var(--surface-2);
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: var(--text-primary);
-  }
+  /* ---- problem cards ---- */
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:24px 26px; margin:18px 0; box-shadow:0 1px 2px rgba(0,0,0,.04); position:relative;}
+  .card .head{display:flex; align-items:flex-start; gap:14px;}
+  .badge{flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--bunker); color:var(--volt);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px;}
+  .card h3{margin:2px 0 2px; font-size:21px; letter-spacing:-.01em;}
+  .sev{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    padding:2px 9px; border-radius:999px; vertical-align:middle;}
+  .sev.high{background:#fdecec; color:var(--live); border:1px solid #f6c9c9;}
+  .sev.med{background:#fff3e0; color:var(--amber); border:1px solid #f3d9af;}
 
-  .section-head {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin: 1.75rem 0 0.75rem;
-  }
+  .eli5, .golf{border-radius:10px; padding:14px 16px; margin:14px 0;}
+  .eli5{background:var(--wash); border:1px solid var(--line);}
+  .golf{background:#f3f7ff; border:1px solid #d4e2ff;}
+  .eli5 .tag, .golf .tag{display:block; font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-bottom:6px;}
+  .eli5 .tag{color:var(--mist);}
+  .golf .tag{color:var(--cobalt);}
+  .golf code{background:#e4edff; padding:1px 6px; border-radius:5px; font-size:14px;}
 
-  .players {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 8px;
-    margin-bottom: 1.75rem;
-  }
-  .player-card {
-    background: var(--surface);
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-  }
-  .player-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-  .player-sgi { font-size: 24px; font-weight: 500; color: var(--text-primary); margin: 2px 0; }
-  .player-tier { font-size: 11px; color: var(--text-muted); }
+  .matters{margin-top:12px; padding-left:14px; border-left:3px solid var(--volt);}
+  .matters b{text-transform:uppercase; font-size:12px; letter-spacing:.1em; color:var(--volt-deep);}
 
-  .slider-section {
-    background: var(--surface);
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    margin-bottom: 1.5rem;
-  }
-  .slider-label-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 10px;
-  }
-  .slider-label { font-size: 14px; color: var(--text-secondary); }
-  .slider-current { font-size: 22px; font-weight: 500; color: var(--text-primary); }
-  input[type=range] {
-    width: 100%;
-    height: 4px;
-    accent-color: #0b0b0b;
-    cursor: pointer;
-  }
-  .slider-ticks {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 6px;
-  }
+  .options{margin-top:16px; border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .options .ohead{background:var(--bunker); color:#fff; padding:9px 16px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;}
+  .options .ohead b{color:var(--volt);}
+  .opt{display:flex; gap:12px; padding:13px 16px; border-top:1px solid var(--line);}
+  .opt:first-of-type{border-top:none;}
+  .opt .ltr{flex:0 0 auto; width:26px; height:26px; border-radius:7px; background:var(--wash); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:var(--cobalt);}
+  .opt .obody{flex:1;}
+  .opt .ot{font-weight:700;}
+  .opt .rec{display:inline-block; margin-left:8px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+    color:var(--volt-deep); background:#f3f9d6; border:1px solid #dcebb0; border-radius:999px; padding:1px 9px; vertical-align:middle;}
+  .opt .pc{display:block; font-size:14.5px; color:var(--mist); margin-top:3px;}
+  .opt .pc em{color:var(--ink); font-style:normal; font-weight:600;}
 
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-  .kpi {
-    background: var(--surface);
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-  }
-  .kpi-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .kpi-val { font-size: 24px; font-weight: 500; }
-  .kpi-val.warn { color: var(--warn-text); }
-  .kpi-val.good { color: var(--good-text); }
+  /* ---- tables ---- */
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:15px;}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line);}
+  th{background:var(--wash); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--mist);}
+  td.num, th.num{text-align:right; font-variant-numeric:tabular-nums;}
+  tr.flag td{background:#fdf6f6;}
+  .ok{color:var(--green); font-weight:700;}
+  .no{color:var(--live); font-weight:700;}
 
-  .callout {
-    border-left: 3px solid var(--warn-border);
-    background: var(--warn-bg);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 13px 16px;
-    margin-bottom: 1.5rem;
-    font-size: 13px;
-    color: #501313;
-    line-height: 1.7;
-  }
-  .callout.neutral {
-    border-left-color: #1D9E75;
-    background: #E1F5EE;
-    color: #04342C;
-  }
-  .callout.great {
-    border-left-color: #185FA5;
-    background: #E6F1FB;
-    color: #042C53;
-  }
+  .checklist td:first-child{font-weight:600; white-space:nowrap;}
 
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th {
-    text-align: left;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-muted);
-    padding: 7px 10px;
-    border-bottom: 0.5px solid var(--border-strong);
-    background: var(--surface-2);
-  }
-  td {
-    padding: 8px 10px;
-    border-bottom: 0.5px solid var(--border);
-    color: var(--text-primary);
-    vertical-align: middle;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--surface-2); }
+  /* ---- closing ---- */
+  .note{background:#f1faf2; border:1px solid #c9e9d3; border-left:6px solid var(--green);
+    border-radius:12px; padding:18px 22px; margin-top:18px;}
+  .note h3{margin:0 0 6px; color:var(--green); font-size:15px; letter-spacing:.1em; text-transform:uppercase;}
 
-  .badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .badge-scratch { background: var(--scratch-bg); color: var(--scratch-text); border: 0.5px solid #B4B2A9; }
-  .badge-stroke { background: var(--stroke-bg); color: var(--stroke-text); }
+  footer{margin-top:46px; padding-top:18px; border-top:1px solid var(--line); color:var(--mist); font-size:13px;}
 
-  .step-math { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
-
-  .footer-note {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 1.5rem;
-    line-height: 1.7;
-    padding-top: 1rem;
-    border-top: 0.5px solid var(--border-strong);
-  }
-
-  @media (max-width: 600px) {
-    .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .masthead { flex-direction: column; }
+  @media print{
+    body{background:#fff; font-size:12pt;}
+    .band{margin-bottom:20px;}
+    .card,.tldr,.primer,.note{box-shadow:none; break-inside:avoid;}
+    h2{break-after:avoid;}
+    .wrap{max-width:none; padding:0 0 20px;}
+    a{color:var(--ink); text-decoration:none;}
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="masthead">
-    <div class="masthead-left">
-      <h1>No Tees Tour — SGI handicap review</h1>
-      <p>Illustrative model showing how the current handicap formula behaves across a realistic player pool. Drag the multiplier slider to explore the impact.</p>
+<div class="band">
+  <div class="wrap">
+    <div class="kicker">No Tees Tour · Short Game Index</div>
+    <h1>The SGI Calculations — A Plain-English Review</h1>
+    <p class="sub">Six things worth a second look before we build them, explained simply, with examples.</p>
+    <div class="meta">
+      <span><b>Prepared for</b> &nbsp;Crosshand × NTT</span>
+      <span><b>Topic</b> &nbsp;“NTT - SGI” spec</span>
+      <span><b>Date</b> &nbsp;June 26, 2026</span>
+      <span class="draft">Draft v1 · For review</span>
     </div>
-    <div class="masthead-badge">DRAFT</div>
   </div>
-
-  <div class="formula-box">
-    <strong style="color: var(--text-primary); font-weight: 500;">Formula (reproduced exactly from the SGI spec)</strong><br>
-    Step 1 &nbsp;<code>Match Index = 9 &divide; SGI</code> &nbsp;&rarr;&nbsp;
-    Step 2 &nbsp;<code>Differential = Higher Index &minus; Lower Index</code> &nbsp;&rarr;&nbsp;
-    Step 3 &nbsp;<code>Handicap = (Differential &times; Multiplier) &divide; 2</code>, rounded, capped at 5
-  </div>
-
-  <p class="section-head">Illustrative player pool (10 hypothetical NTT players)</p>
-  <div class="players" id="playerCards"></div>
-
-  <div class="slider-section">
-    <div class="slider-label-row">
-      <span class="slider-label">Multiplier — currently <strong>10</strong> in the spec</span>
-      <span class="slider-current" id="multDisplay">10</span>
-    </div>
-    <input type="range" id="multSlider" min="5" max="60" step="1" value="10">
-    <div class="slider-ticks"><span>5</span><span>15</span><span>25</span><span>35</span><span>45</span><span>60</span></div>
-  </div>
-
-  <div class="kpi-row" id="kpiRow"></div>
-
-  <div id="calloutBox" class="callout"></div>
-
-  <p class="section-head">Matchup results</p>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Player A</th>
-          <th>SGI</th>
-          <th>Player B</th>
-          <th>SGI</th>
-          <th>Gap</th>
-          <th>Handicap awarded</th>
-          <th>The math</th>
-        </tr>
-      </thead>
-      <tbody id="matchBody"></tbody>
-    </table>
-  </div>
-
-  <p class="footer-note" id="footerNote"></p>
-
 </div>
 
-<script>
-const players = [
-  { name: "Jordan", sgi: 71, tier: "Top tier" },
-  { name: "Taylor", sgi: 65, tier: "Strong" },
-  { name: "Morgan", sgi: 60, tier: "Strong" },
-  { name: "Casey", sgi: 55, tier: "Mid" },
-  { name: "Riley", sgi: 50, tier: "Mid" },
-  { name: "Avery", sgi: 45, tier: "Mid" },
-  { name: "Quinn", sgi: 38, tier: "Developing" },
-  { name: "Drew", sgi: 30, tier: "Developing" },
-  { name: "Sage", sgi: 20, tier: "Beginner" },
-  { name: "Alex", sgi: 8, tier: "Beginner" },
-];
+<div class="wrap">
 
-const matchups = [
-  [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],
-  [0,2],[1,3],[2,4],[3,5],[4,6],[5,7],[0,9],[2,6],
-];
+  <div class="tldr">
+    <h3>The 30-second version</h3>
+    <p><b>The arithmetic is correct.</b> Every formula in the document adds up exactly as written. We are <em>not</em> saying anyone did the math wrong.</p>
+    <p><b>Our questions are about design choices</b> — a few places where the rules either don’t match how the game is actually scored in the app, or where the result won’t behave the way we think the teams expect. Each one below has a simple explanation, a real example, and a decision for us to make together.</p>
+    <p style="margin-bottom:0;"><b>Bottom line:</b> none of these are hard to fix. We just want to agree on the answers <em>before</em> we write code, because some of them affect how scores are stored and scaled — and that’s expensive to change later.</p>
+  </div>
 
-const cards = document.getElementById('playerCards');
-players.forEach(p => {
-  const d = document.createElement('div');
-  d.className = 'player-card';
-  d.innerHTML = `<div class="player-name">${p.name}</div><div class="player-sgi">${p.sgi}</div><div class="player-tier">${p.tier}</div>`;
-  cards.appendChild(d);
-});
+  <h2>First, how it’s supposed to work</h2>
+  <p class="lead">In one breath, so the rest makes sense.</p>
+  <div class="primer">
+    <p>Every time a player takes a turn (a chip and maybe a putt), we record what happened. We add those turns up into four “report-card” scores, average them into one number called the <b>SGI</b>, and use the gap between two players’ SGIs to decide if the weaker player should get a few free points (a <b>handicap</b>) to keep the match fair.</p>
+    <div class="flow">
+      <span class="pill">Each turn</span><span class="arrow">→</span>
+      <span class="pill">4 report-card scores</span><span class="arrow">→</span>
+      <span class="pill accent">SGI (0–100)</span><span class="arrow">→</span>
+      <span class="pill">Handicap for the weaker player</span>
+    </div>
+    <p style="margin-bottom:6px;">The four report-card scores are: <b>Up &amp; Down</b> (did you finish in 2 shots?), <b>Circle Accuracy</b> (did your chip land in the close zone?), <b>One-Putt</b> (did you sink your putt?), and <b>Scoring Efficiency</b> (points you earned vs. the most you could).</p>
+  </div>
 
-function calc(sgiA, sgiB, mult) {
-  const hi = Math.max(sgiA, sgiB);
-  const lo = Math.min(sgiA, sgiB);
-  const miHi = 9 / hi;
-  const miLo = 9 / lo;
-  const diff = miLo - miHi;
-  const raw = (diff * mult) / 2;
-  return { diff, raw, final: Math.min(Math.round(raw), 5) };
-}
+  <!-- 1 -->
+  <h2><span class="num">Problem 1.</span> The fairness helper almost never turns on</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">1</div>
+      <div><h3>For normal players the handicap rounds down to zero <span class="sev high">High</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      Imagine a “fairness helper” at a basketball hoop that lowers the rim for the shorter kid — but it only ever moves if one kid is a <em>toddler</em>. Two regular kids of slightly different height? It does nothing. So most of the time, it might as well not be there.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      The handicap is built on <code>9 ÷ SGI</code>, which is a “reciprocal.” The result is that the gap between two good players is tiny, so it rounds away to nothing. The helper only wakes up when one player is a near-beginner.
+      <table>
+        <tr><th>Matchup</th><th class="num">SGI vs SGI</th><th class="num">Handicap given</th></tr>
+        <tr><td>Two strong players</td><td class="num">55 vs 65</td><td class="num"><b>0</b> (scratch)</td></tr>
+        <tr><td>Average gap</td><td class="num">40 vs 60</td><td class="num"><b>0</b> (scratch)</td></tr>
+        <tr><td>Big gap</td><td class="num">20 vs 60</td><td class="num"><b>2</b> points</td></tr>
+        <tr class="flag"><td>The spec’s own example</td><td class="num">6 vs 58</td><td class="num"><b>5</b> points (capped)</td></tr>
+      </table>
+      Note the example pairs an SGI of <b>6</b> (almost the worst score possible) with an average <b>58</b>. That’s the only kind of matchup where the helper does much.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>If most of our players land between, say, 40 and 70, almost every match will be “scratch” and the handicap will rarely change anything. <b>Decision:</b> is that intended? If we want closer matches to also get a nudge, here are three ways to fix it.</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· pick one to discuss</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">Use the SGI gap directly (simplest, most predictable)</span><span class="rec">Suggested start</span>
+          <span class="pc">Drop the <code>9 ÷ SGI</code> step and compute straight from the difference: <em>Handicap = (better SGI − weaker SGI) ÷ 8</em>, capped at 5. A 10-point gap always means the same nudge, whether the players are great or weak. <em>Example:</em> 40 vs 60 → 20 ÷ 8 = 2.5 → <b>2–3 points</b> (it’s 0 today).</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">Keep the current formula, just turn up the dial</span>
+          <span class="pc">Smallest change — keep Crosshand’s <code>9 ÷ SGI</code> shape but raise the multiplier (e.g. swap “× 10 ÷ 2” for roughly “× 20”) so typical gaps land at 1–3 points instead of rounding to zero. <em>Example:</em> 40 vs 60 → about <b>2 points</b>; a 6-vs-58 blowout still hits the cap of 5.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">Use a simple lookup table</span>
+          <span class="pc">Skip the formula and map gaps to points by hand: <em>0–5 → 0, 6–15 → 1, 16–25 → 2, 26–35 → 3…</em> up to the cap. Totally controllable and easy to explain, at the cost of being hand-tuned rather than calculated.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">D</div>
+        <div class="obody">
+          <span class="ot">Decide it’s intentional and leave it</span>
+          <span class="pc">Accept that only lopsided matchups get strokes and nearly everything else is scratch. No code change — but we should choose this <em>on purpose</em>, not by accident.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-function render() {
-  const mult = parseInt(document.getElementById('multSlider').value);
-  document.getElementById('multDisplay').textContent = mult;
+  <!-- 2 -->
+  <h2><span class="num">Problem 2.</span> “Scoring Efficiency” can go over 100% (or never reach it)</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">2</div>
+      <div><h3>The “most points possible” doesn’t match how the game actually scores <span class="sev high">High</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      Imagine a test that’s “out of 10,” but one surprise bonus question is secretly worth 3 points. Ace everything and you score 11 out of 10 — <em>110%</em>. The “out of 10” label was wrong, so the percentage stops making sense.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      The app actually awards <b>3 points</b> for chipping straight into the hole, and at most 2 otherwise. But the spec’s example treats the most-you-can-get as if it were smaller. Three different places disagree about the maximum:
+      <table>
+        <tr><th>Source</th><th>Says max per turn is…</th></tr>
+        <tr><td>The app’s referee screen (live code)</td><td>3 (a hole-out)</td></tr>
+        <tr><td>The data model’s own comment</td><td>2</td></tr>
+        <tr><td>The spec’s worked example (9 ÷ 9)</td><td>1</td></tr>
+      </table>
+      So if a player hole-outs a few times, Scoring Efficiency can read <b>over 100%</b>. And if we instead say the max is 3, a player who plays perfectly but never hole-outs is stuck at <b>67%</b> forever.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>A percentage that can exceed 100% — or can never reach it — will confuse players and break any ranking that assumes 0–100. Below are the ways to make the percentage behave (always 0–100).</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· pick one to discuss</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">For the rating, treat a chip-in as 2 points (not 3)</span><span class="rec">Suggested start</span>
+          <span class="pc">Keep the exciting 3-point hole-out in the live game, but when calculating SGI, cap a turn at 2 (a chip-in counts the same as “in the circle + putt made”). The scale stays a clean <em>0–2 per turn</em>, so 100% is genuinely reachable by playing a perfect short game. <em>Example:</em> 9 turns, best play = 18 points = 100%.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">Make the maximum a true hole-out (3 points)</span>
+          <span class="pc">Set “maximum possible” to 3 per turn, so SEP = points ÷ (turns × 3). The percentage is honest and never tops 100%, but a player who chips close and putts perfectly — yet never holes out — is capped at <em>67%</em>, because holing out is treated as the only way to be “perfect.”</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">Whichever we choose, make all three sources agree</span>
+          <span class="pc">Today the referee code says max 3, the data model’s note says 2, and the spec example implies 1. Pick one canonical points-per-turn table and use the exact same one in the app, the data model, and the spec. This is needed no matter which of A or B we land on.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  let scratches = 0;
-  const tbody = document.getElementById('matchBody');
-  tbody.innerHTML = '';
-  const total = matchups.length;
+  <!-- 3 -->
+  <h2><span class="num">Problem 3.</span> Three of the four scores measure almost the same thing</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">3</div>
+      <div><h3>“Holing the ball” gets counted about three times <span class="sev med">Medium</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      Imagine judging a smoothie on four things: “fruitiness,” “sweetness,” “sugar,” and “taste.” Three of those rise and fall together. So really you’re judging sweetness three times and everything else once — even though it looks like four fair categories.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      When a player sinks the ball, <b>three</b> of the four scores jump at once:
+      <table>
+        <tr><th>The moment you hole the ball…</th><th>…this score goes up</th></tr>
+        <tr><td>You finished in 2 shots or fewer</td><td>Up &amp; Down ↑</td></tr>
+        <tr><td>You made the putt</td><td>One-Putt ↑</td></tr>
+        <tr><td>You earned points</td><td>Scoring Efficiency ↑</td></tr>
+      </table>
+      Meanwhile, chipping it <em>close</em> (but not in) only nudges Circle Accuracy. So “sink it” counts roughly triple, and “great chip” counts once.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>Calling them “four equally weighted categories” sounds balanced, but in practice the index mostly rewards putting/holing. That may be exactly what we want — or we may want to weight chipping more.</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· pick one to discuss</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">Keep all four equal — just confirm it’s on purpose</span><span class="rec">Suggested start</span>
+          <span class="pc">Four simple, equal categories are easy to explain to players and look balanced on a profile. The overlap isn’t fatal — it just means “finishing the hole” is what the rating rewards most, which is arguably the point of a <em>short-game</em> index. No code change; we just decide consciously.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">Re-weight so chipping counts more</span>
+          <span class="pc">Give Circle Accuracy (the one independent measure) a bigger share. <em>Example:</em> Circle Accuracy 40%, the other three 20% each. Keeps all four categories but stops putting/holing from dominating.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">Collapse to two non-overlapping measures</span>
+          <span class="pc">Replace the three holing-related scores with one “Conversion” score, and keep “Circle Accuracy” for chipping — two things that measure genuinely different skills. Cleaner statistically, but a bigger change to the player-facing breakdown.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  matchups.forEach(([ai, bi]) => {
-    const a = players[ai], b = players[bi];
-    const gap = Math.abs(a.sgi - b.sgi);
-    const weakerName = a.sgi < b.sgi ? a.name : b.name;
-    const h = calc(a.sgi, b.sgi, mult);
-    if (h.final === 0) scratches++;
+  <!-- 4 -->
+  <h2><span class="num">Problem 4.</span> Some players break the math by being too good (or too new)</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">4</div>
+      <div><h3>“Divide by zero” for great chippers and brand-new players <span class="sev med">Medium</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      Ask someone, “What percent of your free throws went in?” If they <em>never took one</em>, the honest answer isn’t 0% — there’s no answer at all. Dividing by zero just breaks.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      One-Putt % is <code>putts made ÷ putts attempted</code>. A player who chips the ball <em>into the hole</em> every time never attempts a putt — so the math becomes <code>0 ÷ 0</code>, which is undefined. Ironically, the best chipper gets a broken putting stat. The same thing happens for a <b>brand-new player</b> who hasn’t taken a single turn — every score is <code>0 ÷ 0</code>, so we can’t even produce an SGI for their first match.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>Without a rule, these players show garbage stats or crash a calculation. We need a rule for “no data yet.”</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· these combine — decide each</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">Empty score shows “—”, never 0%</span><span class="rec">Suggested</span>
+          <span class="pc">If a score has nothing to divide (e.g. zero putts attempted), show a dash and leave it out of the average — don’t pretend it’s 0%. <em>Example:</em> a great chipper who never has to putt shows One-Putt “—”, not a misleading 0%.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">First-timers get a starting SGI</span><span class="rec">Suggested</span>
+          <span class="pc">Give a brand-new player a baseline (e.g. <em>50</em>, the middle of the scale) so the handicap math always has two numbers to work with. We just need to agree the starting value.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">No handicap until a player is “established”</span>
+          <span class="pc">Mark players “provisional” until they’ve logged enough turns (e.g. <em>18–27</em>); their early matches are played scratch. Avoids handing out strokes based on one lucky or unlucky round.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    const badge = h.final === 0
-      ? `<span class="badge badge-scratch">Scratch</span>`
-      : `<span class="badge badge-stroke">+${h.final} to ${weakerName}</span>`;
+  <!-- 5 -->
+  <h2><span class="num">Problem 5.</span> The example player couldn’t exist in real life</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">5</div>
+      <div><h3>100% on the total but 44% on every part — impossible together <span class="sev med">Medium</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      A student says, “I got 100% on the whole test… but only 44% on every single section.” That can’t be true at the same time. If every section was 44%, the total has to be about 44% too.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      The sample player in the spec has Up &amp; Down 44%, Circle 44%, One-Putt 44% — but Scoring Efficiency <b>100%</b>. Scoring Efficiency at 100% means the player earned the maximum on <em>every</em> turn, which would force the other three near 100% too. The numbers are fine for <em>teaching the formula</em>, but they don’t describe a real golfer.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>No code problem here — just a heads-up so nobody on either team treats that 44 / 44 / 44 / 100 → SGI 58 line as a realistic player or uses it to sanity-check real data. Nothing to decide here — just tidy up the final spec.</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· housekeeping for the final spec</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">Write one realistic, consistent example</span><span class="rec">Suggested</span>
+          <span class="pc">Once Problems 2–4 are settled, build a sample player where the four scores and the SGI actually fit together (best done <em>after</em> those decisions, since the right numbers depend on them).</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">For now, just label it “illustrative only”</span>
+          <span class="pc">Cheapest fix — add a one-line caption to the 44 / 44 / 44 / 100 example saying it shows the formula’s mechanics, not a real player.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">Show two examples — a strong and a weak player</span>
+          <span class="pc">Include one high-SGI and one low-SGI player, both internally consistent, so readers see the realistic range the rating produces.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${a.name}</td><td>${a.sgi}</td>
-      <td>${b.name}</td><td>${b.sgi}</td>
-      <td>${gap}</td>
-      <td>${badge}</td>
-      <td class="step-math">diff ${h.diff.toFixed(3)} &times; ${mult} &divide; 2 = ${h.raw.toFixed(2)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  <!-- 6 -->
+  <h2><span class="num">Problem 6.</span> The handicap uses a “9” that the game doesn’t always use</h2>
+  <div class="card">
+    <div class="head">
+      <div class="badge">6</div>
+      <div><h3>A measuring stick whose length changes <span class="sev med">Medium</span></h3></div>
+    </div>
+    <div class="eli5">
+      <span class="tag">Imagine this</span>
+      Imagine measuring everyone’s height with a ruler that’s sometimes 9 inches and sometimes 11 inches long, and that even shrinks while you measure. Your “height” depends on the ruler, not just on you.
+    </div>
+    <div class="golf">
+      <span class="tag">In golf terms</span>
+      The handicap formula multiplies by a fixed <code>Target Score = 9</code>. But in the app the target isn’t always 9: semifinals and finals play to <b>11</b>, and the target even <b>drops by 1</b> on a scoreless hole. Because the handicap scales directly with that number, using 11 instead of 9 makes every handicap about <b>22% bigger</b>.
+    </div>
+    <div class="matters"><b>Why it matters</b><br>The same two players could get a different handicap depending on the round — for a reason that has nothing to do with their skill. Three ways to settle it.</div>
+    <div class="options">
+      <div class="ohead">Options to consider <b>· pick one to discuss</b></div>
+      <div class="opt">
+        <div class="ltr">A</div>
+        <div class="obody">
+          <span class="ot">Fix the number at 9, always</span><span class="rec">Suggested start</span>
+          <span class="pc">Use 9 in the handicap formula no matter the round, even when the round plays to 11. A player’s handicap then depends only on skill, not on which round they happen to be in. Simple and stable.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">B</div>
+        <div class="obody">
+          <span class="ot">Follow the round’s real target on purpose</span>
+          <span class="pc">Use 9 or 11 to match the round being played, accepting that higher-stakes rounds give slightly bigger strokes. Fine — as long as it’s a deliberate choice, not an accident.</span>
+        </div>
+      </div>
+      <div class="opt">
+        <div class="ltr">C</div>
+        <div class="obody">
+          <span class="ot">Remove the number entirely</span>
+          <span class="pc">If we adopt <b>Option A in Problem 1</b> (handicap straight from the SGI gap), there’s no “÷ SGI” and no target multiplier at all — and this whole problem simply disappears. The problems are linked, so it’s worth deciding them together.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  const pct = Math.round((scratches / total) * 100);
-  const awarded = total - scratches;
+  <!-- summary -->
+  <h2>The decisions, on one page</h2>
+  <p class="lead">What we need to agree before building. The first two carry the most weight.</p>
+  <table class="checklist">
+    <tr><th>#</th><th>The problem, in a phrase</th><th>What we need to decide</th></tr>
+    <tr class="flag"><td>1</td><td>Handicap rarely turns on</td><td>Pick a fix (options A–D): use the SGI gap directly, turn up the dial, a lookup table, or leave it on purpose</td></tr>
+    <tr class="flag"><td>2</td><td>Scoring Efficiency scale is off</td><td>Pick a scale (options A–C) and make the app, data model, and spec all agree</td></tr>
+    <tr><td>3</td><td>Four scores overlap</td><td>Confirm we’re OK that putting/holing counts ~3×</td></tr>
+    <tr><td>4</td><td>Divide-by-zero / new players</td><td>Rule for “no data yet” and a starting SGI for first-timers</td></tr>
+    <tr><td>5</td><td>Example can’t happen</td><td>Swap in a realistic sample (no code impact)</td></tr>
+    <tr><td>6</td><td>“9” isn’t always 9</td><td>Fix the handicap’s target number across all rounds</td></tr>
+  </table>
 
-  document.getElementById('kpiRow').innerHTML = `
-    <div class="kpi"><div class="kpi-label">Total matchups</div><div class="kpi-val">${total}</div></div>
-    <div class="kpi"><div class="kpi-label">Played scratch</div><div class="kpi-val warn">${scratches}</div></div>
-    <div class="kpi"><div class="kpi-label">Handicap awarded</div><div class="kpi-val good">${awarded}</div></div>
-    <div class="kpi"><div class="kpi-label">Scratch rate</div><div class="kpi-val ${pct >= 50 ? 'warn' : 'good'}">${pct}%</div></div>
-  `;
+  <div class="note">
+    <h3>What’s already good</h3>
+    <p style="margin:.3rem 0;">The structure is genuinely strong: four simple report-card scores → one number → a fairness handicap is easy to explain to players, and the referee screen already collects the right detail at the moment of play. The fixes above are about <b>agreeing on definitions</b>, not redesigning the system. Once we settle problems 1–2, the rest fall into place quickly.</p>
+    <p style="margin:.3rem 0 0;"><b>Suggested next step:</b> a short working session with Crosshand (formula intent) and NTT (player experience) to answer the six decisions, then we lock the spec and build.</p>
+  </div>
 
-  const callout = document.getElementById('calloutBox');
-  if (mult <= 12) {
-    callout.className = 'callout';
-    callout.innerHTML = `<strong>At multiplier ${mult}:</strong> ${scratches} of ${total} matchups produce zero strokes — a ${pct}% scratch rate. Players with meaningful skill gaps compete without any adjustment. The formula is mathematically correct, but the multiplier is too low to produce useful separation across a realistic player pool.`;
-  } else if (pct >= 40) {
-    callout.className = 'callout';
-    callout.innerHTML = `<strong>At multiplier ${mult}:</strong> Still ${pct}% scratch. Competitive matchups between similarly skilled players continue to produce no handicap. Try pushing the multiplier higher to find the functional range.`;
-  } else if (pct > 10) {
-    callout.className = 'callout neutral';
-    callout.innerHTML = `<strong>At multiplier ${mult}:</strong> Scratch rate drops to ${pct}%. Most competitive matchups now produce at least 1 stroke of separation. This is approaching the functional range — validate this feels right against expected NTT player skill gaps.`;
-  } else {
-    callout.className = 'callout great';
-    callout.innerHTML = `<strong>At multiplier ${mult}:</strong> Nearly every matchup produces a handicap. Confirm this level of sensitivity is appropriate — at this setting even very close skill gaps receive strokes.`;
-  }
+  <footer>
+    No Tees Tour — Short Game Index review · Draft v1, June 26, 2026 · Prepared for internal Crosshand × NTT discussion.<br>
+    This document raises design questions only; it does not change any agreed formula. Confidential — not for distribution outside the review group.
+  </footer>
 
-  document.getElementById('footerNote').textContent =
-    `All SGI scores are illustrative only. No real NTT player data was used. The formula above is reproduced exactly from the SGI spec document. The only variable being adjusted is the multiplier constant (currently set to 10 in the spec). No other element of the patented formula changes. Once real player SGI scores are available, this model can be recalibrated against actual data to confirm the right multiplier value.`;
-}
-
-document.getElementById('multSlider').addEventListener('input', render);
-render();
-</script>
+</div>
 </body>
 </html>
