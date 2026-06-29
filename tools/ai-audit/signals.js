@@ -79,13 +79,14 @@ export async function getForwardSignal(pageHtml, positioning, seoGrade, findings
     "Sound like a knowledgeable advisor pointing at something the owner has not seen yet, not a tool generating generic advice. " +
     "Be encouraging but direct. Never be harsh. Never use the word audit. Never be generic. " +
     "If you cannot generate a specific confident observation based on what you read, return nothing. " +
-    "Write exactly three complete sentences following this structure: " +
-    "sentence one names the single most important observation about this site, " +
-    "sentence two explains why it matters for this specific business context, " +
-    "sentence three states the concrete implication or opportunity the owner can act on. " +
-    "If your output is more than three sentences, return only the first three complete sentences. " +
-    "Do not truncate output under any circumstances — every sentence must be complete. " +
-    "Never use em dashes, hyphens used as dashes, or asterisks for emphasis anywhere in your response.";
+    "Write exactly three complete sentences. Each sentence must be under 30 words. " +
+    "Use plain, direct language a business owner can understand without marketing experience. " +
+    "No subordinate clauses. No stacked ideas in a single sentence. One thought per sentence. " +
+    "Sentence one: name the single most important observation about this site. " +
+    "Sentence two: explain why it matters for this specific business in one plain sentence. " +
+    "Sentence three: state the one concrete thing the owner can act on. " +
+    "If your output is more than three sentences, return only the first three. " +
+    "Do not truncate mid-sentence. Never use em dashes, hyphens as dashes, or asterisks.";
 
   const userContent =
     `Page content: ${plainText}\n\n` +
@@ -145,8 +146,11 @@ export async function getCompareSignal(originalData, admiredHtml, admiredPositio
     "specifically referencing what the admired site does well and how that specific move applies to the prospect's situation. " +
     "Be concrete: name the specific thing the admired site does and connect it directly to what the prospect can do. " +
     "Frame it as an opportunity, not a critique. Sound like a knowledgeable advisor, not a generic tool. " +
-    "Exactly two sentences. Hard limit — do not add a third. " +
-    "Never use em dashes, hyphens used as dashes, or asterisks for emphasis.";
+    "Write exactly two complete sentences. Each sentence must be under 30 words. " +
+    "Plain language only. One thought per sentence. No subordinate clauses. " +
+    "Sentence one: name the specific thing the admired site does well. " +
+    "Sentence two: state the one concrete move the prospect can apply to their own site. " +
+    "Do not truncate mid-sentence. Never use em dashes, hyphens as dashes, or asterisks.";
 
   const userContent =
     `Prospect SEO grade: ${originalData.seoGrade || "unknown"}\n` +
@@ -233,16 +237,15 @@ export async function getEnterpriseBenchmarkSignal(html, brandName, dimensions, 
   const systemPrompt =
     "You are a senior marketing strategist. " +
     "A private company operator is studying " + brandName + " as a benchmark. " +
-    "Based on the enterprise scoring data provided, generate exactly three sentences following this structure: " +
-    "sentence one names the single most important observation about this brand's digital presence, " +
-    "sentence two explains why it matters for a private operator studying this benchmark, " +
-    "sentence three states the concrete implication or move the operator can apply to their own site. " +
-    "Reference the specific dimension where the brand is strongest or weakest. " +
-    "Frame it as an insight the operator can act on, not a critique of the brand. " +
-    "Write exactly three complete sentences. " +
-    "If your output is more than three sentences, return only the first three complete sentences. " +
-    "Do not truncate output under any circumstances — every sentence must be complete. " +
-    "Never use em dashes, hyphens used as dashes, or asterisks.";
+    "Based on the enterprise scoring data provided, write exactly three complete sentences. " +
+    "Each sentence must be under 30 words. " +
+    "Use plain, direct language a business owner can understand without marketing experience. " +
+    "No subordinate clauses. No stacked ideas in a single sentence. One thought per sentence. " +
+    "Sentence one: name the single most important observation about this site. " +
+    "Sentence two: explain why it matters for this specific business in one plain sentence. " +
+    "Sentence three: state the one concrete thing the owner can act on. " +
+    "If your output is more than three sentences, return only the first three. " +
+    "Do not truncate mid-sentence. Never use em dashes, hyphens as dashes, or asterisks.";
 
   const userContent =
     `Brand: ${brandName} (${url})\n` +

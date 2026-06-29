@@ -4,12 +4,13 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-ALLOW_ORIGIN = "*"
+ALLOW_ORIGIN = "https://skalatsky.com"
 FINDINGS_MODE = "rules"
 
 [[kv_namespaces]]
 binding = "AUDITS"
-id = "af67756957b3402d9e81d1c1ad3d4179"
+id = "5049da225635469891c4a5f6c3abf356"
+preview_id = "af67756957b3402d9e81d1c1ad3d4179"
 
 [browser]
 binding = "BROWSER"

@@ -95,12 +95,23 @@ export async function fetchWithScrapfly(url, apiKey) {
     "https://api.scrapfly.io/scrape" +
     "?key=" + encodeURIComponent(apiKey) +
     "&url=" + encodeURIComponent(url) +
-    "&render_js=true&asp=true";
-  const res = await fetch(endpoint, { signal: AbortSignal.timeout(90000) });
-  if (!res.ok) throw new Error(`Scrapfly HTTP ${res.status}`);
-  const data = await res.json();
-  if (!data?.result?.success) throw new Error(`Scrapfly error: ${JSON.stringify(data?.result?.error || data?.message || "unknown")}`);
-  return data.result.content || null;
+    "&render_js=true&asp=true&country=us";
+  const maxAttempts = 3;
+  let lastErr;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    if (attempt > 0) await new Promise(r => setTimeout(r, attempt * 2000));
+    try {
+      const res = await fetch(endpoint, { signal: AbortSignal.timeout(90000) });
+      if (!res.ok) throw new Error(`Scrapfly HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data?.result?.success) throw new Error(`Scrapfly error: ${JSON.stringify(data?.result?.error || data?.message || "unknown")}`);
+      return data.result.content || null;
+    } catch (e) {
+      lastErr = e;
+      console.warn(`Scrapfly attempt ${attempt + 1}/${maxAttempts} failed:`, String(e));
+    }
+  }
+  throw lastErr;
 }
 
 export function isBlockPage(html) {

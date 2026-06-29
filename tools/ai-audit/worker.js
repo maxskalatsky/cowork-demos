@@ -2,7 +2,37 @@ import { dataForSeoOnPage, fetchAgentSignals, detectJsFramework, extractHtmlMeta
 import { scoreSeo, letterFromScore, scorePositioning, scoreAgentReadiness, buildRulesReport, scoreEnterprise, resolveProfile } from "./scorer.js";
 import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude, getEnterpriseBenchmarkSignal } from "./signals.js";
 
-const DEV_MODE = true; // disable KV email gate in dev; set false before promoting to production
+const DEV_MODE = false; // bypass KV email gate during dev testing; set false before promoting to production
+
+async function logToNotion(env, { businessName, email, url, seoGrade, agentLevel }) {
+  if (!env.NOTION_API_KEY) return;
+  const today = new Date().toISOString().split("T")[0];
+  const props = {
+    "Prospect Name": { title: [{ text: { content: businessName || "" } }] },
+    "Prospect Email": { email: email || null },
+    "Prospect Company": { rich_text: [{ text: { content: businessName || "" } }] },
+    "Prospect URL": { url: url || null },
+    "Signal Date": { date: { start: today } },
+  };
+  if (seoGrade) props["SEO Grade"] = { select: { name: seoGrade } };
+  if (agentLevel) props["Agent Level"] = { select: { name: agentLevel } };
+  try {
+    await fetch("https://api.notion.com/v1/pages", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.NOTION_API_KEY}`,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        parent: { database_id: "cd12287db4f143a3931f09a8ac8f55c8" },
+        properties: props,
+      }),
+    });
+  } catch (e) {
+    console.warn("Notion log failed:", String(e));
+  }
+}
 
 async function classifyEntity(url, env) {
   if (!env.ANTHROPIC_API_KEY) return "private_company";
@@ -113,7 +143,7 @@ export default {
             email, url: target, timestamp: new Date().toISOString(), entityType: "known_brand",
           }));
         }
-
+        await logToNotion(env, { businessName: brand, email, url: target, seoGrade: null, agentLevel: null });
         const fwd = env.ANTHROPIC_API_KEY
           ? await getEnterpriseBenchmarkSignal(extra.html || "", brand, enterpriseScores, target, env)
           : null;
@@ -174,14 +204,11 @@ export default {
       // Log audit to KV
       if (env.AUDITS) {
         await env.AUDITS.put(email, JSON.stringify({
-          email,
-          url: target,
-          timestamp: new Date().toISOString(),
-          seoScore: scores.total,
-          seoGrade,
-          agentLevel: agent.level,
+          email, url: target, timestamp: new Date().toISOString(),
+          seoScore: scores.total, seoGrade, agentLevel: agent.level,
         }));
       }
+      await logToNotion(env, { businessName: brand, email, url: target, seoGrade, agentLevel: agent.level });
 
       // Forward Signal — Claude-generated opportunity observation
       if (env.ANTHROPIC_API_KEY) {
