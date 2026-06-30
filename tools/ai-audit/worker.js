@@ -4,6 +4,23 @@ import { inferBusinessType, getForwardSignal, getCompareSignal, polishWithClaude
 
 const DEV_MODE = false; // bypass KV email gate during dev testing; set false before promoting to production
 
+const ALLOWED_EMAILS = [
+  "max.skalatsky@gmail.com",
+  "max@skalatsky.com",
+  "brett@skalatsky.com",
+  "justin@skalatsky.com",
+  "mari@skalatsky.com",
+  "esteban@skalatsky.com",
+  "kwallnofer@gmail.com",
+  "gkboko@gmail.com",
+  "yukiuk@hotmail.com",
+  "harry00jordan@gmail.com",
+  "agurock1@verizon.net",
+  "elach10@gmail.com",
+  "christopheraudie@gmail.com",
+  "john22harrison77@gmail.com",
+].map(e => e.toLowerCase());
+
 async function logToNotion(env, { businessName, email, url, seoGrade, agentLevel }) {
   if (!env.NOTION_API_KEY) return;
   const today = new Date().toISOString().split("T")[0];
@@ -118,7 +135,8 @@ export default {
     }
 
     // One free Signal per email — check KV before running anything expensive
-    if (!DEV_MODE && env.AUDITS) {
+    const isAllowlisted = ALLOWED_EMAILS.includes(email);
+    if (!DEV_MODE && !isAllowlisted && env.AUDITS) {
       const prior = await env.AUDITS.get(email);
       if (prior) {
         return json({ error: "You have already run a free Signal. Email signal@skalatsky.com to discuss your results." }, 429, cors);

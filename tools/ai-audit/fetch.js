@@ -101,11 +101,17 @@ export async function fetchWithScrapfly(url, apiKey) {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     if (attempt > 0) await new Promise(r => setTimeout(r, attempt * 2000));
     try {
+      const t0 = Date.now();
       const res = await fetch(endpoint, { signal: AbortSignal.timeout(90000) });
+      const elapsed = Date.now() - t0;
       if (!res.ok) throw new Error(`Scrapfly HTTP ${res.status}`);
       const data = await res.json();
       if (!data?.result?.success) throw new Error(`Scrapfly error: ${JSON.stringify(data?.result?.error || data?.message || "unknown")}`);
-      return data.result.content || null;
+      const r = data.result;
+      console.log(`[Scrapfly] attempt=${attempt+1} status=${r.status_code} elapsed=${elapsed}ms render_js=${r.config?.render_js} country=${r.config?.country} asp=${r.config?.asp} ip_country=${r.isp?.geo?.country || "?"} content_len=${(r.content||"").length} cost=${r.cost} url=${r.url}`);
+      const titleMatch = (r.content || "").match(/<title[^>]*>([^<]*)<\/title>/i);
+      console.log(`[Scrapfly] page_title="${(titleMatch||[])[1]||""}" content_snippet=${(r.content||"").slice(0,200).replace(/\s+/g," ")}`);
+      return r.content || null;
     } catch (e) {
       lastErr = e;
       console.warn(`Scrapfly attempt ${attempt + 1}/${maxAttempts} failed:`, String(e));

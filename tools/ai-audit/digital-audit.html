@@ -276,7 +276,7 @@ p.sub{font-size:14px;color:#777;margin:0 0 32px;}
     var q1Sel=document.querySelector('input[name="sa-q1"]:checked');
     var q2Sels=Array.from(document.querySelectorAll('input[name="sa-q2"]:checked'));
     var q3Sels=Array.from(document.querySelectorAll('input[name="sa-q3"]:checked'));
-    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url:u.href,email:emailVal,entityType:q1Sel?q1Sel.value:null,primaryVisitor:q2Sels.map(function(e){return e.value;}),siteGoal:q3Sels.map(function(e){return e.value;})}) })
+    fetch(SA_WORKER_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, signal:AbortSignal.timeout(20000), body:JSON.stringify({url:u.href,email:emailVal,entityType:q1Sel?q1Sel.value:null,primaryVisitor:q2Sels.map(function(e){return e.value;}),siteGoal:q3Sels.map(function(e){return e.value;})}) })
       .then(function(res){ var s=res.status; return res.json().then(function(d){ d._s=s; return d; }); })
       .then(function(rep){
         if(rep._s===429){
