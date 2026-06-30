@@ -149,7 +149,10 @@ export default {
     try {
       // ── ENTERPRISE PATH (known_brand) ──────────────────────────────────────
       if (entityType === "known_brand") {
-        const extra = await fetchAgentSignals(target, env);
+        const extra = await Promise.race([
+          fetchAgentSignals(target, env),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("fetch timeout")), 25000))
+        ]);
         let rawPage = { checks: {}, meta: {} };
         try { rawPage = await dataForSeoOnPage(target, env); } catch {}
 
