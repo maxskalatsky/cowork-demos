@@ -5,979 +5,727 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recreation Services — Els for Autism</title>
 
-  <!-- Bootstrap 4.5 — matches what els site loads -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-
-  <!-- Font Awesome 6 (kit.fontawesome.com/e6d3b009fd.js is their kit; using cdnjs fallback for local preview) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Google Fonts: Bitter (headings) + Lato (body) — matches els site -->
-  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-
   <style>
-    /* ══════════════════════════════════════════════════════════
-       EXTRACTED ELS DESIGN SYSTEM
-       Source: wpo-minify-header-d3ce0f3e.min.css (verbatim where possible)
-    ══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════
+       VERBATIM FROM wpo-minify-header-d3ce0f3e.min.css
+    ═══════════════════════════════════════════════════════════ */
 
-    /* ── Buttons ────────────────────────────────────────────── */
-    .grad-button {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      font-size: 1em;
-      color: #fff;
-      border-radius: 6px;
-      padding: 1em 3em;
-      background-size: 200% auto;
-      color: #fff;
-      box-shadow: 0 4px 6px rgb(50 50 93 / .11), 0 1px 3px rgb(0 0 0 / .08);
-      background-image: linear-gradient(to right, #0047ba 0%, #098bd1 50%, #0047ba 100%);
-      transition: 0.5s;
-      border: 0;
-      margin-bottom: 10px;
-      box-shadow: rgb(50 50 93 / .25) 0 6px 12px -2px, rgb(0 0 0 / .3) 0 3px 7px -3px;
-      font-weight: bold;
-      font-family: 'Lato', sans-serif;
-      cursor: pointer;
-    }
-    .grad-button:hover {
-      background-position: right center;
-      border: 0;
-      color: #fff;
-      text-decoration: none;
-    }
+    /* grad-button */
+    .grad-button { display: block; text-align: center; text-decoration: none; font-size: 1em; color: #fff; border-radius: 6px; padding: 1em 3em; background-size: 200% auto; box-shadow: rgb(50 50 93 / .25) 0 6px 12px -2px, rgb(0 0 0 / .3) 0 3px 7px -3px; background-image: linear-gradient(to right, #0047ba 0%, #098bd1 50%, #0047ba 100%); transition: 0.5s; border: 0; margin-bottom: 10px; font-weight: bold; font-family: Lato, Arial; }
+    .grad-button:hover { background-position: right center; border: 0; color: #fff; text-decoration: none; }
     .grad-button:focus { outline: none !important; }
+    .grad-button-teal { background-image: linear-gradient(to right, #098bd1 0%, #07acc3 50%, #098bd1 100%); }
+    .grad-button-short { width: auto; display: inline-block; }
 
-    .grad-button-teal {
-      box-shadow: 0 4px 6px rgb(50 50 93 / .11), 0 1px 3px rgb(0 0 0 / .08);
-      background-image: linear-gradient(to right, #098bd1 0%, #07acc3 50%, #098bd1 100%);
-    }
+    /* entry-header hero */
+    .entry-header { text-align: center; background-color: #0047ba; margin-bottom: 0; background: url('../reference/els-homepage_files/cc_top_render.jpg') center 38% no-repeat #0047ba; background-size: cover !important; }
+    .entry-header-cover { padding: 110px 0 100px !important; height: 100%; background: linear-gradient(79deg, rgb(1 172 195 / .7) 0%, rgb(31 25 97) 150%); }
+    .entry-header h1.entry-title { font-size: 56px; color: #fff; font-weight: 300; max-width: 80%; margin: 0 auto 16px; font-family: 'Bitter', serif; line-height: 1.1; }
+    h6#parent_title { font-family: Lato, Arial; font-size: 18px !important; color: #fff !important; text-transform: uppercase; text-align: center; letter-spacing: 10px; font-weight: 400; margin-bottom: 14px; display: block !important; opacity: .88; }
+    .entry-content p { margin-bottom: 16px; }
+    hr { margin-top: 1.6rem !important; margin-bottom: 1.6rem !important; }
 
-    .grad-button-short {
-      width: auto;
-      display: inline-block;
-    }
+    /* naccs — verbatim rules */
+    .naccs .menu { background-color: #fafafa; border-top: 1px solid #e2e3e4; }
+    .naccs .menu div { color: #0047ba; cursor: pointer; position: relative; vertical-align: middle; font-weight: 700; transition: 1s all cubic-bezier(.075,.82,.165,1); border-bottom: 1px solid #e2e3e4; border-left: 1px solid #e2e3e4; border-right: 1px solid #e2e3e4; padding: 0 !important; }
+    .naccs .menu div span.light { height: 10px; width: 10px; position: absolute; top: 18px; left: 15px; background-color: #07acc3; border-radius: 100%; transition: 1s all cubic-bezier(.075,.82,.165,1); z-index: 1; pointer-events: none; }
+    .naccs .menu div.active span.light { background-color: #07acc3; left: 0; height: 100%; width: 3px; top: 0; border-radius: 0; }
+    .naccs .menu div.active { color: #07acc3; background-color: #fff; border-right: 0; }
+    .thdiv a { padding: 13px 16px 13px 40px; display: block; color: #0047ba; text-decoration: none; font-weight: 700; font-size: 14px; font-family: Lato, Arial; line-height: 1.3; }
+    .thdiv.active > span > a { color: #07acc3; }
+    .thdiv a:hover { color: #07acc3; text-decoration: none; }
+    .subanchor { padding: 5px 14px 5px 40px !important; font-style: italic; font-weight: 300 !important; color: #0a8bd1 !important; display: block; font-size: 12px; text-decoration: none; }
 
-    /* ── Entry-header hero (interior page pattern) ──────────── */
-    .entry-header {
-      text-align: center;
-      background-color: #0047ba;
-      margin-bottom: 0;
-      background: url('../reference/els-homepage_files/cc_top_render.jpg') center 40% no-repeat #0047ba;
-      background-size: cover !important;
-    }
-    .entry-header-cover {
-      padding: 110px 0 100px !important;
-      height: 100%;
-      background: linear-gradient(79deg, rgb(1 172 195 / .72) 0%, rgb(31 25 97 / .9) 150%);
-    }
-    .entry-header h1 {
-      font-size: 56px;
-      color: #fff;
-      font-weight: 300;
-      max-width: 80%;
-      margin: 0 auto 22px;
-      font-family: 'Bitter', serif;
-      line-height: 1.15;
-    }
+    /* gc grid — verbatim */
+    .gc { display: inline-block; margin-right: -.25em; min-height: 1px; padding-left: 40px; vertical-align: top; }
+    .gc--1-of-3 { width: 26%; padding-left: 0 !important; }
+    .gc--2-of-3 { width: 74%; }
 
-    /* ── Kicker + subtitle ──────────────────────────────────── */
-    #parent_title {
-      font-size: 18px;
-      color: #fff;
-      text-transform: uppercase;
-      text-align: center;
-      letter-spacing: 10px;
-      font-family: 'Lato', sans-serif;
-      font-weight: 400;
-      margin-bottom: 18px;
-      opacity: .88;
-    }
-    .parent_sub_title {
-      color: #fff !important;
-      font-size: 20px;
-      font-family: 'Lato', sans-serif;
-      max-width: 620px;
-      margin: 0 auto 30px;
-      opacity: .9;
-      line-height: 1.6;
-    }
+    /* nacc content list — verbatim + display override for self-contained comp */
+    ul.nacc { position: relative; list-style: none; margin: 0; padding: 0; }
+    ul.nacc li.contentli { list-style: none; display: none; padding: 4px 0 24px 28px; }
+    ul.nacc li.contentli.active { display: block; }
+    ul.nacc li p { margin: 0; }
+    .extrainfo { margin: 20px 0; }
 
-    /* ── WP block patterns ──────────────────────────────────── */
-    hr.wp-block-separator {
-      border: none;
-      border-top: 1px solid rgba(0, 0, 0, .1);
-      margin: 0;
-    }
-    .wp-block-columns {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      align-items: flex-start;
-    }
-    .wp-block-column { flex: 1; min-width: 220px; }
-
-
-    /* ══════════════════════════════════════════════════════════
-       PAGE BASE
-    ══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════
+       BASE
+    ═══════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; }
-
-    body {
-      font-family: 'Lato', sans-serif;
-      color: #333;
-      background: #fff;
-      font-size: 16px;
-      line-height: 1.68;
-    }
+    body { font-family: Lato, Arial; color: #333; background: #fff; font-size: 16px; line-height: 1.68; }
     h2, h3, h4, h5 { font-family: 'Bitter', serif; }
     a { color: #098bd1; }
 
+    /* draft banner */
+    .draft-banner { background: #fff3cd; border-bottom: 3px solid #ffc107; padding: 10px 20px; text-align: center; font-size: 11.5px; font-weight: 900; color: #7a5c00; letter-spacing: .07em; text-transform: uppercase; font-family: Lato, Arial; }
 
-    /* ══════════════════════════════════════════════════════════
-       DRAFT BANNER
-    ══════════════════════════════════════════════════════════ */
-    .draft-banner {
-      background: #fff3cd;
-      border-bottom: 3px solid #ffc107;
-      padding: 10px 20px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 900;
-      color: #7a5c00;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      font-family: 'Lato', sans-serif;
-    }
-
-
-    /* ══════════════════════════════════════════════════════════
-       BREADCRUMB
-    ══════════════════════════════════════════════════════════ */
-    .els-breadcrumb {
-      background: #eef1f7;
-      border-bottom: 1px solid #dde3ec;
-      padding: 11px 0;
-      font-size: 13px;
-      color: #555;
-    }
+    /* breadcrumb */
+    .els-breadcrumb { background: #eef1f7; border-bottom: 1px solid #dde3ec; padding: 10px 0; font-size: 13px; color: #555; }
     .els-breadcrumb a { color: #0047ba; text-decoration: none; font-weight: 600; }
     .els-breadcrumb a:hover { text-decoration: underline; }
     .els-breadcrumb .sep { margin: 0 8px; color: #aab; }
 
+    /* hero extras */
+    .hero-sub { color: rgba(255,255,255,.88); font-size: 17px; max-width: 580px; margin: 0 auto 22px; line-height: 1.65; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero-btns .grad-button { min-width: 190px; margin-bottom: 0; padding: .8em 2em; }
 
-    /* ══════════════════════════════════════════════════════════
-       SECTION SHELLS
-    ══════════════════════════════════════════════════════════ */
-    .section-panel        { padding: 60px 0; background: #fff; }
-    .section-panel-alt    { padding: 60px 0; background: #f6f8fc; }
+    /* ═══════════════════════════════════════════════════════════
+       AQUATICS CALLOUT
+    ═══════════════════════════════════════════════════════════ */
+    .aq-callout { background: #1f1961; border-top: 4px solid #ffca7b; padding: 26px 0; }
+    .aq-eyebrow { font-family: Lato, Arial; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: .18em; color: #ffca7b; display: block; margin-bottom: 6px; }
+    .aq-callout h3 { font-family: 'Bitter', serif; color: #fff; font-size: 20px; margin: 0 0 8px; font-weight: 400; }
+    .aq-callout p { color: rgba(255,255,255,.88); font-size: 15px; margin: 0 0 14px; line-height: 1.7; max-width: 820px; }
+    .aq-link { color: #ffca7b; font-weight: 700; font-size: 13px; text-decoration: none; cursor: pointer; }
+    .aq-link:hover { color: #fff; text-decoration: underline; }
 
-    .section-eyebrow {
-      font-family: 'Lato', sans-serif;
-      font-size: 11.5px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      color: #01acc3;
-      margin-bottom: 8px;
-    }
-    .section-heading {
-      font-family: 'Bitter', serif;
-      font-size: clamp(22px, 3vw, 34px);
-      color: #1f1961;
-      margin-bottom: 12px;
-      font-weight: 700;
-    }
-    .section-lead {
-      font-size: 16px;
-      color: #555;
-      max-width: 680px;
-      margin-bottom: 30px;
-      line-height: 1.72;
-    }
+    /* ═══════════════════════════════════════════════════════════
+       NACCS WRAPPER
+    ═══════════════════════════════════════════════════════════ */
+    .naccs-wrap { padding: 0 0 48px; }
+    .naccs-intro { padding: 28px 0 18px; }
+    .naccs-intro p { color: #555; font-size: 15.5px; line-height: 1.72; max-width: 860px; margin: 0; }
 
+    /* panel headings */
+    .panel-h2 { font-family: 'Bitter', serif; color: #0047ba; font-size: 26px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #e2e3e4; }
+    .panel-lead { color: #555; font-size: 15px; line-height: 1.72; margin-bottom: 18px; }
 
-    /* ══════════════════════════════════════════════════════════
-       INTRO STRIP
-    ══════════════════════════════════════════════════════════ */
-    .intro-strip {
-      background: #1f1961;
-      padding: 36px 0;
-      text-align: center;
-    }
-    .intro-strip p {
-      color: rgba(255,255,255,.92);
-      font-size: 17px;
-      max-width: 780px;
-      margin: 0 auto;
-      line-height: 1.78;
-    }
-
-
-    /* ══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════
        PROGRAM CARDS
-    ══════════════════════════════════════════════════════════ */
-    .program-card {
-      background: #fff;
-      border: 1px solid #dde3ec;
-      border-left: 4px solid #098bd1;
-      border-radius: 4px;
-      padding: 20px 22px 18px;
-      margin-bottom: 20px;
-      height: calc(100% - 20px);
-    }
-    .program-card.teal-card  { border-left-color: #01acc3; }
-    .program-card.navy-card  { border-left-color: #1f1961; }
-    .program-card.gold-card  { border-left-color: #ffca7b; }
-    .program-card.green-card { border-left-color: #2e7d32; }
+    ═══════════════════════════════════════════════════════════ */
+    .prog-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+    .prog-card { flex: 1 1 calc(50% - 8px); min-width: 200px; background: #fff; border: 1px solid #dde3ec; border-left: 4px solid #098bd1; border-radius: 4px; padding: 16px 18px 14px; }
+    .prog-card.teal { border-left-color: #01acc3; }
+    .prog-card.navy { border-left-color: #1f1961; }
+    .prog-card.green { border-left-color: #2e7d32; }
+    .prog-card h5 { font-family: 'Bitter', serif; color: #1f1961; font-size: 15px; margin-bottom: 7px; }
+    .prog-card p { font-size: 13.5px; color: #555; margin: 0; line-height: 1.6; }
+    .prog-card .note { font-size: 12px; color: #888; font-style: italic; margin-top: 8px; }
 
-    .program-card h4 {
-      font-family: 'Bitter', serif;
-      font-size: 17px;
-      color: #1f1961;
-      margin-bottom: 9px;
-      font-weight: 700;
-    }
-    .program-card p {
-      font-size: 14px;
-      color: #555;
-      line-height: 1.6;
-      margin: 0;
-    }
+    /* coming badge */
+    .badge-coming { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: 2px 7px; border-radius: 3px; background: #e8f0fd; color: #0047ba; border: 1px solid #c5d5f5; vertical-align: middle; margin-left: 5px; position: relative; top: -2px; white-space: nowrap; }
 
-    /* ── Coming-soon badge ── */
-    .badge-coming {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      padding: 2px 8px;
-      border-radius: 3px;
-      background: #e8f0fd;
-      color: #0047ba;
-      border: 1px solid #c5d5f5;
-      vertical-align: middle;
-      position: relative;
-      top: -2px;
-      margin-left: 6px;
-    }
+    /* ═══════════════════════════════════════════════════════════
+       CARET ROWS — click/tap-driven expand-collapse, one open at a time
+    ═══════════════════════════════════════════════════════════ */
+    .caret-list { list-style: none; margin: 0 0 24px; padding: 0; border-top: 1px solid #dde3ec; }
+    .caret-item { border-bottom: 1px solid #dde3ec; }
+    .caret-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; background: none; border: 0; text-align: left; padding: 15px 6px; cursor: pointer; font-family: 'Bitter', serif; color: #1f1961; font-size: 15.5px; font-weight: 600; -webkit-tap-highlight-color: transparent; }
+    .caret-row:hover { color: #098bd1; }
+    .caret-row:focus-visible { outline: 2px solid #098bd1; outline-offset: -2px; }
+    .caret-row-title { display: flex; align-items: center; }
+    .caret-row-title .row-icon { font-size: 12px; margin-right: 8px; flex-shrink: 0; }
+    .caret-icon { font-size: 13px; color: #098bd1; flex-shrink: 0; transition: transform .25s cubic-bezier(.075,.82,.165,1); }
+    .caret-item.open > .caret-row { color: #098bd1; }
+    .caret-item.open > .caret-row .caret-icon { transform: rotate(180deg); }
+    .caret-panel { display: none; position: relative; padding: 6px 36px 20px 6px; }
+    .caret-item.open > .caret-panel { display: block; }
+    .caret-panel p { font-size: 13.5px; color: #555; line-height: 1.65; margin: 0 0 8px; }
+    .caret-panel p:last-of-type { margin-bottom: 0; }
+    .caret-panel .note { font-size: 12px; color: #888; font-style: italic; margin-top: 8px; }
+    .caret-close { position: absolute; top: 6px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: 1px solid #dde3ec; background: #fff; color: #888; font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+    .caret-close:hover { background: #f6f8fc; color: #0047ba; border-color: #c5d5f5; }
 
-    /* ── Copy placeholder ── */
-    .copy-ph {
-      background: #fff8e1;
-      border-left: 4px solid #ffc107;
-      padding: 9px 13px;
-      font-size: 13px;
-      color: #7a5c00;
-      font-style: italic;
-      margin: 6px 0 0;
-      border-radius: 0 4px 4px 0;
-    }
+    /* accent variants matching prior card colors */
+    .caret-list--teal .caret-icon { color: #01acc3; }
+    .caret-list--teal .caret-item.open > .caret-row { color: #01acc3; }
+    .caret-list--navy .caret-icon { color: #1f1961; }
+    .caret-list--navy .caret-item.open > .caret-row { color: #1f1961; }
 
-
-    /* ══════════════════════════════════════════════════════════
-       GAMEON BLOCK
-    ══════════════════════════════════════════════════════════ */
-    .gameon-block {
-      border: 2px solid #dde3ec;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 44px;
-    }
-    .gameon-header {
-      background: #1f1961;
-      color: #fff;
-      padding: 22px 30px;
-    }
-    .gameon-header h3 {
-      font-family: 'Bitter', serif;
-      font-size: 22px;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-    .gameon-header p { font-size: 14px; opacity: .8; margin: 0; }
-    .gameon-body { padding: 30px; }
-
-    .track-badge {
-      display: inline-block;
-      font-size: 10.5px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      padding: 4px 12px;
-      border-radius: 3px;
-      margin-bottom: 10px;
-      font-family: 'Lato', sans-serif;
-    }
-    .track-family   { background: #e6f5ea; color: #1b6b35; }
+    /* GameON block */
+    .gameon-block { border: 2px solid #dde3ec; border-radius: 6px; overflow: hidden; margin: 20px 0 18px; }
+    .gameon-hdr { background: #1f1961; padding: 16px 24px; }
+    .gameon-hdr h4 { font-family: 'Bitter', serif; color: #fff; font-size: 18px; margin-bottom: 3px; }
+    .gameon-hdr p { font-size: 13px; color: rgba(255,255,255,.75); margin: 0; }
+    .gameon-body { padding: 20px 24px; }
+    .track-lbl { display: inline-block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .1em; padding: 3px 10px; border-radius: 3px; margin-bottom: 8px; font-family: Lato, Arial; }
+    .track-family { background: #e6f5ea; color: #1b6b35; }
     .track-provider { background: #eef2fb; color: #1f1961; }
+    .gameon-body h5 { font-family: 'Bitter', serif; color: #1f1961; font-size: 15px; margin-bottom: 6px; }
+    .gameon-body p { font-size: 13.5px; color: #555; margin-bottom: 10px; line-height: 1.6; }
+    .sport-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 4px 0 4px; }
+    .sport-chip { background: #f0f4fa; border: 1px solid #c6d3e8; color: #1f1961; font-size: 12.5px; font-weight: 700; padding: 4px 13px; border-radius: 20px; }
+    .gameon-div { border: none; border-top: 1px dashed #dde3ec; margin: 16px 0; }
+    .gameon-body .grad-button { margin-top: 8px; }
 
-    .gameon-track h4 {
-      font-family: 'Bitter', serif;
-      font-size: 17px;
-      color: #1f1961;
-      margin-bottom: 8px;
-    }
-    .gameon-track p  { font-size: 14px; color: #555; margin-bottom: 14px; line-height: 1.6; }
-    .sport-tag {
-      display: inline-block;
-      background: #f0f4fa;
-      border: 1px solid #c6d3e8;
-      color: #1f1961;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 5px 15px;
-      border-radius: 20px;
-      margin: 0 6px 6px 0;
-    }
-    .gameon-divider {
-      border: none;
-      border-top: 1px dashed #dde3ec;
-      margin: 24px 0;
-    }
+    /* Bridge the Gap */
+    .btg-box { background: #f9fbf9; border: 1px solid #dde3ec; border-left: 4px solid #2e7d32; border-radius: 4px; padding: 16px 18px; margin-top: 4px; }
+    .btg-box h5 { color: #2e7d32; font-size: 15px; margin-bottom: 7px; }
+    .btg-box p { font-size: 13.5px; color: #555; margin-bottom: 8px; line-height: 1.6; }
+    .btg-box p:last-child { margin: 0; }
+    .btg-note { font-style: italic; color: #666; }
 
+    /* coming panel */
+    .coming-panel { background: #f6f8fc; border: 1px solid #dde3ec; border-radius: 8px; padding: 36px 28px; text-align: center; margin-bottom: 20px; }
+    .coming-panel h3 { font-family: 'Bitter', serif; color: #1f1961; margin: 14px 0 10px; font-size: 24px; }
+    .coming-panel p { color: #555; max-width: 520px; margin: 0 auto; font-size: 14.5px; line-height: 1.7; }
 
-    /* ══════════════════════════════════════════════════════════
-       AQUATICS FEATURE BAND
-    ══════════════════════════════════════════════════════════ */
-    .aquatics-band {
-      background: url('../reference/els-homepage_files/water-wall-with-M-cropped.jpg') center center no-repeat #1f1961;
-      background-size: cover;
-      position: relative;
-      padding: 68px 0;
-    }
-    .aquatics-cover {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(31,25,97,.92) 0%, rgba(1,172,195,.75) 100%);
-    }
-    .aq-inner { position: relative; z-index: 1; }
+    /* feature panel — left-aligned card for full-copy program descriptions */
+    .feature-panel { background: #f6f8fc; border: 1px solid #dde3ec; border-radius: 8px; padding: 30px 28px; margin-bottom: 20px; text-align: left; }
+    .feature-panel h3 { font-family: 'Bitter', serif; color: #1f1961; margin: 14px 0 12px; font-size: 22px; }
+    .feature-panel p { color: #555; font-size: 14.5px; line-height: 1.72; margin: 0 0 12px; }
+    .feature-panel p:last-child { margin-bottom: 0; }
 
-    .aq-eyebrow {
-      font-family: 'Lato', sans-serif;
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      color: #ffca7b;
-      margin-bottom: 10px;
-    }
-    .aquatics-band h2 {
-      font-family: 'Bitter', serif;
-      font-size: clamp(26px, 3.8vw, 42px);
-      color: #fff;
-      margin-bottom: 18px;
-    }
-    .aq-lead {
-      font-size: 17px;
-      color: rgba(255,255,255,.88);
-      max-width: 660px;
-      line-height: 1.72;
-      margin-bottom: 32px;
-    }
-    .aq-stat-row {
-      display: flex;
-      gap: 32px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-    .aq-stat { border-left: 3px solid #ffca7b; padding-left: 14px; }
-    .aq-stat .num {
-      font-family: 'Bitter', serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffca7b;
-      line-height: 1;
-    }
-    .aq-stat .lbl { font-size: 13px; color: rgba(255,255,255,.72); margin-top: 3px; }
-    .aq-stat .ph  { font-size: 11px; font-style: italic; color: rgba(255,255,255,.4); }
+    /* ═══════════════════════════════════════════════════════════
+       REGISTRATION
+    ═══════════════════════════════════════════════════════════ */
+    .reg-section { background: #eef2fa; padding: 52px 0; }
+    .section-eyebrow { font-family: Lato, Arial; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; color: #01acc3; margin-bottom: 6px; display: block; }
+    .section-h2 { font-family: 'Bitter', serif; color: #1f1961; font-size: 28px; margin-bottom: 8px; }
+    .section-lead { color: #555; font-size: 15px; margin-bottom: 22px; line-height: 1.7; }
+    .reg-box { background: #fff; border: 1px solid #dde3ec; border-radius: 8px; padding: 24px; box-shadow: 0 2px 14px rgba(0,0,0,.05); }
 
-    .aq-chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
-    .aq-chip {
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.22);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 17px;
-      border-radius: 20px;
-    }
-
-
-    /* ══════════════════════════════════════════════════════════
-       CLUB LIST
-    ══════════════════════════════════════════════════════════ */
-    .club-list { list-style: none; padding: 0; margin: 0; }
-    .club-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 14px 0;
-      border-bottom: 1px solid #dde3ec;
-    }
-    .club-list li:last-child { border-bottom: none; }
-    .club-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: #01acc3;
-      margin-top: 7px;
-      flex-shrink: 0;
-    }
-    .club-list strong { font-family: 'Bitter', serif; font-size: 15px; color: #1f1961; display: block; margin-bottom: 3px; }
-    .club-list .body-copy { font-size: 14px; color: #555; line-height: 1.6; }
-
-
-    /* ══════════════════════════════════════════════════════════
-       REGISTRATION SECTION
-    ══════════════════════════════════════════════════════════ */
-    .reg-section { background: #eef2fa; padding: 64px 0; }
-    .reg-box {
-      background: #fff;
-      border: 1px solid #dde3ec;
-      border-radius: 8px;
-      padding: 28px 24px;
-      box-shadow: 0 2px 14px rgba(0,0,0,.06);
-    }
-
-
-    /* ══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════
        HELP STRIP
-    ══════════════════════════════════════════════════════════ */
-    .help-strip {
-      background: #01acc3;
-      padding: 16px 0;
-      text-align: center;
-      color: #fff;
-      font-size: 15px;
-    }
+    ═══════════════════════════════════════════════════════════ */
+    .help-strip { background: #01acc3; padding: 13px 0; text-align: center; color: #fff; font-size: 14.5px; font-family: Lato, Arial; }
     .help-strip a { color: #fff; font-weight: 700; }
-    .help-strip em { opacity: .65; font-size: 12px; }
 
+    /* ═══════════════════════════════════════════════════════════
+       VOLUNTEER STRIP
+    ═══════════════════════════════════════════════════════════ */
+    .vol-strip { background: linear-gradient(135deg, #0047ba 0%, #098bd1 100%); padding: 44px 0; text-align: center; }
+    .vol-strip h3 { font-family: 'Bitter', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+    .vol-strip p { color: rgba(255,255,255,.88); font-size: 15.5px; margin-bottom: 22px; max-width: 580px; display: block; margin-left: auto; margin-right: auto; }
+    .vol-strip .grad-button { max-width: 280px; margin: 0 auto; }
 
-    /* ══════════════════════════════════════════════════════════
-       VOLUNTEER SECTION
-    ══════════════════════════════════════════════════════════ */
-    .volunteer-section { background: #f6f8fc; padding: 58px 0; }
-    .vol-icon-circle {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #0047ba, #01acc3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 24px;
-      margin: 0 auto 16px;
-    }
-    .vol-card {
-      background: #fff;
-      border: 1px solid #dde3ec;
-      border-radius: 6px;
-      padding: 28px 22px;
-      text-align: center;
-      height: 100%;
-    }
-    .vol-card h4 { font-size: 17px; color: #1f1961; margin-bottom: 10px; }
-    .vol-card p  { font-size: 14px; color: #555; line-height: 1.6; margin: 0; }
+    /* ═══════════════════════════════════════════════════════════
+       DONOR ROW
+    ═══════════════════════════════════════════════════════════ */
+    .donor-row { background: #fff; border-top: 1px solid #dde3ec; border-bottom: 1px solid #dde3ec; padding: 26px 0; }
+    .donor-eyebrow { font-family: Lato, Arial; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; color: #9aabb5; text-align: center; margin-bottom: 18px; }
+    .logo-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .logo-ph { width: 108px; height: 46px; background: #eef1f7; border: 1px solid #dde3ec; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #9aabb5; font-style: italic; }
 
-
-    /* ══════════════════════════════════════════════════════════
-       PROJECT OBJECTIVES BAND
-    ══════════════════════════════════════════════════════════ */
-    .objectives-band {
-      background: #0047ba;
-      background: linear-gradient(135deg, #0047ba 0%, #098bd1 100%);
-      color: #fff;
-      padding: 52px 0;
-    }
-    .objectives-band h2 { font-family: 'Bitter', serif; color: #fff; margin-bottom: 8px; }
-    .objectives-band .sub { color: rgba(255,255,255,.8); font-size: 15px; margin-bottom: 28px; }
-
-    .obj-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .obj-item:last-child { margin-bottom: 0; }
-    .obj-icon {
-      color: #ffca7b;
-      font-size: 20px;
-      margin-top: 2px;
-      flex-shrink: 0;
-      width: 24px;
-      text-align: center;
-    }
-    .obj-text { font-size: 15px; line-height: 1.65; }
-    .obj-text strong { font-weight: 700; }
-
-
-    /* ══════════════════════════════════════════════════════════
-       SUPPORT SECTION
-    ══════════════════════════════════════════════════════════ */
-    .support-section { background: #f6f8fc; padding: 62px 0; border-top: 1px solid #dde3ec; }
-
-    .video-ph {
-      background: #d8e0ed;
-      border-radius: 8px;
-      aspect-ratio: 16/9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #7a8eaa;
-      font-size: 13px;
-      font-weight: 700;
-      gap: 8px;
-      text-align: center;
-    }
-    .video-ph span { font-size: 11px; font-weight: 400; font-style: italic; }
-
-    .stat-strip {
-      background: #fff;
-      border: 1px solid #dde3ec;
-      border-radius: 8px;
-      padding: 28px;
-    }
-    .stat-item .num {
-      font-family: 'Bitter', serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: #0047ba;
-      line-height: 1;
-      display: block;
-    }
-    .stat-item .lbl { font-size: 13px; color: #555; margin-top: 5px; display: block; }
-    .stat-item .ph  { font-size: 11px; font-style: italic; color: #9aabb5; display: block; }
-
-    .s-detail h4 { font-size: 16px; color: #1f1961; margin-bottom: 6px; font-family: 'Bitter', serif; }
-    .s-detail p  { font-size: 14px; color: #555; line-height: 1.65; }
+    /* ═══════════════════════════════════════════════════════════
+       SUPPORT BAND
+    ═══════════════════════════════════════════════════════════ */
+    .support-band { background: #f6f8fc; padding: 50px 0; border-top: 1px solid #dde3ec; }
+    .support-band p.lead-copy { color: #555; font-size: 15.5px; max-width: 660px; margin-bottom: 28px; line-height: 1.72; }
+    .s-detail h4 { font-size: 15px; color: #1f1961; margin-bottom: 6px; font-family: 'Bitter', serif; }
+    .s-detail p { font-size: 13.5px; color: #555; line-height: 1.65; margin: 0; }
     .s-detail em { font-size: 12px; color: #9aabb5; }
 
-
-    /* ══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════
        RESPONSIVE
-    ══════════════════════════════════════════════════════════ */
+    ═══════════════════════════════════════════════════════════ */
     @media (max-width: 767px) {
-      .entry-header-cover { padding: 68px 0 60px !important; }
-      .entry-header h1 { font-size: 30px; max-width: 92%; }
-      #parent_title { font-size: 13px; letter-spacing: 6px; }
-      .section-panel, .section-panel-alt { padding: 44px 0; }
-      .aq-stat-row { gap: 18px; }
-      .gameon-body { padding: 20px; }
-      .aquatics-band { padding: 48px 0; }
+      .entry-header-cover { padding: 60px 0 52px !important; }
+      .entry-header h1.entry-title { font-size: 30px; max-width: 94%; }
+      h6#parent_title { font-size: 12px !important; letter-spacing: 5px; }
+      .hero-btns .grad-button { min-width: 160px; font-size: .9em; }
+      .gc, .gc--1-of-3, .gc--2-of-3 { display: block; width: 100% !important; margin-right: 0; }
+      .naccs .menu { border-right: 1px solid #e2e3e4; }
+      ul.nacc li.contentli { padding: 16px 0 0; }
+      .prog-card { flex: 1 1 100%; }
+      .gameon-body { padding: 16px; }
+      .gameon-hdr { padding: 14px 16px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══ DRAFT BANNER ══════════════════════════════════════════ -->
+<!-- DRAFT BANNER -->
 <div class="draft-banner">
-  ⚠ Layout comp — for design review. Program copy is verbatim from elsforautism.org. Remaining items to confirm before publishing: SALSA program description, Aquatics stats, impact stats, video assets, naming opportunities status, and giving link. No "Donate Now" language anywhere.
+  ⚠ Comp — program copy verbatim from elsforautism.org. Items to confirm before publishing: SALSA description, Aquatics detail, Camps detail, impact stats, video assets, giving link, donor logos.
 </div>
 
-
-<!-- ══ BREADCRUMB ════════════════════════════════════════════ -->
-<div class="els-breadcrumb">
-  <div class="container">
-    <a href="#">Programs and Services</a>
+<!-- BREADCRUMB -->
+<nav class="els-breadcrumb">
+  <div class="container-xl">
+    <a href="#">Programs &amp; Services</a>
     <span class="sep">›</span>
     <strong>Recreation Services</strong>
   </div>
-</div>
+</nav>
 
-
-<!-- ══ HERO — entry-header pattern ══════════════════════════ -->
-<div class="entry-header">
+<!-- HERO -->
+<header class="entry-header">
   <div class="entry-header-cover">
     <div class="container">
-      <p id="parent_title">Programs &amp; Services</p>
-      <h1>Recreation Services</h1>
-      <p class="parent_sub_title">World-class inclusive programs in sports, aquatics, the arts, and beyond — specialized for individuals with autism and welcoming to all abilities.</p>
-      <div class="d-flex justify-content-center flex-wrap" style="gap:14px;">
-        <a href="#register" class="grad-button grad-button-short" style="min-width:220px;">
+      <h6 id="parent_title">Programs &amp; Services</h6>
+      <h1 class="entry-title">Recreation Services</h1>
+      <p class="hero-sub">World-class inclusive programming in sports, aquatics, creative arts, camps, and virtual clubs — built for individuals with autism and welcoming to all.</p>
+      <div class="hero-btns">
+        <a href="#register" class="grad-button grad-button-short">
           <i class="fa-solid fa-calendar-check" style="margin-right:8px;"></i>Register for a Program
         </a>
-        <a href="#programs" class="grad-button grad-button-short grad-button-teal" style="min-width:180px;">
-          <i class="fa-solid fa-list" style="margin-right:8px;"></i>Explore Programs
+        <a href="https://www.elsforautism.org/get-involved/volunteers/" target="_blank" class="grad-button grad-button-short grad-button-teal">
+          <i class="fa-solid fa-hand-holding-heart" style="margin-right:8px;"></i>Volunteer
         </a>
       </div>
     </div>
   </div>
-</div>
+</header>
 
-
-<!-- ══ INTRO STRIP ═══════════════════════════════════════════ -->
-<div class="intro-strip">
-  <div class="container">
-    <p>Keeping our recreation participants active, healthy, and engaged is our priority! Els for Autism offers recreation programs specifically developed for children and adults with autism and other developmental disabilities. Programming is held at The Els Center of Excellence campus in Jupiter, Florida, and virtually for online groups. All on-site classes are held in a 1:4 staff-to-student ratio with specialized instructors, behavior technicians, and recreation assistants. Classes are held Monday through Friday, 1:30–5:30 p.m. New participants must complete our intake process before beginning any programs.</p>
+<!-- AQUATICS CALLOUT -->
+<div class="aq-callout">
+  <div class="container-xl">
+    <span class="aq-eyebrow"><i class="fa-solid fa-star" style="margin-right:5px;"></i>Featured Program Area</span>
+    <h3>Aquatics &amp; Water Safety</h3>
+    <p>Drowning is a leading cause of accidental death for individuals with autism — Els for Autism Aquatics addresses this directly, building water confidence and life-saving safety skills for participants of all ability levels. From beginner swim lessons to the Ernie Els #GameON Aquatics curriculum, our programming protects lives and opens doors.</p>
+    <a class="aq-link nav-tab-trigger" data-tab="3" href="#"><i class="fa-solid fa-arrow-right" style="margin-right:5px;"></i>Explore Aquatics Programs</a>
   </div>
 </div>
 
+<!-- NACCS -->
+<div class="container-xl naccs-wrap">
 
-<!-- ══ PROGRAM SECTIONS ══════════════════════════════════════ -->
-<div id="programs"></div>
-<hr class="wp-block-separator">
-
-
-<!-- ── Recreation Therapy ──────────────────────────────────── -->
-<div class="section-panel-alt">
-  <div class="container">
-    <div class="section-eyebrow">Therapeutic Programming</div>
-    <h2 class="section-heading">
-      Recreation Therapy
-      <span class="badge-coming">Coming 2027</span>
-    </h2>
-    <p class="section-lead">Our dedicated Recreation Therapy program pairs credentialed therapeutic recreation specialists with participants to develop individualized goals through purposeful leisure activity. Launching in 2027 alongside our new Recreation Complex, this program bridges clinical support and joyful engagement in a way few programs can.</p>
-    <div style="background:#dce4ef;border-radius:8px;height:180px;display:flex;align-items:center;justify-content:center;color:#7a8eaa;font-size:13px;font-weight:700;font-style:italic;">[Photo placeholder — Recreation Therapy]</div>
+  <div class="naccs-intro">
+    <p>Keeping our recreation participants active, healthy, and engaged is our priority. Els for Autism offers recreation programs specifically developed for children and adults with autism and other developmental disabilities. All on-site classes are held at The Els Center of Excellence in Jupiter, Florida in a 1:4 staff-to-student ratio. Classes run Monday through Friday, 1:30–5:30 p.m. New participants must complete our intake process before beginning any programs.</p>
   </div>
-</div>
 
-<hr class="wp-block-separator">
+  <div class="naccs">
+    <div class="grid">
 
+      <!-- LEFT NAV -->
+      <div class="gc gc--1-of-3">
+        <div class="menu">
 
-<!-- ── Sports Programs ────────────────────────────────────── -->
-<div class="section-panel">
-  <div class="container">
-    <div class="section-eyebrow">Get Moving</div>
-    <h2 class="section-heading">Sports Programs</h2>
-    <p class="section-lead">Through the Ernie Els #GameON Autism Sports Programs, we are changing the culture of sports and recreation for individuals with autism and other developmental disabilities. The programs are infused with evidence-based practices to maximize learning for all.</p>
-
-    <div class="row">
-      <!-- Golf -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-golf-ball-tee" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Golf</h4>
-          <p>The Ernie Els #GameON Autism Golf program is designed to teach the fundamentals of golf including putting, pitching, chipping, and full swing, as well as proper club grip. In each class, participants will learn and practice foundational motor skills through fun athletic games and golf activities while also practicing social communication skills.</p>
-        </div>
-      </div>
-
-      <!-- Tennis -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-baseball" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Tennis</h4>
-          <p>The Ernie Els #GameON Autism Tennis program is a structured tennis learning experience that includes: basic strokes, hand-eye coordination, racket handling, and sequencing of the various strokes together. Components of the game-based process are woven into each lesson. Participants also practice social and communication skills.</p>
-        </div>
-      </div>
-
-      <!-- Fitness -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-dumbbell" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Fitness</h4>
-          <p>The Ernie Els #GameON Autism Fitness program is designed to address various areas of health and fitness. Lessons include exercises in cardio, strength, and flexibility while practicing social communication with peers and instructors. Classes incorporate the use of traditional fitness equipment, as well as music and dance as a means of motivating student participation in fitness activities.</p>
-        </div>
-      </div>
-
-      <!-- Kickball -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-circle" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Kickball</h4>
-          <p>Kickball provides individuals the opportunity to participate in a team sport with their peers. Participants engage in physical activities that include running, throwing, rolling, and catching while also developing social/communication skills through peer interaction and peer encouragement. Each class includes a warm-up, skill-building, and 30 minutes of play.</p>
-        </div>
-      </div>
-
-      <!-- Yoga -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-spa" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Yoga</h4>
-          <p>Yoga for individuals with special needs enhances stamina, flexibility, and strength in a fun, motivating, and social environment. Accompanied by calming music, classes include warm-up and breathing exercises, cardio routines, developmentally appropriate and energizing yoga poses, as well as relaxation techniques to improve health, promote well-being, and increase bodily awareness.</p>
-        </div>
-      </div>
-
-      <!-- Pickleball Coming 2027 -->
-      <div class="col-md-4 mb-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-table-tennis-paddle-ball" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Pickleball <span class="badge-coming">Coming 2027</span></h4>
-          <p>One of the fastest-growing sports in the country, adapted for our inclusive community. Court programming launches with our expanded facility in 2027.</p>
-        </div>
-      </div>
-    </div><!-- /row -->
-
-    <!-- GameON Block ── Family vs. Provider split ──────────── -->
-    <div class="gameon-block">
-      <div class="gameon-header">
-        <h3>Ernie Els #GameON Autism Sports</h3>
-        <p>Golf &middot; Tennis &middot; Fitness &middot; Aquatics &mdash; two distinct pathways for two distinct audiences</p>
-      </div>
-      <div class="gameon-body">
-
-        <!-- Track A: Families -->
-        <div class="gameon-track">
-          <span class="track-badge track-family"><i class="fa-solid fa-house-user" style="margin-right:5px;"></i>For Families &amp; Participants</span>
-          <h4>Join a #GameON Program</h4>
-          <p>Individuals with autism and their families can participate directly in our #GameON sports curriculum. Programs are designed for varying skill levels and delivered by trained Els for Autism instructors in a safe, welcoming environment. No prior athletic experience required.</p>
-          <div>
-            <span class="sport-tag"><i class="fa-solid fa-golf-ball-tee" style="margin-right:5px;"></i>Golf</span>
-            <span class="sport-tag"><i class="fa-solid fa-baseball" style="margin-right:5px;"></i>Tennis</span>
-            <span class="sport-tag"><i class="fa-solid fa-dumbbell" style="margin-right:5px;"></i>Fitness</span>
-            <span class="sport-tag"><i class="fa-solid fa-water" style="margin-right:5px;"></i>Aquatics</span>
+          <div class="thdiv active" data-id="1">
+            <span class="light"></span>
+            <span><a href="#">Sports Programs</a></span>
           </div>
+
+          <div class="thdiv" data-id="2">
+            <span class="light"></span>
+            <span><a href="#">Creative Arts</a></span>
+          </div>
+
+          <div class="thdiv" data-id="3">
+            <span class="light"></span>
+            <span><a href="#">Aquatics</a></span>
+          </div>
+
+          <div class="thdiv" data-id="4">
+            <span class="light"></span>
+            <span><a href="#">Camps &amp; Special Events</a></span>
+          </div>
+
+          <div class="thdiv" data-id="5">
+            <span class="light"></span>
+            <span><a href="#">Virtual Clubs</a></span>
+          </div>
+
+          <div class="thdiv" data-id="6">
+            <span class="light"></span>
+            <span><a href="#">Recreation Therapy <span class="badge-coming">2027</span></a></span>
+          </div>
+
+          <div class="thdiv" data-id="7">
+            <span class="light"></span>
+            <span><a href="#">Adult Day &amp; Culinary</a></span>
+          </div>
+
         </div>
+        <div class="extrainfo"></div>
+      </div><!--/.gc--1-of-3--><div class="gc gc--2-of-3">
 
-        <hr class="gameon-divider">
+        <ul class="nacc">
 
-        <!-- Track B: External Providers -->
-        <div class="gameon-track">
-          <span class="track-badge track-provider"><i class="fa-solid fa-certificate" style="margin-right:5px;"></i>For External Providers</span>
-          <h4>Become a Certified #GameON Provider</h4>
-          <p>Golf courses, tennis clubs, fitness centers, and aquatic facilities can adopt the #GameON curriculum and become certified Els for Autism program sites. Certification equips your instructors with the tools and confidence to deliver world-class inclusive programming at your own facility — extending our reach around the world.</p>
-          <a href="#" class="grad-button grad-button-short grad-button-teal" style="max-width:280px;margin:0;">
-            <i class="fa-solid fa-certificate" style="margin-right:8px;"></i>Learn About Certification
-          </a>
-        </div>
+          <!-- ── PANEL 1: SPORTS ─────────────────────────────── -->
+          <li class="contentli active" id="content-1">
+            <h2 class="panel-h2">Sports Programs</h2>
+            <p class="panel-lead">Through the Ernie Els #GameON Autism Sports Programs, we are changing the culture of sports and recreation for individuals with autism and other developmental disabilities. The programs are infused with evidence-based practices to maximize learning for all.</p>
 
-      </div>
-    </div><!-- /gameon-block -->
-  </div>
-</div>
+            <ul class="caret-list" data-caret-group="sports">
 
-<hr class="wp-block-separator">
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-1" id="row-sports-1">
+                  <span class="caret-row-title"><i class="fa-solid fa-golf-ball-tee row-icon" style="color:#098bd1;"></i>Golf</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-1" role="region" aria-labelledby="row-sports-1">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>The Ernie Els #GameON Autism Golf program is designed to teach the fundamentals of golf including putting, pitching, chipping, and full swing, as well as proper club grip. In each class, participants will learn and practice foundational motor skills through fun athletic games and golf activities while also practicing social communication skills.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-2" id="row-sports-2">
+                  <span class="caret-row-title"><i class="fa-solid fa-baseball row-icon" style="color:#098bd1;"></i>Tennis</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-2" role="region" aria-labelledby="row-sports-2">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>The Ernie Els #GameON Autism Tennis program is a structured tennis learning experience that includes: basic strokes, hand-eye coordination, racket handling, and sequencing of the various strokes together. Components of the game-based process are woven into each lesson. Participants also practice social and communication skills.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-3" id="row-sports-3">
+                  <span class="caret-row-title"><i class="fa-solid fa-dumbbell row-icon" style="color:#098bd1;"></i>Fitness</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-3" role="region" aria-labelledby="row-sports-3">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>The Ernie Els #GameON Autism Fitness program is designed to address various areas of health and fitness. Lessons include exercises in cardio, strength, and flexibility while practicing social communication with peers and instructors. Classes incorporate the use of traditional fitness equipment, as well as music and dance as a means of motivating student participation in fitness activities.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-4" id="row-sports-4">
+                  <span class="caret-row-title"><i class="fa-solid fa-circle row-icon" style="color:#098bd1;"></i>Kickball</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-4" role="region" aria-labelledby="row-sports-4">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Kickball provides individuals the opportunity to participate in a team sport with their peers. Participants engage in physical activities that include running, throwing, rolling, and catching while also developing social/communication skills through peer interaction and peer encouragement. Each class includes a warm-up, skill-building, and 30 minutes of play.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-5" id="row-sports-5">
+                  <span class="caret-row-title"><i class="fa-solid fa-spa row-icon" style="color:#098bd1;"></i>Yoga</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-5" role="region" aria-labelledby="row-sports-5">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Yoga for individuals with special needs enhances stamina, flexibility, and strength in a fun, motivating, and social environment. Accompanied by calming music, classes include warm-up and breathing exercises, cardio routines, developmentally appropriate and energizing yoga poses, as well as relaxation techniques to improve health, promote well-being, and increase bodily awareness.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-sports-6" id="row-sports-6">
+                  <span class="caret-row-title"><i class="fa-solid fa-table-tennis-paddle-ball row-icon" style="color:#098bd1;"></i>Pickleball <span class="badge-coming">Coming 2027</span></span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-sports-6" role="region" aria-labelledby="row-sports-6">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>One of the fastest-growing sports in the country, adapted for our inclusive community. Court programming launches with our expanded facility in 2027.</p>
+                </div>
+              </li>
+
+            </ul><!-- /caret-list sports -->
+
+            <!-- GameON block: two paths -->
+            <div class="gameon-block">
+              <div class="gameon-hdr">
+                <h4>Ernie Els #GameON Autism Sports</h4>
+                <p>Two pathways — for families joining programs, and for external providers getting certified</p>
+              </div>
+              <div class="gameon-body">
+
+                <span class="track-lbl track-family"><i class="fa-solid fa-house-user" style="margin-right:5px;"></i>For Families &amp; Participants</span>
+                <h5>Join a #GameON Program</h5>
+                <p>Individuals with autism and their families can participate directly in the #GameON sports curriculum. Programs are designed for varying skill levels and delivered by trained Els for Autism instructors in a safe, welcoming environment. No prior athletic experience required.</p>
+                <div class="sport-chips">
+                  <span class="sport-chip"><i class="fa-solid fa-golf-ball-tee" style="margin-right:5px;"></i>Golf</span>
+                  <span class="sport-chip"><i class="fa-solid fa-baseball" style="margin-right:5px;"></i>Tennis</span>
+                  <span class="sport-chip"><i class="fa-solid fa-dumbbell" style="margin-right:5px;"></i>Fitness</span>
+                  <span class="sport-chip"><i class="fa-solid fa-water" style="margin-right:5px;"></i>Aquatics</span>
+                </div>
+
+                <hr class="gameon-div">
+
+                <span class="track-lbl track-provider"><i class="fa-solid fa-certificate" style="margin-right:5px;"></i>For External Providers</span>
+                <h5>Become a Certified #GameON Provider</h5>
+                <p>Golf courses, tennis clubs, fitness centers, and aquatic facilities can adopt the #GameON curriculum and become certified Els for Autism program sites. Certification equips your instructors with the tools and confidence to deliver world-class inclusive programming at your own facility — extending our reach globally.</p>
+                <a href="https://www.elsforautism.org/programs-services/recreation-services/ernie-els-gameon-autism-sports/" target="_blank" class="grad-button grad-button-short grad-button-teal" style="max-width:280px;margin-top:8px;">
+                  <i class="fa-solid fa-certificate" style="margin-right:8px;"></i>Learn About Certification
+                </a>
+
+              </div>
+            </div><!-- /gameon-block -->
+
+            <!-- Bridge the Gap -->
+            <div class="btg-box">
+              <h5><i class="fa-solid fa-people-group" style="margin-right:7px;"></i>Bridge the Gap</h5>
+              <p><strong>Bridge the Gap</strong> is a respite care program for individuals who need a place to go before and between Foundation programs and services. Under the supervision of recreation staff, participants may engage in a variety of leisure activities, including puzzles, board games, and arts &amp; crafts. Participants may bring snacks and a drink as none will be available.</p>
+              <p class="btg-note"><strong><em>Please note:</em></strong> As this service is specifically for prior to/between participants' activities, individuals must be picked up from their last activity/therapy and cannot be picked up from Bridge the Gap. Additionally, Bridge the Gap services will not be provided on days Els for Autism is closed. Spaces are limited. Enrollment on a first-come, first-served basis.</p>
+            </div>
+
+          </li><!-- /panel 1 -->
 
 
-<!-- ── Bridge the Gap ─────────────────────────────────────── -->
-<div class="section-panel-alt">
+          <!-- ── PANEL 2: CREATIVE ARTS ──────────────────────── -->
+          <li class="contentli" id="content-2">
+            <h2 class="panel-h2">Reach &amp; Teach Through the Arts</h2>
+            <p class="panel-lead">The exploration of art, dance, and music can facilitate personal growth and development for people with ASD in many areas, including gross and fine motor skills, speech-language skills (through song, memory, and mental agility), social skills, confidence, and self-expression. Reach and Teach through the Arts features art, dance, music, and theater tailored specifically to the unique interests and needs of individuals with autism and other developmental disabilities. Group sessions are available on campus for individuals ages 6 and older. All classes are taught by certified therapists or instructors.</p>
+
+            <ul class="caret-list caret-list--teal" data-caret-group="arts">
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-1" id="row-arts-1">
+                  <span class="caret-row-title"><i class="fa-solid fa-person-walking row-icon" style="color:#01acc3;"></i>Dance Therapy</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-1" role="region" aria-labelledby="row-arts-1">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>This class introduces individuals to the fundamentals of dance in a positive &amp; creative environment. Through rhythmic exercises, basic ballet techniques, and creative movement, individuals develop creative expression, as well as an awareness and understanding of the mechanics of their body movement. Dancers will participate in movement games that encourage spontaneous &amp; creative expression, build movement vocabulary &amp; repertoire, and allow safe exploration. While dancing, participants will engage in activities to promote social skills, peer interactions, and relationship development.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-2" id="row-arts-2">
+                  <span class="caret-row-title"><i class="fa-solid fa-music row-icon" style="color:#01acc3;"></i>Music Therapy</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-2" role="region" aria-labelledby="row-arts-2">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Music Therapy is all about exploring and participating in a wide range of creative musical experiences in a supportive group setting. Music Therapy can increase confidence, develop communication &amp; social skills, self-expression, and find connection with yourself and others. In this group, you will have the opportunity to grow &amp; enjoy creative music-making with instruments from around the world, song selection, using rhythm, songwriting, movement to music, and more. Each week we will have the opportunity to create &amp; explore music together.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-3" id="row-arts-3">
+                  <span class="caret-row-title"><i class="fa-solid fa-palette row-icon" style="color:#01acc3;"></i>Art Therapy</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-3" role="region" aria-labelledby="row-arts-3">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Art therapy focuses on the process of making art to express one's thoughts and feelings. By engaging in art therapy, you can explore your emotions, enhance communication skills, and develop social connections. Each week, you will have the opportunity to explore different art mediums and create personalized art works.</p>
+                  <p class="note">Facilitated by Alicia Ballestas, MA, ATR-BC, Board Certified, Clinical Art Therapist</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-4" id="row-arts-4">
+                  <span class="caret-row-title"><i class="fa-solid fa-masks-theater row-icon" style="color:#01acc3;"></i>Theater</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-4" role="region" aria-labelledby="row-arts-4">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Theater fosters individuality, inspires imagination, promotes communication, and celebrates personal interests for individuals with autism. Our theatre classes help participants develop social skills, verbal expression, empathy for others, and a sense of self-worth and accomplishment through a complement of short scene work, object work exercises, and improv games, all culminating in an end-of-semester showcase where each individual has their opportunity to shine.</p>
+                  <p class="note">Classes run 1:6 ratio. Individuals needing more support may join with a support companion.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-5" id="row-arts-5">
+                  <span class="caret-row-title"><i class="fa-solid fa-brush row-icon" style="color:#01acc3;"></i>Art Club</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-5" role="region" aria-labelledby="row-arts-5">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Here at Els, the Art Club program provides a creative and supportive space for clients to express themselves. This program encourages self confidence, focus, fine motor skills and reduces anxiety. Through guided art activities such as drawing, and painting, our participants explore emotions, develop communication, and strengthen social and sensory integration skills. The group sessions in our program foster connection and collaboration.</p>
+                </div>
+              </li>
+
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-arts-6" id="row-arts-6">
+                  <span class="caret-row-title"><i class="fa-solid fa-drum row-icon" style="color:#01acc3;"></i>Music &amp; Movement</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-arts-6" role="region" aria-labelledby="row-arts-6">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Our Music and Movement program is an excellent method for our clients to express themselves and explore an aspect of fitness through music. Clients delve into different aspects of music and movement through dance routines and following rhythmic sounds. Therapeutic aspects of the movements are emphasized through motions mirrored from the instructor — enhancing coordination, emotional regulation, and creativity. The space shared with peers fosters opportunities for social engagement and improving language skills.</p>
+                </div>
+              </li>
+
+            </ul><!-- /caret-list arts -->
+          </li><!-- /panel 2 -->
+
+
+          <!-- ── PANEL 3: AQUATICS ───────────────────────────── -->
+          <li class="contentli" id="content-3">
+            <h2 class="panel-h2">Aquatics &amp; Water Safety</h2>
+            <p class="panel-lead">Water safety is a critical, life-saving priority for the autism community. Els for Autism Aquatics programming goes far beyond swimming lessons — it builds water confidence, teaches essential survival skills, and directly addresses the disproportionate drowning risk faced by individuals with autism.</p>
+
+            <div class="prog-grid">
+              <div class="prog-card">
+                <h5><i class="fa-solid fa-water" style="color:#098bd1;margin-right:6px;font-size:12px;"></i>Learn-to-Swim</h5>
+                <p>Beginner aquatics instruction designed for individuals with autism, emphasizing water safety fundamentals, comfort in the water, and foundational swimming skills in a calm, structured environment with a low instructor-to-student ratio.</p>
+                <p class="note">[Confirm description with Recreation team]</p>
+              </div>
+              <div class="prog-card">
+                <h5><i class="fa-solid fa-life-ring" style="color:#098bd1;margin-right:6px;font-size:12px;"></i>Water Safety Education</h5>
+                <p>Targeted water safety skills including survival floating, calling for help, and safe pool entry/exit — critical life-saving knowledge that every individual with autism should have access to.</p>
+                <p class="note">[Confirm description with Recreation team]</p>
+              </div>
+              <div class="prog-card">
+                <h5><i class="fa-solid fa-trophy" style="color:#098bd1;margin-right:6px;font-size:12px;"></i>#GameON Aquatics</h5>
+                <p>Part of the Ernie Els #GameON Autism Sports curriculum, the Aquatics program uses evidence-based practices to develop swimming skills, water confidence, and social communication through structured aquatic activities.</p>
+                <p class="note">[Confirm description with Recreation team]</p>
+              </div>
+              <div class="prog-card">
+                <h5><i class="fa-solid fa-heart-pulse" style="color:#098bd1;margin-right:6px;font-size:12px;"></i>Aquatic Fitness</h5>
+                <p>Low-impact fitness programming in the water providing cardiovascular exercise, strength, and flexibility work while accommodating a wide range of sensory and physical needs in a safe, supportive environment.</p>
+                <p class="note">[Confirm description with Recreation team]</p>
+              </div>
+            </div>
+
+            <div class="gameon-block" style="margin-top:4px;">
+              <div class="gameon-hdr">
+                <h4>Drowning Prevention Is Our Priority</h4>
+                <p>Aquatics programming is among the highest-impact work we do</p>
+              </div>
+              <div class="gameon-body">
+                <p>Individuals with autism face a disproportionately high risk of drowning — water safety is not optional. Our aquatics programs are designed to reduce this risk through direct instruction, repeated practice, and building genuine water competence over time. Every session works toward skills that can save a life.</p>
+                <p>For specific schedules and enrollment, contact our <strong>Recreation Team at (561) 320-9512</strong> or <a href="mailto:recreation@elsforautism.org">recreation@elsforautism.org</a>.</p>
+              </div>
+            </div>
+          </li><!-- /panel 3 -->
+
+
+          <!-- ── PANEL 4: CAMPS & SPECIAL EVENTS ─────────────── -->
+          <li class="contentli" id="content-4">
+            <h2 class="panel-h2">Camps &amp; Special Event Days</h2>
+            <p class="panel-lead">From spring breaks to full summer sessions and one-of-a-kind event days, our camps give participants immersive experiences in the welcoming environment they already trust.</p>
+
+            <ul class="caret-list" data-caret-group="camps">
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-camps-1" id="row-camps-1">
+                  <span class="caret-row-title"><i class="fa-solid fa-sun row-icon" style="color:#098bd1;"></i>Spring Break Camp</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-camps-1" role="region" aria-labelledby="row-camps-1">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>A week-long program during the school break combining recreation, arts, sports, and social time in a safe, structured environment that keeps momentum going year-round.</p>
+                  <p class="note">[Confirm description with Recreation team]</p>
+                </div>
+              </li>
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-camps-2" id="row-camps-2">
+                  <span class="caret-row-title"><i class="fa-solid fa-umbrella-beach row-icon" style="color:#098bd1;"></i>Movin' &amp; Groovin' Summer Camp</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-camps-2" role="region" aria-labelledby="row-camps-2">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Our flagship summer camp — weeks of inclusive programming spanning every discipline we offer, with trained staff and intentionally curated peer connections for participants on campus in Jupiter, Florida.</p>
+                  <p class="note">[Confirm description with Recreation team]</p>
+                </div>
+              </li>
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-camps-3" id="row-camps-3">
+                  <span class="caret-row-title"><i class="fa-solid fa-star row-icon" style="color:#098bd1;"></i>Special Event Days</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-camps-3" role="region" aria-labelledby="row-camps-3">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Themed one-day events throughout the year celebrating holidays, milestones, and community moments. Always inclusive, always carefully designed, always memorable.</p>
+                  <p class="note">[Confirm description with Recreation team]</p>
+                </div>
+              </li>
+            </ul>
+          </li><!-- /panel 4 -->
+
+
+          <!-- ── PANEL 5: VIRTUAL CLUBS ──────────────────────── -->
+          <li class="contentli" id="content-5">
+            <h2 class="panel-h2">Virtual Social &amp; Communication Programs</h2>
+            <p class="panel-lead">No matter where you call home, you can participate in our virtual social and communications programs which all meet on Microsoft Teams. Like all of our on-site programs, these virtual programs support individuals with ASD in building relationships, fostering community, developing social skills, and improving self-esteem.</p>
+
+            <p><strong>Spectrum Book Clubs (Ages 18+)</strong></p>
+            <p>Book club provides participants an opportunity to enjoy reading, listening, and discussing a shared book. Participants do not need to own a copy of the selected book. During the meeting, participants will be able to see the story, and Els for Autism staff will facilitate the group. Participants may take an active role as readers during the meeting, or they can choose to listen to their peers. At the end of each meeting, staff will lead the group in a discussion and Q&amp;A.</p>
+
+            <ul class="caret-list caret-list--teal" data-caret-group="clubs">
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-clubs-1" id="row-clubs-1">
+                  <span class="caret-row-title"><i class="fa-solid fa-book row-icon" style="color:#01acc3;"></i>Spectrum Book Club — Amateur Group <span style="font-weight:400;font-size:12px;color:#777;margin-left:6px;">(Ages 18+)</span></span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-clubs-1" role="region" aria-labelledby="row-clubs-1">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Focuses on fundamental reading skills such as fluency, volume, reading with expression, plot summaries, and comprehension checks.</p>
+                </div>
+              </li>
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-clubs-2" id="row-clubs-2">
+                  <span class="caret-row-title"><i class="fa-solid fa-book-open row-icon" style="color:#01acc3;"></i>Spectrum Book Club — Pro Group <span style="font-weight:400;font-size:12px;color:#777;margin-left:6px;">(Ages 18+)</span></span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-clubs-2" role="region" aria-labelledby="row-clubs-2">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Focuses on advanced reading skills such as comprehension, making inferences and connections to self and/or others, and making predictions.</p>
+                </div>
+              </li>
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-clubs-3" id="row-clubs-3">
+                  <span class="caret-row-title"><i class="fa-solid fa-people-arrows row-icon" style="color:#01acc3;"></i>Connections Social Club <span style="font-weight:400;font-size:12px;color:#777;margin-left:6px;">(Ages 18+)</span></span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-clubs-3" role="region" aria-labelledby="row-clubs-3">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>Connections Social Club is a fully virtual, staff-facilitated social group that gives participants a structured, predictable space to connect with peers each week. Every session follows the same reliable agenda — a welcome and check-in, a review of expectations, a themed discussion or activity, and time for open conversation — so participants always know what to expect before they log on.</p>
+                  <p>Els for Autism staff facilitate every meeting, offering support and guidance so individuals of all abilities can take part meaningfully, whether that means leading a discussion topic or simply following along with the group.</p>
+                </div>
+              </li>
+            </ul>
+          </li><!-- /panel 5 -->
+
+
+          <!-- ── PANEL 6: RECREATION THERAPY ─────────────────── -->
+          <li class="contentli" id="content-6">
+            <div class="coming-panel">
+              <span class="badge-coming" style="font-size:11px;padding:3px 10px;">Coming 2027</span>
+              <h3>Recreation Therapy</h3>
+              <p>Our dedicated Recreation Therapy program will pair credentialed therapeutic recreation specialists with participants to develop individualized goals through purposeful leisure activity. Launching in 2027 alongside our new Recreation Complex, this program bridges clinical support and joyful engagement in a way few programs can.</p>
+              <p style="margin-top:14px;font-size:13px;color:#9aabb5;">Stay connected for updates as our April 2027 facility expansion progresses.</p>
+            </div>
+          </li><!-- /panel 6 -->
+
+
+          <!-- ── PANEL 7: ADULT DAY & CULINARY ──────────────── -->
+          <li class="contentli" id="content-7">
+            <h2 class="panel-h2">Adult Day &amp; Culinary Programs</h2>
+
+            <div class="feature-panel">
+              <span class="badge-coming" style="font-size:11px;padding:3px 10px;">Coming 2027</span>
+              <h3>Everyone Can Play Recreation Based Adult Day Training Program</h3>
+              <p>The Everyone Can Play Recreation Based Adult Day Training Program blends adaptive sports, fitness, and wellness into a structured daily schedule built specifically for adults with autism. Participants take part in modified versions of golf, tennis, and other Ernie Els #GameON Autism Sports activities alongside dedicated fitness sessions that build strength, cardiovascular health, and functional movement — all paced and adapted to each participant's ability level.</p>
+              <p>Beyond the field and the gym, the program is grounded in community inclusion. Each participant works from an individualized support plan developed with input from our recreation and clinical teams, ensuring goals around communication, independence, and social skills are addressed in every activity — not layered on as an afterthought. Staff maintain a low ratio throughout the day so support can flex to the moment, whether that means more hands-on coaching or simply more room to work independently.</p>
+              <p>Each week, the program also includes community-based outings that take participants off campus and into real-world settings — grocery stores, restaurants, parks, and local businesses — to practice the skills built in the classroom in the environments where they matter most. These outings are a core part of the curriculum, not an occasional add-on, and are central to the program's goal of building lasting independence and community connection for adults with autism.</p>
+            </div>
+
+            <h5 style="font-family:'Bitter',serif;color:#1f1961;font-size:17px;margin:20px 0 8px;">Culinary Programs</h5>
+            <p class="panel-lead" style="margin-bottom:14px;">Food is community. Our culinary programs teach practical kitchen skills, nutrition awareness, and food service fundamentals in an inclusive, hands-on environment.</p>
+
+            <ul class="caret-list caret-list--navy" data-caret-group="culinary">
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-culinary-1" id="row-culinary-1">
+                  <span class="caret-row-title"><i class="fa-solid fa-utensils row-icon" style="color:#1f1961;"></i>SALSA</span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-culinary-1" role="region" aria-labelledby="row-culinary-1">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p class="note" style="font-style:italic;color:#888;margin-top:0;">[Program description to be confirmed with Recreation team]</p>
+                </div>
+              </li>
+              <li class="caret-item">
+                <button type="button" class="caret-row" aria-expanded="false" aria-controls="panel-culinary-2" id="row-culinary-2">
+                  <span class="caret-row-title"><i class="fa-solid fa-briefcase row-icon" style="color:#1f1961;"></i>Culinary Institute Teaching Program for Adults with Autism <span class="badge-coming">June 2027</span></span>
+                  <i class="fa-solid fa-chevron-down caret-icon" aria-hidden="true"></i>
+                </button>
+                <div class="caret-panel" id="panel-culinary-2" role="region" aria-labelledby="row-culinary-2">
+                  <button type="button" class="caret-close" aria-label="Close">&times;</button>
+                  <p>A structured workforce-readiness program preparing participants for real employment opportunities in food service — from prep fundamentals to front-of-house skills. Launching June 2027.</p>
+                </div>
+              </li>
+            </ul>
+          </li><!-- /panel 7 -->
+
+        </ul>
+      </div><!--/.gc--2-of-3-->
+
+    </div><!--/.grid-->
+  </div><!--/.naccs-->
+
+</div><!--/.container-xl.naccs-wrap-->
+
+
+<!-- HELP STRIP -->
+<div class="help-strip">
   <div class="container">
-    <div class="section-eyebrow">Respite &amp; In-Between Care</div>
-    <h2 class="section-heading">Bridge the Gap</h2>
-    <div class="row">
-      <div class="col-md-8">
-        <p><strong>Bridge the Gap</strong> is a respite care program for individuals who need a place to go before and between Foundation programs and services. Under the supervision of recreation staff, participants may engage in a variety of leisure activities, including puzzles, board games, and arts &amp; crafts. Participants may bring snacks and a drink as none will be available.</p>
-        <p><strong><em>Please note:</em></strong> As this service is specifically for prior to/between participants' activities, individuals must be picked up from their last activity/therapy and cannot be picked up from Bridge the Gap. Additionally, Bridge the Gap services will not be provided on days Els for Autism is closed. Spaces are limited. Enrollment on a first-come, first-served basis.</p>
-      </div>
-    </div>
+    <i class="fa-solid fa-headset" style="margin-right:8px;"></i>
+    Questions? Contact our Recreation Team — <a href="tel:5613209512">(561) 320-9512</a> &nbsp;·&nbsp; <a href="mailto:recreation@elsforautism.org">recreation@elsforautism.org</a>
   </div>
 </div>
 
-<hr class="wp-block-separator">
 
-
-<!-- ══ AQUATICS FEATURE BAND ═════════════════════════════════ -->
-<div class="aquatics-band">
-  <div class="aquatics-cover"></div>
-  <div class="container aq-inner">
-    <div class="aq-eyebrow"><i class="fa-solid fa-star" style="margin-right:6px;"></i>Featured Program Area</div>
-    <h2>Aquatics &amp; Water Safety</h2>
-    <p class="aq-lead">Water safety is a critical, life-saving priority for the autism community. Els for Autism Aquatics programming goes far beyond swimming lessons — it builds water confidence, teaches essential survival skills, and directly addresses the disproportionate drowning risk faced by individuals with autism. This is some of the highest-impact work we do.</p>
-
-    <div class="aq-stat-row">
-      <div class="aq-stat">
-        <div class="num">[#]×</div>
-        <div class="lbl">Higher drowning risk for individuals with autism</div>
-        <div class="ph">[stat to be confirmed by team]</div>
-      </div>
-      <div class="aq-stat">
-        <div class="num">[#]</div>
-        <div class="lbl">Participants served through Aquatics programming</div>
-        <div class="ph">[stat to be confirmed by team]</div>
-      </div>
-      <div class="aq-stat">
-        <div class="num">[#]</div>
-        <div class="lbl">Certified aquatics instructors trained</div>
-        <div class="ph">[stat to be confirmed by team]</div>
-      </div>
-    </div>
-
-    <div class="aq-chip-row">
-      <span class="aq-chip">Learn-to-Swim</span>
-      <span class="aq-chip">Water Safety Education</span>
-      <span class="aq-chip">Drowning Prevention</span>
-      <span class="aq-chip">Aquatic Fitness</span>
-      <span class="aq-chip">#GameON Aquatics</span>
-    </div>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ── Creative Arts ──────────────────────────────────────── -->
-<div class="section-panel-alt">
-  <div class="container">
-    <div class="section-eyebrow">Expression &amp; Creativity</div>
-    <h2 class="section-heading">Creative Arts</h2>
-    <p class="section-lead">The exploration of art, dance, and music can facilitate personal growth and development for people with ASD in many areas, including gross and fine motor skills, speech-language skills (through song, memory, and mental agility), social skills, confidence, and self-expression. Group sessions are available on campus for individuals ages 6 and older. All classes are taught by certified therapists or instructors.</p>
-
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-person-walking" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Dance Therapy</h4>
-          <p>This class introduces individuals to the fundamentals of dance in a positive &amp; creative environment. Through rhythmic exercises, basic ballet techniques, and creative movement, individuals develop creative expression, as well as an awareness and understanding of the mechanics of their body movement. Dancers will participate in movement games that encourage spontaneous &amp; creative expression, build movement vocabulary &amp; repertoire, and allow safe exploration. While dancing, participants will engage in activities to promote social skills, peer interactions, and relationship development.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-music" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Music Therapy</h4>
-          <p>Music Therapy is all about exploring and participating in a wide range of creative musical experiences in a supportive group setting. Music Therapy can increase confidence, develop communication &amp; social skills, self-expression, and find connection with yourself and others. In this group, you will have the opportunity to grow &amp; enjoy creative music-making with instruments from around the world, song selection, using rhythm, songwriting, movement to music, and more. Each week we will have the opportunity to create &amp; explore music together.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-palette" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Art Therapy</h4>
-          <p>Art therapy focuses on the process of making art to express one's thoughts and feelings. By engaging in art therapy, you can explore your emotions, enhance communication skills, and develop social connections. Each week, you will have the opportunity to explore different art mediums and create personalized art works.</p>
-          <p style="font-size:13px;color:#777;margin-top:8px;">Facilitated by Alicia Ballestas, MA, ATR-BC, Board Certified, Clinical Art Therapist</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-masks-theater" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Theater</h4>
-          <p>Theater fosters individuality, inspires imagination, promotes communication, and celebrates personal interests for individuals with autism. Our theatre classes help participants develop social skills, verbal expression, empathy for others, and a sense of self-worth and accomplishment through a complement of short scene work, object work exercises, and improv games, all culminating in an end-of-semester showcase where each individual has their opportunity to shine.</p>
-          <p style="font-size:13px;color:#777;margin-top:8px;">Classes are run in a 1:6 ratio. Individuals needing more support may join with a support companion.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-brush" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Art Club</h4>
-          <p>Here at Els, the Art Club program provides a creative and supportive space for clients to express themselves. This program encourages self confidence, focus, fine motor skills and reduces anxiety. Through guided art activities such as drawing, and painting, our participants explore emotions, develop communication, and strengthen social and sensory integration skills. The group sessions in our program foster connection and collaboration.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="program-card teal-card">
-          <h4><i class="fa-solid fa-drum" style="color:#01acc3;margin-right:7px;font-size:14px;"></i>Music &amp; Movement</h4>
-          <p>Our Music and Movement program is an excellent method for our clients to express themselves and explore an aspect of fitness through music. Clients delve into different aspects of music and movement through dance routines and following rhythmic sounds. Therapeutic aspects of the movements are emphasized through motions mirrored from the instructor — enhancing coordination, emotional regulation, and creativity. The space shared with peers fosters opportunities for social engagement and improving language skills.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ── Camps & Special Event Days ────────────────────────── -->
-<div class="section-panel">
-  <div class="container">
-    <div class="section-eyebrow">Extended Experiences</div>
-    <h2 class="section-heading">Camps &amp; Special Event Days</h2>
-    <p class="section-lead">From spring breaks to full summer sessions and one-of-a-kind event days, our camps give participants immersive, multi-day experiences in the welcoming environment they already trust.</p>
-
-    <div class="row">
-      <div class="col-md-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-sun" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Spring Break Camp</h4>
-          <p>A week-long program during the school break combining recreation, arts, sports, and social time in a safe, structured environment that keeps momentum going year-round.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-umbrella-beach" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Summer Camp</h4>
-          <p>Our flagship summer experience — weeks of inclusive programming spanning every discipline we offer, with trained staff and intentionally curated peer connections.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="program-card">
-          <h4><i class="fa-solid fa-star" style="color:#098bd1;margin-right:7px;font-size:14px;"></i>Special Event Days</h4>
-          <p>Themed one-day events throughout the year celebrating holidays, milestones, and community moments. Always inclusive, always carefully designed, always memorable.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ── Virtual Clubs ─────────────────────────────────────── -->
-<div class="section-panel-alt">
-  <div class="container">
-    <div class="section-eyebrow">Community Online</div>
-    <h2 class="section-heading">Virtual Clubs</h2>
-    <p class="section-lead">No matter where you call home, you can participate in our virtual social and communications programs which all meet on Microsoft Teams. Like all of our on-site programs, these virtual programs support individuals with ASD in building relationships, fostering community, developing social skills, and improving self-esteem.</p>
-
-    <ul class="club-list">
-      <li>
-        <span class="club-dot"></span>
-        <div>
-          <strong>Spectrum Book Club — Amateur Group <span style="font-weight:400;font-size:13px;color:#777;">(Ages 18+)</span></strong>
-          <p class="body-copy">Book club provides participants an opportunity to enjoy reading, listening, and discussing a shared book. Participants do not need to own a copy of the selected book. During the meeting, participants will be able to see the story, and Els for Autism staff will facilitate the group. Participants may take an active role as readers, or they can choose to listen to their peers. At the end of each meeting, staff will lead the group in a discussion and Q&amp;A.</p>
-          <p class="body-copy" style="margin-top:6px;"><em>Amateur:</em> Focuses on fundamental reading skills such as fluency, volume, reading with expression, plot summaries, and comprehension checks.</p>
-        </div>
-      </li>
-      <li>
-        <span class="club-dot"></span>
-        <div>
-          <strong>Spectrum Book Club — Pro Group <span style="font-weight:400;font-size:13px;color:#777;">(Ages 18+)</span></strong>
-          <p class="body-copy" style="margin-top:4px;"><em>Pro:</em> Focuses on advanced reading skills such as comprehension, making inferences and connections to self and/or others, and making predictions.</p>
-        </div>
-      </li>
-      <li>
-        <span class="club-dot"></span>
-        <div>
-          <strong>Connections Club <span style="font-weight:400;font-size:13px;color:#777;">(Ages 18+)</span></strong>
-          <p class="body-copy">Connections Club is designed to provide opportunities for individuals to interact with peers in a safe and supportive environment using video conferencing technology while practicing social and communication skills. Els for Autism staff members facilitate meetings, providing support and guidance so individuals of all abilities can actively participate in the group. Each meeting will follow a schedule, including a welcome/introduction, a review of expectations, fun facts, and a variety of discussion topics, games, and activities.</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ── Recreation Adult Day Program ──────────────────────── -->
-<div class="section-panel">
-  <div class="container">
-    <div class="section-eyebrow">Adult Programming</div>
-    <h2 class="section-heading">
-      Recreation Adult Day Program
-      <span class="badge-coming">Coming 2027</span>
-    </h2>
-    <p class="section-lead">Meaningful daily programming for adults with autism that centers recreation as a core component of quality adult life. Launching in 2027 with our expanded Recreation Complex, this program will offer structured activity, community integration, and skill-building tailored to adults across a range of ability levels.</p>
-
-    <div class="row">
-      <div class="col-md-5">
-        <div class="program-card gold-card">
-          <h4>
-            <i class="fa-solid fa-people-group" style="color:#c9a045;margin-right:7px;font-size:14px;"></i>
-            Everyone Can Play <span class="badge-coming">Coming 2027</span>
-          </h4>
-          <p>A dedicated adult day program grounded in the belief that recreation is a right, not an afterthought. Enrollment details will be announced as our facility expansion progresses. Stay connected for updates.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ── Culinary Programs ──────────────────────────────────── -->
-<div class="section-panel-alt">
-  <div class="container">
-    <div class="section-eyebrow">Life Skills &amp; Culinary Arts</div>
-    <h2 class="section-heading">Culinary Programs</h2>
-    <p class="section-lead">Food is community. Our culinary programs teach practical kitchen skills, nutrition awareness, and food service fundamentals in an inclusive, hands-on environment — from creative cooking to industry-ready workforce preparation.</p>
-
-    <div class="row">
-      <div class="col-md-5">
-        <div class="program-card navy-card">
-          <h4><i class="fa-solid fa-utensils" style="color:#1f1961;margin-right:7px;font-size:14px;"></i>SALSA</h4>
-          <p style="font-size:13px;color:#888;font-style:italic;">[Program description coming — confirm copy with Recreation team before publishing]</p>
-        </div>
-      </div>
-      <div class="col-md-5">
-        <div class="program-card navy-card">
-          <h4>
-            <i class="fa-solid fa-briefcase" style="color:#1f1961;margin-right:7px;font-size:14px;"></i>
-            Food Service Industry Curriculum <span class="badge-coming">Coming June 2027</span>
-          </h4>
-          <p>A structured workforce-readiness program preparing participants for real employment opportunities in food service — from prep fundamentals to front-of-house skills. Launching June 2027.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="wp-block-separator">
-
-
-<!-- ══ REGISTRATION ══════════════════════════════════════════ -->
+<!-- REGISTRATION -->
 <div id="register" class="reg-section">
-  <div class="container">
-    <div class="section-eyebrow">Enrollment</div>
-    <h2 class="section-heading">Find and Register for a Program</h2>
-    <p class="section-lead" style="margin-bottom:28px;">Browse available sessions and enroll directly below. If you need help finding the right fit, we're here.</p>
+  <div class="container-xl">
+    <span class="section-eyebrow">Enrollment</span>
+    <h2 class="section-h2">Find and Register for a Program</h2>
+    <p class="section-lead">Browse available sessions and enroll directly below. New participants must complete our intake process before beginning programs.</p>
     <div class="reg-box">
       <div id="ProgramFinderiframe-29062026131105"></div>
       <script src="https://apps.daysmartrecreation.com/dash/index.php?Action=WidgetJS/index&company=elsforautism"></script>
@@ -997,169 +745,46 @@
 </div>
 
 
-<!-- ══ HELP STRIP ════════════════════════════════════════════ -->
-<div class="help-strip">
+<!-- VOLUNTEER CTA -->
+<div class="vol-strip">
   <div class="container">
-    <i class="fa-solid fa-headset" style="margin-right:8px;"></i>
-    Having trouble registering? <strong>Contact us</strong> &mdash;
-    <a href="tel:5613209512">(561) 320-9512</a>
-    &nbsp;&middot;&nbsp;
-    <a href="mailto:recreation@elsforautism.org">recreation@elsforautism.org</a>
+    <h3>Volunteer with Recreation Services</h3>
+    <p>Our programs run on the energy and dedication of trained volunteers who share our commitment to inclusive recreation. We need your time, your skills, and your heart.</p>
+    <a href="https://www.elsforautism.org/get-involved/volunteers/" target="_blank" class="grad-button grad-button-short" style="max-width:280px;margin:0 auto;">
+      <i class="fa-solid fa-hand-holding-heart" style="margin-right:8px;"></i>Learn About Volunteering
+    </a>
   </div>
 </div>
 
-<hr class="wp-block-separator">
 
-
-<!-- ══ VOLUNTEER SECTION ═════════════════════════════════════ -->
-<div class="volunteer-section">
+<!-- DONOR LOGO ROW -->
+<div class="donor-row">
   <div class="container">
-    <div class="section-eyebrow">Get Involved</div>
-    <h2 class="section-heading">Volunteer with Recreation Services</h2>
-    <p class="section-lead">Our programs run on the energy and dedication of trained volunteers who share our commitment to inclusive recreation. We need your time, your skills, and your heart.</p>
-
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <div class="vol-card">
-          <div class="vol-icon-circle"><i class="fa-solid fa-user-graduate"></i></div>
-          <h4>Program Volunteers</h4>
-          <p>Assist instructors during sports, arts, aquatics, and camp programming. Training provided. No prior experience necessary — just enthusiasm and reliability.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="vol-card">
-          <div class="vol-icon-circle"><i class="fa-solid fa-chalkboard-teacher"></i></div>
-          <h4>Skills-Based Volunteers</h4>
-          <p>Bring your expertise — in art, music, fitness, culinary arts, or technology — to support specific program areas. We match your skills to where they matter most.</p>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="vol-card">
-          <div class="vol-icon-circle"><i class="fa-solid fa-calendar-days"></i></div>
-          <h4>Event Volunteers</h4>
-          <p>Support Special Event Days, camps, and community programming throughout the year. Single-day commitments available for those with limited availability.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="text-center mt-2">
-      <a href="#" class="grad-button grad-button-short" style="max-width:260px;margin:0 auto;">
-        <i class="fa-solid fa-hand-holding-heart" style="margin-right:8px;"></i>Learn About Volunteering
-      </a>
+    <div class="donor-eyebrow">Thank you to our Recreation Services supporters</div>
+    <div class="logo-row">
+      <div class="logo-ph">[Logo 1]</div>
+      <div class="logo-ph">[Logo 2]</div>
+      <div class="logo-ph">[Logo 3]</div>
+      <div class="logo-ph">[Logo 4]</div>
+      <div class="logo-ph">[Logo 5]</div>
     </div>
   </div>
 </div>
 
-<hr class="wp-block-separator">
 
-
-<!-- ══ PROJECT OBJECTIVES ════════════════════════════════════ -->
-<div class="objectives-band">
+<!-- SUPPORT BAND -->
+<div class="support-band">
   <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-5 mb-4 mb-md-0">
-        <div class="section-eyebrow" style="color:#ffca7b;">Our Focus</div>
-        <h2>Building the Future of Inclusive Recreation</h2>
-        <p class="sub">The Recreation Services hub is part of a larger effort to serve more families, deepen community ties, and open doors for the next chapter of Els for Autism programming.</p>
-      </div>
-      <div class="col-md-7">
-        <div class="obj-item">
-          <div class="obj-icon"><i class="fa-solid fa-users"></i></div>
-          <div class="obj-text"><strong>Recruit families and new participants</strong> — Expand access to Recreation Services for individuals with autism and their families across Martin and Palm Beach counties and beyond.</div>
-        </div>
-        <div class="obj-item">
-          <div class="obj-icon"><i class="fa-solid fa-building-columns"></i></div>
-          <div class="obj-text"><strong>Build anticipation for the new Recreation Complex</strong> — The April 2027 opening marks a historic expansion. We're laying the groundwork now so families know what's coming and are ready to participate from day one.</div>
-        </div>
-        <div class="obj-item">
-          <div class="obj-icon"><i class="fa-solid fa-handshake"></i></div>
-          <div class="obj-text"><strong>Strengthen Martin and Palm Beach County partnerships</strong> — Deepen relationships with local organizations, municipalities, and businesses who share our commitment to inclusive community life.</div>
-        </div>
-        <div class="obj-item">
-          <div class="obj-icon"><i class="fa-solid fa-person-running"></i></div>
-          <div class="obj-text"><strong>Recruit and train volunteers</strong> — Build a robust volunteer corps that supports our programs, extends our capacity, and deepens community investment in inclusive recreation.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    <span class="section-eyebrow">Make an Impact</span>
+    <h2 class="section-h2">Support Recreation Services</h2>
+    <p class="lead-copy">Recreation programs transform lives. Your support directly funds specialized programming, trained instructors, and accessible facilities for individuals with autism and their families. Every contribution keeps our doors open to everyone.</p>
 
-<hr class="wp-block-separator">
-
-
-<!-- ══ SUPPORT SECTION ═══════════════════════════════════════ -->
-<div class="support-section">
-  <div class="container">
-    <div class="section-eyebrow">Make an Impact</div>
-    <h2 class="section-heading">Support Recreation Services</h2>
-    <p class="section-lead">Recreation programs transform lives. Your support directly funds specialized programming, trained instructors, and accessible facilities for individuals with autism and their families. Every contribution keeps our doors open to everyone.</p>
-
-    <!-- Campaign Videos (placeholder) -->
-    <div class="row mb-4">
-      <div class="col-md-4 mb-3">
-        <div class="video-ph">
-          <i class="fa-solid fa-circle-play fa-2x" style="opacity:.35;"></i>
-          Campaign Video 1
-          <span>[Video asset TBD]</span>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="video-ph">
-          <i class="fa-solid fa-circle-play fa-2x" style="opacity:.35;"></i>
-          Campaign Video 2
-          <span>[Video asset TBD]</span>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="video-ph">
-          <i class="fa-solid fa-circle-play fa-2x" style="opacity:.35;"></i>
-          Campaign Video 3
-          <span>[Video asset TBD]</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Impact Stats (placeholder) -->
-    <div class="stat-strip mb-4">
-      <div class="row text-center">
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-          <div class="stat-item">
-            <span class="num">[#]</span>
-            <span class="lbl">Participants served annually</span>
-            <span class="ph">[stat TBD]</span>
-          </div>
-        </div>
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-          <div class="stat-item">
-            <span class="num">[#]</span>
-            <span class="lbl">Programs offered</span>
-            <span class="ph">[stat TBD]</span>
-          </div>
-        </div>
-        <div class="col-6 col-md-3 mb-3 mb-md-0">
-          <div class="stat-item">
-            <span class="num">[#]</span>
-            <span class="lbl">Countries reached</span>
-            <span class="ph">[stat TBD]</span>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-item">
-            <span class="num">[#]</span>
-            <span class="lbl">Years of programming</span>
-            <span class="ph">[stat TBD]</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTA + Partnership Details -->
     <div class="row">
       <div class="col-md-4 mb-4 mb-md-0">
-        <a href="#" class="grad-button" style="max-width:260px;">
+        <a href="#" class="grad-button" style="max-width:240px;">
           <i class="fa-solid fa-heart" style="margin-right:8px;"></i>Support Recreation Services
         </a>
-        <p style="font-size:13px;color:#9aabb5;font-style:italic;margin-top:8px;">[Giving link coming soon]</p>
+        <p style="font-size:12px;color:#9aabb5;font-style:italic;margin-top:8px;">[Giving link coming soon]</p>
       </div>
       <div class="col-md-4 mb-4 mb-md-0">
         <div class="s-detail">
@@ -1174,27 +799,88 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 
-<!-- Smooth scroll -->
 <script>
-document.querySelectorAll('a[href^="#"]').forEach(function(a) {
-  a.addEventListener('click', function(e) {
-    var id = a.getAttribute('href').slice(1);
-    var el = document.getElementById(id);
-    if (el) {
-      e.preventDefault();
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-</script>
+(function() {
+  // naccs tab switching
+  var tabs = document.querySelectorAll('.naccs .menu .thdiv');
+  var panels = document.querySelectorAll('.nacc li.contentli');
 
-<!-- Bootstrap JS (needed for any Bootstrap components) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = this.getAttribute('data-id');
+
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+
+      this.classList.add('active');
+      var panel = document.getElementById('content-' + id);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // caret rows — click/tap-driven expand-collapse, one open per group
+  document.querySelectorAll('.caret-list').forEach(function(list) {
+    var items = list.querySelectorAll('.caret-item');
+
+    items.forEach(function(item) {
+      var row = item.querySelector('.caret-row');
+      var closeBtn = item.querySelector('.caret-close');
+
+      row.addEventListener('click', function() {
+        var wasOpen = item.classList.contains('open');
+
+        items.forEach(function(other) {
+          other.classList.remove('open');
+          other.querySelector('.caret-row').setAttribute('aria-expanded', 'false');
+        });
+
+        if (!wasOpen) {
+          item.classList.add('open');
+          row.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          item.classList.remove('open');
+          row.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  });
+
+  // aquatics callout link → trigger tab 3 + scroll to naccs
+  document.querySelectorAll('.nav-tab-trigger').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var tabId = this.getAttribute('data-tab');
+      var tab = document.querySelector('.thdiv[data-id="' + tabId + '"]');
+      if (tab) tab.click();
+      var naccs = document.querySelector('.naccs');
+      if (naccs) naccs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // smooth scroll for #register
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var id = this.getAttribute('href').slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
