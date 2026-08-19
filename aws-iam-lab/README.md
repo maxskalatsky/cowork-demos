@@ -19,6 +19,40 @@ Next step in the lab: pick one real task the service account needs (e.g. "start/
 instances tagged `Team=X`" or "describe instances only"), then rewrite the policy to
 grant only that.
 
+## 02 — read-only "maid" role (look, don't touch)
+
+`02-readonly-ec2-maid.json` is the scoped-down version for a role that only needs to
+check on things — never create, delete, or modify. It grants exactly the 269 EC2
+actions that start with `Describe` or `Get`, still on `Resource: "*"`.
+
+Why `Resource: "*"` is still there, and that's correct: almost all EC2 `Describe*`/`Get*`
+actions don't support resource-level permissions in AWS's own IAM model — they only
+work when the resource is `*`. That's *why* Parliament's `01` finding didn't flag most of
+them: it only complains about `Resource: "*"` on actions that could have been scoped
+tighter. For read-only EC2 calls, `*` isn't an oversight, it's the only option AWS gives.
+
+How the action list was built: not by hand. `Describe`/`Get` string-matching alone risks
+missing actions or catching something destructive with a misleading name, so the list
+came from botocore's EC2 service model (`session.get_service_model('ec2').operation_names`,
+269 of 800 total EC2 operations) filtered to names starting with `Describe`/`Get`, then a
+script re-checked every action in the output actually starts with one of those two
+prefixes before it shipped.
+
+Verified two ways:
+1. Parliament (`parliament --file 02-readonly-ec2-maid.json`) reports **zero**
+   `RESOURCE_STAR` or unsafe-action findings. It does flag ~57 actions as "Unknown
+   action" (things like `DescribeRouteServer*`, `GetCapacityManager*`, `GetIpamPolicy*`)
+   — that's Parliament's bundled action database lagging behind newer AWS API additions,
+   not a problem with the policy: botocore, the more current source, already knows them.
+2. A script re-derives the read-only set from the same botocore model and diffs it
+   against the policy's `Action` list — confirms all 269 entries start with `Describe`
+   or `Get` and nothing else snuck in.
+
+This is a read role, not a "safe" role in the compliance sense — some `Describe`/`Get`
+calls (e.g. `GetConsoleOutput`, `GetPasswordData`) can expose sensitive instance data.
+Least privilege for a real maid account should still scope this by resource tag or
+account/VPC where the API allows it, and pair it with CloudTrail logging on the role.
+
 ## Linting with Parliament
 
 [Parliament](https://github.com/duo-labs/parliament) is an open-source IAM policy
