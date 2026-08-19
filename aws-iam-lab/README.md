@@ -53,6 +53,48 @@ calls (e.g. `GetConsoleOutput`, `GetPasswordData`) can expose sensitive instance
 Least privilege for a real maid account should still scope this by resource tag or
 account/VPC where the API allows it, and pair it with CloudTrail logging on the role.
 
+## 03 — handyman role (start/stop/reboot, lab-tagged instances only)
+
+`03-handyman-ec2-lab-tagged.json` grants `ec2:StartInstances`, `ec2:StopInstances`,
+`ec2:RebootInstances` — nothing else — restricted to instances carrying the tag
+`Project=aws-iam-lab`. This is the first policy in the lab with a real
+resource-level restriction instead of `Resource: "*"`:
+
+```json
+"Resource": "arn:aws:ec2:*:111122223333:instance/*",
+"Condition": {
+  "StringEquals": { "ec2:ResourceTag/Project": "aws-iam-lab" }
+}
+```
+
+`111122223333` is AWS's own placeholder account ID (used throughout their docs) —
+**replace it with the real account ID before using this policy anywhere.** The tag
+key/value (`Project=aws-iam-lab`) is this lab's convention, not an AWS requirement —
+swap it for whatever tag actually marks "belongs to this lab" in your account, and
+make sure every instance you want the handyman to touch is tagged that way, or these
+calls will fail with an authorization error.
+
+Unlike the maid role, `Start`/`Stop`/`RebootInstances` *do* support resource-level
+ARNs and tag-based conditions in AWS's IAM model — that's what makes a real
+restriction possible here instead of another `Resource: "*"`. This is documented,
+stable EC2 IAM behavior (it's the canonical example in AWS's own tag-based-access
+tutorials), but I was not able to confirm it by scraping AWS's Service Authorization
+Reference in this session — that page is JS-rendered and returned empty content to
+the fetch tool. Worth a manual spot-check of
+https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonec2.html
+before this goes anywhere real.
+
+Verified: `parliament --file 03-handyman-ec2-lab-tagged.json` returns **zero findings,
+exit code 0** — no `RESOURCE_STAR`, no unknown actions, no malformed-ARN warnings (it
+did catch a first draft that still had a literal `ACCOUNT_ID` placeholder as an
+invalid ARN, which is what pushed the fix above).
+
+This only lets the handyman turn instances on/off — it can't find instance IDs
+(`DescribeInstances` doesn't support resource-level scoping — see `02`), can't touch
+anything untagged, and can't create or delete anything. Pair with `02` (or a
+tag-scoped describe policy) if the handyman also needs to look up which instances
+exist.
+
 ## Linting with Parliament
 
 [Parliament](https://github.com/duo-labs/parliament) is an open-source IAM policy
