@@ -9,10 +9,10 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
 }
 
-# --- One VPC, one subnet, one security group. No public/private split at all. ---
+# Deliberately insecure: one flat network, no public/private split.
 
 resource "aws_vpc" "lab" {
   cidr_block           = "10.0.0.0/16"
@@ -88,38 +88,6 @@ resource "aws_security_group" "wide_open" {
 
   tags = {
     Name    = "network-segmentation-lab-wide-open"
-    Project = "network-segmentation-lab"
-  }
-}
-
-# The "public" tier: this one is supposed to face the street.
-resource "aws_instance" "web" {
-  ami                         = var.ami_id
-  instance_type               = var.instance_type
-  subnet_id                   = aws_subnet.flat.id
-  vpc_security_group_ids      = [aws_security_group.wide_open.id]
-  associate_public_ip_address = true
-
-  tags = {
-    Name    = "network-segmentation-lab-web"
-    Role    = "public-web"
-    Project = "network-segmentation-lab"
-  }
-}
-
-# The "private" tier: same subnet, same wide-open security group, same public IP.
-# Nothing here actually keeps it behind the street — it's directly reachable from
-# the internet on every port, identically to the web instance.
-resource "aws_instance" "db" {
-  ami                         = var.ami_id
-  instance_type               = var.instance_type
-  subnet_id                   = aws_subnet.flat.id
-  vpc_security_group_ids      = [aws_security_group.wide_open.id]
-  associate_public_ip_address = true
-
-  tags = {
-    Name    = "network-segmentation-lab-db"
-    Role    = "should-be-private"
     Project = "network-segmentation-lab"
   }
 }
